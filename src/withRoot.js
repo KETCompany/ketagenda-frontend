@@ -10,6 +10,10 @@ import {
 import red from 'material-ui/colors/red';
 import blue from 'material-ui/colors/blue';
 import CssBaseline from 'material-ui/CssBaseline';
+import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
+import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
+
+
 
 // A theme with custom primary and secondary color.
 // It's optional.
@@ -43,11 +47,13 @@ function withRoot(Component) {
       <JssProvider jss={jss} generateClassName={generateClassName}>
         {/* MuiThemeProvider makes the theme available down the React tree
           thanks to React context. */}
-        <MuiThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          <Component {...props} />
-        </MuiThemeProvider>
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <MuiThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <Component {...props} />
+          </MuiThemeProvider>
+        </MuiPickersUtilsProvider>
       </JssProvider>
     );
   }
