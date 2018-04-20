@@ -9,6 +9,7 @@ import RoomQueryBuilder from '../utils/RoomQueryBuilder';
 import RoomList from '../components/RoomList';
 
 import * as RoomAPI from '../api/RoomAPI';
+import QrDialogSlide from '../components/QrDialogSlide';
 
 const styles = theme => ({
 
@@ -22,6 +23,8 @@ class RoomsContainer extends Component {
       search: '',
       rooms: [],
       noRooms: false,
+      selectedTime: '',
+      selectedDate: '',
       filters: {
         locations: [],
         floors: [],
@@ -33,6 +36,8 @@ class RoomsContainer extends Component {
         types: [],
       },
       type: '',
+      qrDialogOpen: false,
+      qrCodeValue: '',
     };
 
     this.getRoomFilters();
@@ -89,10 +94,12 @@ class RoomsContainer extends Component {
   };
 
   handleDateChange = (date) => {
-    this.setState({ selectedDate: date });
+    const { selectedTime } = this.state;
+    this.setState({ selectedDate: date, selectedTime: selectedTime === '' ? new Date() : selectedTime });
   }
   handleTimeChange = (time) => {
-    this.setState({ selectedTime: time });
+    const { selectedDate } = this.state;
+    this.setState({ selectedTime: time, selectedDate: selectedDate === '' ? time : selectedDate });
   }
 
   clearFilters = async () => {
@@ -103,18 +110,36 @@ class RoomsContainer extends Component {
   }
 
   dateNow = () => {
-    this.setState({ selectedDate: new Date(), selectedTime: new Date() });
+    this.setState({ selectedDate: new Date(), selectedTime: new Date() }, () => {
+      this.onSearch();
+    });
   }
 
   onSearch = async (filtered) => {
-    const { search, filters } = this.state;
+    const {
+      search,
+      filters,
+      type,
+      selectedTime,
+    } = this.state;
+    let { selectedDate } = this.state;
 
     let filtering = false;
 
     const searchQueryArray = [`name=${search}`];
 
-    if (this.state.type !== '' && this.state.type !== null) {
-      searchQueryArray.push(`type=${this.state.type}`)
+    if (type !== '' && type !== null) {
+      searchQueryArray.push(`type=${this.state.type}`);
+    }
+
+    if (selectedTime) {
+      if (!selectedTime) {
+        selectedDate = new Date();
+      }
+      selectedDate.setHours(selectedTime.getHours());
+      selectedDate.setMinutes(selectedTime.getMinutes());
+      const time = Math.floor(selectedDate.getTime() / 1000);
+      searchQueryArray.push(`time=${time}`);
     }
 
     if (Object.keys(filters.locations).length > 0) {
@@ -158,10 +183,21 @@ class RoomsContainer extends Component {
     }
   }
 
+  handleQRClickOpen = id => () => {
+    this.setState({ qrDialogOpen: true, qrCodeValue: id });
+  };
+
+  onQRClickClose = () => {
+    this.setState({ qrDialogOpen: false, qrCodeValue: '' });
+  };
+
 
   render() {
     const { classes } = this.props;
-    const { search, filters, filtersDisabled, rooms, noRooms, loading, type } = this.state;
+    const {
+      search, filters, filtersDisabled, rooms, noRooms, loading,
+      type, selectedDate, selectedTime, qrDialogOpen, qrCodeValue,
+    } = this.state;
 
     return (
       <div className={classes.root}>
@@ -170,6 +206,7 @@ class RoomsContainer extends Component {
           search={search}
           onSearchChange={this.onSearchChange}
         />
+
         <RoomFilters
           filters={filters}
           filtersDisabled={filtersDisabled}
@@ -178,13 +215,23 @@ class RoomsContainer extends Component {
           handleDateChange={this.handleDateChange}
           handleTimeChange={this.handleTimeChange}
           dateNow={this.dateNow}
+          selectedDate={selectedDate}
+          selectedTime={selectedTime}
           clearFilters={this.clearFilters}
+          onSearch={this.onSearch}
           type={type}
            />
         <RoomList
           rooms={rooms}
           loading={loading}
-          noRooms={noRooms} />
+          noRooms={noRooms}
+          onQRClickOpen={this.handleQRClickOpen} />
+
+        <QrDialogSlide
+          open={qrDialogOpen}
+          value={qrCodeValue}
+          handleQRClickClose={this.onQRClickClose}
+         />
       </div>
     );
   }

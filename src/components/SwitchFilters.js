@@ -8,13 +8,12 @@ import {
 } from 'material-ui/Form';
 import Switch from 'material-ui/Switch';
 
-const SwitchFilters = ({ text, filters, filtersDisabled = filters, handleChange}) => {
+const SwitchFilters = ({ text, filters, filtersDisabled = filters, handleChange }) => {
   return (
     <FormControl component="fieldset">
       <FormLabel component="legend">{text}</FormLabel>
       <FormGroup>
-        {Object.keys(filters).map(filter => {
-        return (
+        {Object.keys(filters).map(filter => (
           <FormControlLabel
             key={filter}
             control={
@@ -27,13 +26,11 @@ const SwitchFilters = ({ text, filters, filtersDisabled = filters, handleChange}
             }
             label={filter}
           />
-          )
-        })}
+        ))}
       </FormGroup>
       <FormHelperText></FormHelperText>
     </FormControl>
-  )
-}
+  );
+};
 
 export default SwitchFilters;
-  
