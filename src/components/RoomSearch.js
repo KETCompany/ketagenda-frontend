@@ -35,6 +35,4 @@ const RoomSearch = props => (
   </Paper>
 );
 
-
-
 export default withStyles(styles)(RoomSearch);

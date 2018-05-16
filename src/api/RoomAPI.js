@@ -21,3 +21,13 @@ export const filters = async query => (
       };
     })
 );
+
+export const post = async postData => (
+  console.log(postData)
+  // fetch(`http://localhost:8080/api/rooms/reservation`, {
+  //   method: 'POST',
+  //   body: JSON.stringify({ Data: JSON.parse(postData) })
+  // }).then(res => res.json())
+  // .then(data => console.log(data))
+  // .catch(err => console.log(err))
+);

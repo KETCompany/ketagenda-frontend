@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import RoomSearch from '../components/RoomSearch';
 import RoomFilters from '../components/RoomFilters';
-import RoomQueryBuilder from '../utils/RoomQueryBuilder';
+
 import RoomList from '../components/RoomList';
 
 import * as RoomAPI from '../api/RoomAPI';

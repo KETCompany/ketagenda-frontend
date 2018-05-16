@@ -121,7 +121,7 @@ class RoomFilters extends Component {
           </ExpansionPanelActions>
         </ExpansionPanel>
 
-        <ExpansionPanel expanded={expanded.indexOf('panel2') >= 0} onChange={this.handleExpansionChange('panel2')} onChange={this.handleExpansionChange('panel2')} className={classes.paperNoMargin}>
+        <ExpansionPanel expanded={expanded.indexOf('panel2') >= 0} onChange={this.handleExpansionChange('panel2')} className={classes.paperNoMargin}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.column}>
               <Typography className={classes.heading}></Typography>
