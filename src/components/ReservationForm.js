@@ -6,7 +6,8 @@ import { withStyles } from 'material-ui/styles';
 import List, { ListItem, ListItemText } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import Divider from 'material-ui/Divider';
-import { DatePicker, TimePicker } from 'material-ui-pickers';
+import { DatePicker, TimePicker, DateTimePicker } from 'material-ui-pickers';
+import TextField from 'material-ui/TextField';
 
 import EventBusyIcon from 'material-ui-icons/EventBusy';
 import EventAvailableIcon from 'material-ui-icons/EventAvailable';
@@ -27,16 +28,22 @@ import Button from 'material-ui/Button';
 import Toolbar from 'material-ui/Toolbar';
 import Input from 'material-ui/Input';
 
+const moment = require('moment');
+moment.locale('nl');
+
 const styles = theme => ({
   root: {
     textAlign: 'center',
     paddingTop: theme.spacing.unit * 15,
   },
-  search: {
-    width: '100%',
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200,
   },
   column: {
     flexBasis: '33.33%',
+    textAlign: 'center',
   },
   paper: {
     paddingTop: 16,
@@ -53,27 +60,6 @@ const styles = theme => ({
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
-  icon: {
-    verticalAlign: 'bottom',
-    height: 20,
-    width: 20,
-  },
-  helper: {
-    borderLeft: `2px solid ${theme.palette.divider}`,
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
-  },
-  link: {
-    color: theme.palette.primary.main,
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-  },
-  expansionPanelRoot: {
-    flexGrow: 1,
-    marginTop: theme.spacing.unit * 3,
-  },
-  expandeds: false,
 });
 
 class ReservationForm extends React.Component {
@@ -81,53 +67,52 @@ class ReservationForm extends React.Component {
     super();
 
     this.state = {
-      group: String,
-      name: String,
-      tutor: String,
-      start: Date,
-      startDate: Date,
-      startTime: '',
-      end: Date,
-      endDate: Date,
-      endTime: '',
+      roomId: '5add925ac6ab909351e04d69',
+      booking: {
+        name: '',
+        group: '',
+        tutor: '',
+        start: moment(),
+        end: moment(),
+      },
     };
-    
-    this.handleChange = this.handleChange.bind(this);
+
+    // this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange = (event) => {
-    this.setState({value: event.target.value});
+  validateDates = () => {
+    return true;
   }
 
-  handleNameChange = (Name) => {
-    this.setState({ name: Name });
+  // handleChange = (event) => {
+  //   this.setState({ value: event.target.value });
+  // }
+
+  handleNameChange = (event) => {
+    this.setState({ booking: { name: event.target.value } });
   }
 
   handleStartDateChange = (date) => {
-    this.setState({ startDate: date });
-  }
-  handleStartTimeChange = (time) => {
-    this.setState({ startTime: time });
+    this.setState({ booking: { start: moment(date) } });
   }
 
   handleEndDateChange = (date) => {
-    this.setState({ endDate: date });
-  }
-  handleEndTimeChange = (time) => {
-    this.setState({ endTime: time });
+    this.setState({ booking: { end: moment(date) } });
   }
 
-  DateTimeCombine = (date, time) => new Date(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' ' + time.getHours() + ':' + time.getMinutes() + ':00')
+  // DateTimeCombine = (date, time) => date.set({
+  //   'hour': time.get('hour'),
+  //   'minute': time.get('minute'),
+  //   'second': time.get('second'),
+  // });
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log(this.DateTimeCombine(this.state.startDate, this.state.startTime));
-    this.setState({ 
-      start: this.DateTimeCombine(this.state.startDate, this.state.startTime),
-      end: this.DateTimeCombine(this.state.endDate, this.state.endTime),
-    });
-    RoomAPI.post(this.state);
+    console.log(this.state);
+    if (this.validateDates()) {
+      RoomAPI.post(this.state);
+    }
   }
 
   // onSubmitReservation = async (e) => {
@@ -175,14 +160,10 @@ class ReservationForm extends React.Component {
   render() {
     const { props } = this;
     const {
-      group,
       name,
-      tutor,
-      startDate,
-      startTime,
-      endDate,
-      endTime,
-    } = this.state;
+      start,
+      end,
+    } = this.state.booking;
 
     return (
       <div className={props.classes.root}>
@@ -195,69 +176,47 @@ class ReservationForm extends React.Component {
         
         <Paper className={props.classes.paper} elevation={4}>
           <form onSubmit={props.onSubmitSearch}>
-
+          <Toolbar>
             <div className={props.classes.column}>
-              <Input
-                defaultValue=""
-                placeholder="Reservation name"
-                className={props.classes.search}
-                // value={name}
+              <TextField
+                id="search"
+                label="Reservation name"
+                className={props.classes.textField}
+                margin="normal"
                 onChange={this.handleNameChange}
-              />
-            </div>
-            <Toolbar>
-            <div className={props.classes.column}>
-              <DatePicker
-                keyboard
-                format="DD/MM/YYYY"
-                mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-                placeholder="11/11/2018"
-                max={endDate}
-                value={startDate}
-                onChange={this.handleStartDateChange}
-                animateYearScrolling={false}
-                invalidDateMessage={'Select a start date'}
-              />
-            </div>
-            <div className={props.classes.column}>
-              <TimePicker
-                keyboard
-                mask={[/\d/, /\d/, ':', /\d/, /\d/]}
-                ampm={false}
-                max={endTime}
-                value={startTime}
-                onChange={this.handleStartTimeChange}
-                placeholder="13:37"
-                invalidDateMessage={'Select a time'}
               />
             </div>
             </Toolbar>
             <Toolbar>
             <div className={props.classes.column}>
-              <DatePicker
+              <DateTimePicker
                 keyboard
-                format="DD/MM/YYYY"
-                min={startDate}
-                mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-                placeholder="11/11/2018"
-                value={endDate}
-                onChange={this.handleEndDateChange}
-                animateYearScrolling={false}
-                invalidDateMessage={'Select a start date'}
-              />
-            </div>
-            <div className={props.classes.column}>
-              <TimePicker
-                keyboard
-                mask={[/\d/, /\d/, ':', /\d/, /\d/]}
                 ampm={false}
-                min={startTime}
-                value={endTime} 
-                onChange={this.handleEndTimeChange}
-                placeholder="13:37"
-                invalidDateMessage={'Select a time'}
+                disablePast={true}
+                showTabs={false}
+                value={start}
+                format="DD-MM-YYYY HH:mm"
+                animateYearScrolling={false}
+                mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/]}
+                onChange={this.handleStartDateChange}
               />
             </div>
+            </Toolbar>
+            <Toolbar>
+            <div className={props.classes.column}>
+              <DateTimePicker
+                  keyboard
+                  openTo="hour"
+                  ampm={false}
+                  disablePast={true}
+                  value={end}
+                  minDate={start}
+                  format="DD-MM-YYYY HH:mm"
+                  animateYearScrolling={false}
+                  mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/]}
+                  onChange={this.handleEndDateChange}
+                />
+              </div>
             </Toolbar>
             <Button size="small" onClick={this.handleSubmit} color="primary">
               Submit

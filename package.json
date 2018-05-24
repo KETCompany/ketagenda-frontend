@@ -10,6 +10,8 @@
     "material-ui": "next",
     "material-ui-icons": "^1.0.0-beta.36",
     "material-ui-pickers": "^1.0.0-rc.4",
+    "moment": "^2.22.1",
+    "moment-duration-format": "^2.2.2",
     "prop-types": "latest",
     "qrcode.react": "^0.8.0",
     "react": "latest",
