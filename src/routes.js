@@ -1,6 +1,5 @@
 import React from 'react';
 import { Redirect, Link, Route, Switch, BrowserRouter } from 'react-router-dom';
-import Layout from './components/Layout';
 import RoomSelection from './components/RoomSelection';
 import Reservation from './components/ReservationForm';
 

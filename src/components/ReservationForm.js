@@ -20,8 +20,6 @@ import * as RoomAPI from '../api/RoomAPI';
 import { CircularProgress } from 'material-ui/Progress';
 import purple from 'material-ui/colors/purple';
 
-import DateTimeCombiner from '../utils/dateTimeCombine';
-
 import RoomsContainer from '../containers/RoomsContainer';
 
 import Button from 'material-ui/Button';
