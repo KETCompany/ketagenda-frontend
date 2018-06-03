@@ -1,15 +1,21 @@
 import React from 'react';
-import { Redirect, Link, Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
 // import RoomSelection from './components/RoomDetail';
 import Reservation from './components/ReservationForm';
 import RoomsContainer from './containers/RoomsContainer';
 
+import indexRouters from './routes/index';
+
 const Routes = () => (
-  <BrowserRouter onUpdate={() => console.log("test")}>
+  <BrowserRouter>
     <Switch>
-        <Route exact path="/rooms" component={RoomsContainer} />
-        {/* <Route exact path="/rooms/:id" component={RoomDetail} /> */}
-        <Route path="/reservation" component={Reservation} />
+      {indexRouters.map((prop, key) =>
+        <Route path={prop.path} component={prop.component} key={key} />)}
+
+        
+        {/* <Route exact path="/rooms" component={RoomsContainer} /> */}
+        {/* <Route exact path="/rooms/:id" component={RoomDetailContainer} /> */}
+        {/* <Route path="/reservation" component={Reservation} /> */}
     </Switch>
   </BrowserRouter>
 );
