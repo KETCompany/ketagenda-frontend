@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
 
 import _ from 'lodash';
 
@@ -11,8 +12,12 @@ import RoomList from '../components/RoomList';
 import * as RoomAPI from '../api/RoomAPI';
 import QrDialogSlide from '../components/QrDialogSlide';
 
-const styles = theme => ({
 
+const styles = theme => ({
+  root: {
+    textAlign: 'center',
+    paddingTop: theme.spacing.unit * 15,
+  },
 });
 
 class RoomsContainer extends Component {
@@ -41,6 +46,7 @@ class RoomsContainer extends Component {
     };
 
     this.getRoomFilters();
+    this.onSearch();
   }
 
   getRoomFilters = () => {
@@ -201,6 +207,15 @@ class RoomsContainer extends Component {
 
     return (
       <div className={classes.root}>
+
+        <Typography variant="display1" gutterBottom>
+          KET-Agenda
+        </Typography>
+        <Typography variant="subheading" gutterBottom>
+          Key for electronic technolgies in agenda's
+        </Typography>
+
+
         <RoomSearch
           onSubmitSearch={this.onSubmitSearch}
           search={search}

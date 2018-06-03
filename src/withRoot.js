@@ -13,8 +13,6 @@ import CssBaseline from 'material-ui/CssBaseline';
 import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
 import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsProvider';
 
-
-
 // A theme with custom primary and secondary color.
 // It's optional.
 const theme = createMuiTheme({

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Routes from '../routes';
+import withRoot from '../withRoot';
 
 class App extends Component {
   render = () => (
@@ -7,4 +8,4 @@ class App extends Component {
   )
 }
 
-export default App;
+export default withRoot(App);
