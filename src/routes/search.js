@@ -7,6 +7,7 @@
 // import NotificationsPage from 'views/Notifications/Notifications.jsx';
 
 import RoomsContainer from '../containers/RoomsContainer'
+import ReservationContainer from '../containers/ReservationContainer'
 
 import {
   Dashboard,
@@ -22,16 +23,16 @@ const dashboardRoutes = [
   {
     path: '/search',
     sidebarName: 'Search',
-    navbarName: 'Material Dashboard',
+    navbarName: 'Search',
     icon: Dashboard,
     component: RoomsContainer,
   },
   {
-    path: '/user',
-    sidebarName: 'User Profile',
-    navbarName: 'Profile',
+    path: '/reservations',
+    sidebarName: 'Reservations',
+    navbarName: 'Reservations',
     icon: Person,
-    component: RoomsContainer,
+    component: ReservationContainer,
   },
   {
     path: '/table',

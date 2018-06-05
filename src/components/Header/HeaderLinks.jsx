@@ -19,18 +19,19 @@ import headerLinksStyle from "../../assets/jss/material-dashboard-react/headerLi
 
 class HeaderLinks extends React.Component {
   state = {
-    open: false
+    notifications: false
   };
-  handleClick = () => {
-    this.setState({ open: !this.state.open });
+  handleClick = (evt) => {
+    const { name, value } = evt.currentTarget;
+    this.setState({ [name]: !value });
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ notifications: false });
   };
   render() {
     const { classes } = this.props;
-    const { open } = this.state;
+    const { notifications } = this.state;
     return (
       <div>
         <CustomInput
@@ -66,10 +67,12 @@ class HeaderLinks extends React.Component {
             <IconButton
               color="inherit"
               aria-label="Notifications"
-              aria-owns={open ? "menu-list" : null}
+              aria-owns={notifications ? "menu-list" : null}
               aria-haspopup="true"
               onClick={this.handleClick}
               className={classes.buttonLink}
+              name="notifications"
+              value={this.state.notifications}
             >
               <Notifications className={classes.links} />
               <span className={classes.notifications}>5</span>
@@ -82,16 +85,16 @@ class HeaderLinks extends React.Component {
           </Target>
           <Popper
             placement="bottom-start"
-            eventsEnabled={open}
+            eventsEnabled={notifications}
             className={
-              classNames({ [classes.popperClose]: !open }) +
+              classNames({ [classes.popperClose]: !notifications }) +
               " " +
               classes.pooperResponsive
             }
           >
             <ClickAwayListener onClickAway={this.handleClose}>
               <Grow
-                in={open}
+                in={notifications}
                 id="menu-list"
                 style={{ transformOrigin: "0 0 0" }}
               >
@@ -138,7 +141,7 @@ class HeaderLinks extends React.Component {
           aria-label="Person"
           className={classes.buttonLink}
         >
-          <Person className={classes.links} />
+          <Person className={classes.links} onClick={this.handleClick} />
           <Hidden mdUp>
             <p className={classes.linkText}>Profile</p>
           </Hidden>
