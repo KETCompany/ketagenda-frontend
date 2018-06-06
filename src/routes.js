@@ -11,8 +11,6 @@ const Routes = () => (
     <Switch>
       {indexRouters.map((prop, key) =>
         <Route path={prop.path} component={prop.component} key={key} />)}
-
-        
         {/* <Route exact path="/rooms" component={RoomsContainer} /> */}
         {/* <Route exact path="/rooms/:id" component={RoomDetailContainer} /> */}
         {/* <Route path="/reservation" component={Reservation} /> */}

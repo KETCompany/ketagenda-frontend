@@ -23,7 +23,7 @@ export const filters = async query => (
 );
 
 export const post = async postData => (
-  fetch(`http://localhost:8080/api/rooms/reservation`, {
+  fetch('http://localhost:8080/api/rooms/reservation', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',

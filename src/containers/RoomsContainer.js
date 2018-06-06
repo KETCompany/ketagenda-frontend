@@ -221,7 +221,6 @@ class RoomsContainer extends Component {
           search={search}
           onSearchChange={this.onSearchChange}
         />
-
         <RoomFilters
           filters={filters}
           filtersDisabled={filtersDisabled}
@@ -241,7 +240,6 @@ class RoomsContainer extends Component {
           loading={loading}
           noRooms={noRooms}
           onQRClickOpen={this.handleQRClickOpen} />
-
         <QrDialogSlide
           open={qrDialogOpen}
           value={qrCodeValue}
