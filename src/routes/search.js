@@ -1,13 +1,5 @@
-// import DashboardPage from 'views/Dashboard/Dashboard.jsx';
-// import UserProfile from 'views/UserProfile/UserProfile.jsx';
-// import TableList from 'views/TableList/TableList.jsx';
-// import Typography from 'views/Typography/Typography.jsx';
-// import Icons from 'views/Icons/Icons.jsx';
-// import Maps from 'views/Maps/Maps.jsx';
-// import NotificationsPage from 'views/Notifications/Notifications.jsx';
-
-import RoomsContainer from '../containers/RoomsContainer'
-import ReservationContainer from '../containers/ReservationContainer'
+import RoomsContainer from '../containers/RoomsContainer';
+import RoomDetailContainer from '../containers/RoomDetailContainer';
 
 import {
   Dashboard,
@@ -23,53 +15,44 @@ const dashboardRoutes = [
   {
     path: '/search',
     sidebarName: 'Search',
-    navbarName: 'Search',
+    navbarName: 'Material Dashboard',
     icon: Dashboard,
     component: RoomsContainer,
   },
   {
-    path: '/reservations',
-    sidebarName: 'Reservations',
-    navbarName: 'Reservations',
+    path: '/rooms/:id',
+    sidebarName: 'User Profile',
+    navbarName: 'Profile',
     icon: Person,
-    component: ReservationContainer,
+    component: RoomDetailContainer,
   },
   {
     path: '/table',
-    sidebarName: 'Table List',
-    navbarName: 'Table List',
+    sidebarName: 'Group List',
+    navbarName: 'Group List',
     icon: ContentPaste,
     component: RoomsContainer,
   },
   {
     path: '/typography',
-    sidebarName: 'Typography',
-    navbarName: 'Typography',
+    sidebarName: 'Event list',
+    navbarName: 'Event list',
     icon: LibraryBooks,
     component: RoomsContainer,
   },
   {
-    path: '/icons',
-    sidebarName: 'Icons',
-    navbarName: 'Icons',
-    icon: BubbleChart,
-    component: RoomsContainer,
-  },
-  {
-    path: '/maps',
-    sidebarName: 'Maps',
-    navbarName: 'Map',
-    icon: LocationOn,
-    component: RoomsContainer,
-  },
-  {
-    path: '/notifications',
-    sidebarName: 'Notifications',
-    navbarName: 'Notifications',
+    path: '/messages',
+    sidebarName: 'Messages',
+    navbarName: 'Messages',
     icon: Notifications,
     component: RoomsContainer,
   },
-  { redirect: true, path: '/', to: '/search', navbarName: 'Redirect' }
+  {
+    redirect: true,
+    path: '/',
+    to: '/search',
+    navbarName: 'Redirect',
+  },
 ];
 
 export default dashboardRoutes;

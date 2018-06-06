@@ -112,7 +112,7 @@ const cardActions = {
 };
 
 const cardHeader = {
-  margin: "-20px 15px 0",
+  // margin: "-20px 15px 0",
   borderRadius: "3px",
   padding: "15px"
 };

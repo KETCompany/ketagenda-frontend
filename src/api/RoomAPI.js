@@ -5,8 +5,8 @@ export const list = async query => (
     .then(resp => resp.json())
 );
 
-export const get = async id => (
-  fetch(`http://localhost:8080/api/rooms/${id}`)
+export const get = async (id, populate) => (
+  fetch(`http://localhost:8080/api/rooms/${id}${populate ? '?populate' : ''}`)
     .then(resp => resp.json())
 );
 
