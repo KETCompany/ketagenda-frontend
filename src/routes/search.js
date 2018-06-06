@@ -9,7 +9,8 @@ import {
   LibraryBooks,
   BubbleChart,
   LocationOn,
-  Notifications
+  Notifications,
+  PermContactCalendar
 } from '@material-ui/icons';
 
 const dashboardRoutes = [
@@ -28,10 +29,10 @@ const dashboardRoutes = [
   //   component: RoomDetailContainer,
   // },
   {
-    path: '/table',
-    sidebarName: 'Group List',
-    navbarName: 'Group List',
-    icon: ContentPaste,
+    path: '/reservation',
+    sidebarName: 'Reservation',
+    navbarName: 'Reservation',
+    icon: PermContactCalendar,
     component: ReservationContainer,
   },
   {
