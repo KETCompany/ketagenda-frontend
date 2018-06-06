@@ -103,6 +103,7 @@ class RoomsContainer extends Component {
     const { selectedTime } = this.state;
     this.setState({ selectedDate: date, selectedTime: selectedTime === '' ? new Date() : selectedTime });
   }
+
   handleTimeChange = (time) => {
     const { selectedDate } = this.state;
     this.setState({ selectedTime: time, selectedDate: selectedDate === '' ? time : selectedDate });

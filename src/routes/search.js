@@ -1,5 +1,6 @@
 import RoomsContainer from '../containers/RoomsContainer';
 import RoomDetailContainer from '../containers/RoomDetailContainer';
+import ReservationContainer from '../containers/ReservationContainer';
 
 import {
   Dashboard,
@@ -19,19 +20,19 @@ const dashboardRoutes = [
     icon: Dashboard,
     component: RoomsContainer,
   },
-  {
-    path: '/rooms/:id',
-    sidebarName: 'User Profile',
-    navbarName: 'Profile',
-    icon: Person,
-    component: RoomDetailContainer,
-  },
+  // {
+  //   path: '/rooms/:id',
+  //   sidebarName: 'User Profile',
+  //   navbarName: 'Profile',
+  //   icon: Person,
+  //   component: RoomDetailContainer,
+  // },
   {
     path: '/table',
     sidebarName: 'Group List',
     navbarName: 'Group List',
     icon: ContentPaste,
-    component: RoomsContainer,
+    component: ReservationContainer,
   },
   {
     path: '/typography',
