@@ -21,13 +21,13 @@ const dashboardRoutes = [
     icon: Dashboard,
     component: RoomsContainer,
   },
-  // {
-  //   path: '/rooms/:id',
-  //   sidebarName: 'User Profile',
-  //   navbarName: 'Profile',
-  //   icon: Person,
-  //   component: RoomDetailContainer,
-  // },
+  {
+    path: '/rooms/5afc2c4f0a876e4deb9656c6/',
+    sidebarName: 'User Profile',
+    navbarName: 'Profile',
+    icon: Person,
+    component: RoomDetailContainer,
+  },
   {
     path: '/reservation',
     sidebarName: 'Reservation',

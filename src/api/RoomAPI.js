@@ -3,11 +3,13 @@ import arrToObj from '../utils/arrMapper';
 export const list = async query => (
   fetch(`http://localhost:8080/api/rooms${query}`)
     .then(resp => resp.json())
+    .catch(err => console.error(err))
 );
 
 export const get = async (id, populate) => (
   fetch(`http://localhost:8080/api/rooms/${id}${populate ? '?populate' : ''}`)
     .then(resp => resp.json())
+    .catch(err => console.error(err))
 );
 
 export const filters = async query => (

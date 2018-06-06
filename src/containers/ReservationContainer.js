@@ -27,6 +27,7 @@ class ReservationContainer extends Component {
   constructor() {
     super();
     this.state = {
+      agendaItems: [],
       activeStep: 0,
       roomId: '5afc2c4f0a876e4deb9656c6',
       booking: {
@@ -72,6 +73,16 @@ class ReservationContainer extends Component {
     this.setState({ booking: { ...this.state.booking, end: moment(this.state.booking.end).minute(time.getMinutes()).hour(time.getHours()) } });
   }
 
+  handleSelectEvent = (slotInfo) => {
+    alert(
+      `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
+        `\nend: ${slotInfo.end.toLocaleString()}` +
+        `\naction: ${slotInfo.action}`
+    )
+  }
+
+  handleSlotSelect = event => alert(event.title)
+
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState(
@@ -98,7 +109,11 @@ class ReservationContainer extends Component {
           booking={this.state.booking}
           officeHours={officeHours}
         />
-        <ReservationsCalendar />
+        <ReservationsCalendar
+          agendaItems={this.state.agendaItems}
+          handleSlotSelect={this.handleSlotSelect}
+          handleSelectEvent={this.handleSelectEvent}
+        />
       </div>
     );
   }

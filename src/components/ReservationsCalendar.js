@@ -15,26 +15,25 @@ const styles = theme => ({});
 
 class ReservationsCalendar extends React.Component {
   render = () => {
-    // const { agendaItems } = this.state;
+    const {
+      agendaItems,
+      handleSlotSelect,
+      handleSelectEvent
+    } = this.props;
     BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
     return (
       <div>
           <BigCalendar
             selectable={true}
-            events={[]}
+            events={agendaItems}
             step={12}
             timeslots={10}
             defaultView="week"
             defaultDate={new Date()}
             toolbar={true}
-            onSelectEvent={event => alert(event.title)}
-            onSelectSlot={slotInfo =>
-              alert(
-                `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
-                  `\nend: ${slotInfo.end.toLocaleString()}` +
-                  `\naction: ${slotInfo.action}`
-              )}
+            onSelectEvent={handleSlotSelect}
+            onSelectSlot={handleSelectEvent}
           />
       </div>
     );
