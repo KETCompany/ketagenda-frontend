@@ -5,6 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import Slide from 'material-ui/transitions/Slide';
 
 import { withStyles } from 'material-ui/styles';
+import { NavLink } from "react-router-dom";
 
 import Avatar from 'material-ui/Avatar';
 import Divider from 'material-ui/Divider';
@@ -18,7 +19,6 @@ import PermDeviceInformationIcon from 'material-ui-icons/PermDeviceInformation';
 
 import { format } from 'date-fns';
 
-
 const styles = theme => ({
   paper: {
     paddingTop: 16,
@@ -30,6 +30,11 @@ const styles = theme => ({
   center: {
     textAlign: 'left',
   },
+  item: {
+    position: 'relative',
+    display: 'block',
+    textDecoration: 'none',
+  },
 });
 
 const Transition = props => (<Slide direction="up" {...props} />);
@@ -37,6 +42,7 @@ const Transition = props => (<Slide direction="up" {...props} />);
 
 const RoomList = (props) => {
   const { rooms, noRooms, classes, onQRClickOpen } = props;
+  
   if (rooms.length > 0) {
     return (
       <div>
@@ -44,31 +50,38 @@ const RoomList = (props) => {
           <List>
             {rooms.map((room, i) => (
                 <div key={room._id}>
-                  <ListItem>
-                    <Avatar>
-                      {i % 2 === 0 ? <EventBusyIcon color="primary" /> : <EventAvailableIcon color="secondary" />}
-                    </Avatar>
-                    <ListItemText primary={room.name} secondary={room.type} />
-                    {
-                      room.booked && room.booked.length === 1 ?
-                      (<ListItemText
-                        className={classes.center}
-                        secondary={`${format(room.booked[0].start, 'HH:mm')} - ${format(room.booked[0].end, 'HH:mm')}`}
-                        primary={`Booked by ${(room.booked[0].tutor)}`} />) :
-                        (<div></div>)
-                    }
-                    
-                    <ListItemSecondaryAction>
-                      <IconButton onClick={onQRClickOpen(room._id)} aria-label="Delete">
-                        <PermDeviceInformationIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                    {/* <Avatar>
-                      <ArrowForwardIcon color={i % 2 === 0 ? 'primary' : 'secondary'} />
-                    </Avatar> */}
-                  </ListItem>
+                  <NavLink
+                    to={`rooms/${room._id}`}
+                    className={classes.item}
+                    activeClassName="active"
+                    key={i}
+                  >
+                    <ListItem button>
+                      <Avatar>
+                        {i % 2 === 0 ? <EventBusyIcon color="primary" /> : <EventAvailableIcon color="secondary" />}
+                      </Avatar>
+                      <ListItemText primary={room.name} secondary={room.type} />
+                      {
+                        room.booked && room.booked.length === 1 ?
+                        (<ListItemText
+                          className={classes.center}
+                          secondary={`${format(room.booked[0].start, 'HH:mm')} - ${format(room.booked[0].end, 'HH:mm')}`}
+                          primary={`Booked by ${(room.booked[0].tutor)}`} />) :
+                          (<div></div>)
+                      }
+                      
+                      <ListItemSecondaryAction>
+                        <IconButton onClick={onQRClickOpen(room._id)} aria-label="Delete">
+                          <PermDeviceInformationIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                      {/* <Avatar>
+                        <ArrowForwardIcon color={i % 2 === 0 ? 'primary' : 'secondary'} />
+                      </Avatar> */}
+                    </ListItem>
                   <Divider inset component="li" />
-                </div>
+                </NavLink>
+              </div>
               ))}
           </List>
         </Paper>
