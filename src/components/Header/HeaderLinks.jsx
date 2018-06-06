@@ -62,17 +62,17 @@ class HeaderLinks extends React.Component {
             <p className={classes.linkText}>Dashboard</p>
           </Hidden>
         </IconButton>
-        <Manager style={{ display: "inline-block" }}>
+        <Manager style={{ display: 'inline-block' }}>
           <Target>
             <IconButton
               color="inherit"
               aria-label="Notifications"
-              aria-owns={notifications ? "menu-list" : null}
+              aria-owns={notifications ? 'menu-list' : null}
               aria-haspopup="true"
               onClick={this.handleClick}
               className={classes.buttonLink}
               name="notifications"
-              value={this.state.notifications}
+              value={notifications}
             >
               <Notifications className={classes.links} />
               <span className={classes.notifications}>5</span>
@@ -88,7 +88,7 @@ class HeaderLinks extends React.Component {
             eventsEnabled={notifications}
             className={
               classNames({ [classes.popperClose]: !notifications }) +
-              " " +
+              ' ' +
               classes.pooperResponsive
             }
           >
@@ -96,7 +96,7 @@ class HeaderLinks extends React.Component {
               <Grow
                 in={notifications}
                 id="menu-list"
-                style={{ transformOrigin: "0 0 0" }}
+                style={{ transformOrigin: '0 0 0' }}
               >
                 <Paper className={classes.dropdown}>
                   <MenuList role="menu">

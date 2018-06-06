@@ -34,19 +34,18 @@ class ReservationForm extends React.Component {
   render() {
     const {
       handleNameChange,
-      handleStartDateChange,
-      handleEndDateChange,
+      handleDateChange,
+      handleStartTimeChange,
+      handleEndTimeChange,
       onHandleNext,
       onSubmit,
       classes,
-      booking
+      booking: {
+        name,
+        start,
+        end
+      }
     } = this.props;
-    
-    const {
-      name,
-      start,
-      end,
-    } = booking;
 
     return (
       <div className={classes.root}>        
@@ -65,34 +64,37 @@ class ReservationForm extends React.Component {
             </Toolbar>
             <Toolbar>
             <div className={classes.column}>
-              <DateTimePicker
-                ampm={false}
+              <DatePicker
+                keyboard
                 disablePast={true}
-                showTabs={false}
                 value={start}
-                format="DD-MM-YYYY HH:mm"
-                animateYearScrolling={false}
-                openToYearSelection={false}
-                disableYearSelection={true}
-                mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/]}
-                onChange={handleStartDateChange}
+                format="DD-MM-YYYY"
+                mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+                onChange={handleDateChange}
               />
             </div>
             </Toolbar>
             <Toolbar>
             <div className={classes.column}>
-              <DateTimePicker
-                  openTo="hour"
-                  ampm={false}
+              <TimePicker
+                keyboard
+                ampm={false}
+                autoOk={true}
+                disablePast={true}
+                value={start}
+                format="HH:mm"
+                mask={[/\d/, /\d/, ':', /\d/, /\d/]}
+                onChange={handleStartTimeChange}
+                />
+                <TimePicker
+                  keyboard
+                  ampm={true}
+                  autoOk={true}
                   disablePast={true}
                   value={end}
-                  minDate={start}
-                  format="DD-MM-YYYY HH:mm"
-                  animateYearScrolling={false}
-                  openToYearSelection={false}
-                  disableYearSelection={true}
-                  mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, ' ', /\d/, /\d/, ':', /\d/, /\d/]}
-                  onChange={handleEndDateChange}
+                  format="HH:mm"
+                  mask={[/\d/, /\d/, ':', /\d/, /\d/]}
+                  onChange={handleEndTimeChange}
                 />
               </div>
             </Toolbar>

@@ -39,6 +39,8 @@ class ReservationContainer extends Component {
     return true;
   }
 
+  checkTimeDiff = (start, end) => moment(start).isBefore(end);
+
   // handleChange = (event) => {
   //   this.setState({ value: event.target.value });
   // }
@@ -47,18 +49,34 @@ class ReservationContainer extends Component {
     this.setState({ booking: { ...this.state.booking, name: event.target.value } });
   }
 
-  handleStartDateChange = (date) => {
-    this.setState({ booking: { ...this.state.booking, start: moment(date) } });
+  handleDateChange = (date) => {
+    this.setState({
+      booking: {
+        ...this.state.booking,
+        start: moment(this.state.booking.start).date(date.getDate()).month(date.getMonth()),
+        end: moment(this.state.booking.end).date(date.getDate()).month(date.getMonth()),
+      },
+    });
   }
 
-  handleEndDateChange = (date) => {
-    this.setState({ booking: { ...this.state.booking, end: moment(date) } });
+  handleStartTimeChange = (time) => {
+    if (!this.checkTimeDiff(time, this.state.end)) {
+      console.log(typeof time);
+    }
+    this.setState({ booking: { ...this.state.booking, start: moment(this.state.booking.start).minute(time.getMinutes()).hour(time.getHours()) } });
+  }
+
+  handleEndTimeChange = (time) => {
+    if (!this.checkTimeDiff(this.state.start, time)) {
+      console.log(time);
+    }
+    this.setState({ booking: { ...this.state.booking, end: moment(this.state.booking.end).minute(time.getMinutes()).hour(time.getHours()) } });
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState(
-      { booking: { ...this.state.booking, start: moment(this.state.start).toDate(), end: moment(this.state.end).toDate() } },
+      { booking: { ...this.state.booking, start: Date(this.state.start), end: Date(this.state.end) } },
       () => {
         if (this.validateDates()) {
           RoomAPI.post(this.state);
@@ -85,8 +103,9 @@ class ReservationContainer extends Component {
         <ReservationForm
           onSubmit={this.handleSubmit}
           handleNameChange={this.handleNameChange}
-          handleStartDateChange={this.handleStartDateChange}
-          handleEndDateChange={this.handleEndDateChange}
+          handleDateChange={this.handleDateChange}
+          handleStartTimeChange={this.handleStartTimeChange}
+          handleEndTimeChange={this.handleEndTimeChange}
           booking={this.state.booking}
         />
       </div>
