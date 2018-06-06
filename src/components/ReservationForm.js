@@ -40,6 +40,7 @@ class ReservationForm extends React.Component {
       onHandleNext,
       onSubmit,
       classes,
+      officeHours,
       booking: {
         name,
         start,
@@ -61,12 +62,11 @@ class ReservationForm extends React.Component {
                 onChange={handleNameChange}
               />
             </div>
-            </Toolbar>
-            <Toolbar>
             <div className={classes.column}>
               <DatePicker
                 keyboard
                 disablePast={true}
+                autoOk={true}
                 value={start}
                 format="DD-MM-YYYY"
                 mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
@@ -88,7 +88,7 @@ class ReservationForm extends React.Component {
                 />
                 <TimePicker
                   keyboard
-                  ampm={true}
+                  ampm={false}
                   autoOk={true}
                   disablePast={true}
                   value={end}

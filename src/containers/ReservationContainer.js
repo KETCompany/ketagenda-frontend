@@ -5,6 +5,7 @@ import Typography from 'material-ui/Typography';
 import _ from 'lodash';
 
 import ReservationForm from '../components/ReservationForm';
+import ReservationsCalendar from '../components/ReservationsCalendar';
 
 import * as RoomAPI from '../api/RoomAPI';
 
@@ -18,6 +19,9 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 15,
   },
 });
+
+
+const officeHours = [{from: '9:00', to: '12:00'}, {from: '13:00', to: '17:00'}]
 
 class ReservationContainer extends Component {
   constructor() {
@@ -35,15 +39,9 @@ class ReservationContainer extends Component {
     };
   }
 
-  validateDates = () => {
-    return true;
-  }
+  validateDate = () => true;
 
-  checkTimeDiff = (start, end) => moment(start).isBefore(end);
-
-  // handleChange = (event) => {
-  //   this.setState({ value: event.target.value });
-  // }
+  checkTimeDiff = (start, end) => moment(end).isAfter(start);
 
   handleNameChange = (event) => {
     this.setState({ booking: { ...this.state.booking, name: event.target.value } });
@@ -60,15 +58,16 @@ class ReservationContainer extends Component {
   }
 
   handleStartTimeChange = (time) => {
-    if (!this.checkTimeDiff(time, this.state.end)) {
-      console.log(typeof time);
+    if (this.checkTimeDiff(time, this.state.booking.end)) {
+      this.handleEndTimeChange(time);
     }
     this.setState({ booking: { ...this.state.booking, start: moment(this.state.booking.start).minute(time.getMinutes()).hour(time.getHours()) } });
   }
 
   handleEndTimeChange = (time) => {
-    if (!this.checkTimeDiff(this.state.start, time)) {
-      console.log(time);
+    if (this.checkTimeDiff(this.state.booking.start, time)) {
+      console.log();
+      this.handleStartTimeChange(time);
     }
     this.setState({ booking: { ...this.state.booking, end: moment(this.state.booking.end).minute(time.getMinutes()).hour(time.getHours()) } });
   }
@@ -77,11 +76,7 @@ class ReservationContainer extends Component {
     event.preventDefault();
     this.setState(
       { booking: { ...this.state.booking, start: Date(this.state.start), end: Date(this.state.end) } },
-      () => {
-        if (this.validateDates()) {
-          RoomAPI.post(this.state);
-        }
-      },
+      () => (this.validateDate() ? RoomAPI.post(this.state) : ''),
     );
   }
 
@@ -94,12 +89,6 @@ class ReservationContainer extends Component {
 
     return (
       <div className={classes.root}>
-        <Typography variant="display1" gutterBottom>
-          KET-Agenda
-        </Typography>
-        <Typography variant="subheading" gutterBottom>
-          Key for electronic technolgies in agenda's
-        </Typography>
         <ReservationForm
           onSubmit={this.handleSubmit}
           handleNameChange={this.handleNameChange}
@@ -107,7 +96,9 @@ class ReservationContainer extends Component {
           handleStartTimeChange={this.handleStartTimeChange}
           handleEndTimeChange={this.handleEndTimeChange}
           booking={this.state.booking}
+          officeHours={officeHours}
         />
+        <ReservationsCalendar />
       </div>
     );
   }
