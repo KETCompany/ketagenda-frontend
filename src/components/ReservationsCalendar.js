@@ -24,16 +24,16 @@ const formats = {
     localizer.format(time, 'H:mm', culture),
 
   selectRangeFormat: ({ start, end }, culture, localizer) =>
-    localizer.format(start, 'H:mm', culture) + ' - ' + localizer.format(end, 'H:mm',  culture),
+    `${localizer.format(start, 'H:mm', culture)} - ${localizer.format(end, 'H:mm', culture)}`,
 
-  agendaTimeFormat:  (time, culture, localizer) =>
+  agendaTimeFormat: (time, culture, localizer) =>
     localizer.format(time, 'H:mm', culture),
 
   agendaTimeRangeFormat: ({ start, end }, culture, localizer) =>
-    localizer.format(start, 'H:mm', culture) + ' - ' + localizer.format(end, 'H:mm',  culture),
+    `${localizer.format(start, 'H:mm', culture)} - ${localizer.format(end, 'H:mm', culture)}`,
 
   eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
-    localizer.format(start, 'H:mm', culture) + ' - ' + localizer.format(end, 'H:mm',  culture),
+    `${localizer.format(start, 'H:mm', culture)} - ${localizer.format(end, 'H:mm', culture)}`,
 };
 
 class ReservationsCalendar extends React.Component {
