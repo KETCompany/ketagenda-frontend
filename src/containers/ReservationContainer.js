@@ -16,7 +16,7 @@ moment.locale('nl');
 const styles = theme => ({
   root: {
     textAlign: 'center',
-    paddingTop: theme.spacing.unit * 15,
+    // paddingTop: theme.spacing.unit * 15,
   },
 });
 
@@ -28,15 +28,16 @@ class ReservationContainer extends Component {
     super();
     this.state = {
       agendaItems: [],
-      activeStep: 0,
-      roomId: '5afc2c4f0a876e4deb9656c6',
       booking: {
         name: '',
         group: '',
         tutor: '',
-        start: moment(),
-        end: moment(),
+        start: moment().toDate(),
+        end: moment().toDate(),
+        booking: true,
       },
+      activeStep: 0,
+      roomId: '5afc2c4f0a876e4deb9656c6',
     };
   }
 
@@ -44,6 +45,7 @@ class ReservationContainer extends Component {
 
   checkTimeDiff = (start, end) => moment(end).isAfter(start);
 
+  
   handleNameChange = (event) => {
     this.setState({ booking: { ...this.state.booking, name: event.target.value } });
   }
@@ -52,43 +54,48 @@ class ReservationContainer extends Component {
     this.setState({
       booking: {
         ...this.state.booking,
-        start: moment(this.state.booking.start).date(date.getDate()).month(date.getMonth()),
-        end: moment(this.state.booking.end).date(date.getDate()).month(date.getMonth()),
+        start: moment(this.state.booking.start).date(date.getDate()).month(date.getMonth()).toDate(),
+        end: moment(this.state.booking.end).date(date.getDate()).month(date.getMonth()).toDate(),
       },
     });
   }
 
   handleStartTimeChange = (time) => {
-    if (this.checkTimeDiff(time, this.state.booking.end)) {
-      this.handleEndTimeChange(time);
-    }
-    this.setState({ booking: { ...this.state.booking, start: moment(this.state.booking.start).minute(time.getMinutes()).hour(time.getHours()) } });
+    // if (this.checkTimeDiff(time, this.state.booking.end)) {
+    //   this.handleEndTimeChange(time);
+    // }
+    this.setState({ booking: { ...this.state.booking, start: moment(this.state.booking.start).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
   }
 
   handleEndTimeChange = (time) => {
-    if (this.checkTimeDiff(this.state.booking.start, time)) {
-      console.log();
-      this.handleStartTimeChange(time);
-    }
-    this.setState({ booking: { ...this.state.booking, end: moment(this.state.booking.end).minute(time.getMinutes()).hour(time.getHours()) } });
+    // if (this.checkTimeDiff(this.state.booking.start, time)) {
+    //   console.log();
+    //   this.handleStartTimeChange(time);
+    // }
+    this.setState({ booking: { ...this.state.booking, end: moment(this.state.booking.end).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
   }
 
   handleSelectEvent = (slotInfo) => {
-    alert(
-      `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
-        `\nend: ${slotInfo.end.toLocaleString()}` +
-        `\naction: ${slotInfo.action}`
-    )
+    this.handleDateChange(slotInfo.start);
+    this.handleStartTimeChange(slotInfo.start);
+    this.handleEndTimeChange(slotInfo.end);
+    this.setState({
+      agendaItems: [...this.state.agendaItems.filter(item => item.booking === false), this.state.booking],
+    });
+    // alert(
+    //   `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
+    //     `\nend: ${slotInfo.end.toLocaleString()}` +
+    //     `\naction: ${slotInfo.action}`
+    // )
   }
 
   handleSlotSelect = event => alert(event.title)
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.setState(
-      { booking: { ...this.state.booking, start: Date(this.state.start), end: Date(this.state.end) } },
-      () => (this.validateDate() ? RoomAPI.post(this.state) : ''),
-    );
+    return new Promise((resolve, reject) => {
+      this.validateDate();
+    }).then(() => RoomAPI.post(this.state)).catch(error => console.log);
   }
 
   render() {

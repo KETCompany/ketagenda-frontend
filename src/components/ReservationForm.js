@@ -24,8 +24,8 @@ const styles = theme => ({
   paper: {
     paddingTop: 16,
     paddingBottom: 16,
-    marginTop: theme.spacing.unit * 3,
-    width: 800,
+    // marginTop: theme.spacing.unit * 3,
+    // width: 1200,
     margin: '0 auto', 
   },
 });
@@ -73,8 +73,6 @@ class ReservationForm extends React.Component {
                 onChange={handleDateChange}
               />
             </div>
-            </Toolbar>
-            <Toolbar>
             <div className={classes.column}>
               <TimePicker
                 keyboard
