@@ -51,55 +51,53 @@ class ReservationForm extends React.Component {
     return (
       <div className={classes.root}>        
         <Paper className={classes.paper} elevation={4}>
-          <form onSubmit={onSubmit}>
           <Toolbar>
-            <div className={classes.column}>
-              <TextField
-                id="search"
-                label="Reservation name"
-                className={classes.textField}
-                margin="normal"
-                onChange={handleNameChange}
+          <div className={classes.column}>
+            <TextField
+              id="search"
+              label="Reservation name"
+              className={classes.textField}
+              margin="normal"
+              onChange={handleNameChange}
+            />
+          </div>
+          <div className={classes.column}>
+            <DatePicker
+              keyboard
+              disablePast={true}
+              autoOk={true}
+              value={start}
+              format="DD-MM-YYYY"
+              mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+              onChange={handleDateChange}
+            />
+          </div>
+          <div className={classes.column}>
+            <TimePicker
+              keyboard
+              ampm={false}
+              autoOk={true}
+              disablePast={true}
+              value={start}
+              format="HH:mm"
+              mask={[/\d/, /\d/, ':', /\d/, /\d/]}
+              onChange={handleStartTimeChange}
               />
-            </div>
-            <div className={classes.column}>
-              <DatePicker
-                keyboard
-                disablePast={true}
-                autoOk={true}
-                value={start}
-                format="DD-MM-YYYY"
-                mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-                onChange={handleDateChange}
-              />
-            </div>
-            <div className={classes.column}>
               <TimePicker
                 keyboard
                 ampm={false}
                 autoOk={true}
                 disablePast={true}
-                value={start}
+                value={end}
                 format="HH:mm"
                 mask={[/\d/, /\d/, ':', /\d/, /\d/]}
-                onChange={handleStartTimeChange}
-                />
-                <TimePicker
-                  keyboard
-                  ampm={false}
-                  autoOk={true}
-                  disablePast={true}
-                  value={end}
-                  format="HH:mm"
-                  mask={[/\d/, /\d/, ':', /\d/, /\d/]}
-                  onChange={handleEndTimeChange}
-                />
-              </div>
-            </Toolbar>
-            <Button size="small" onClick={onSubmit} color="primary">
-              Submit
-            </Button>
-          </form>
+                onChange={handleEndTimeChange}
+              />
+            </div>
+          </Toolbar>
+          <Button size="small" onClick={onSubmit} color="primary">
+            Submit
+          </Button>
         </Paper>
       </div>
     );

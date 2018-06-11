@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
-import withRoot from '../withRoot';
 
 import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+
 
 moment.locale('nl');
 
@@ -16,7 +16,7 @@ const styles = theme => ({
     paddingBottom: 16,
     marginTop: theme.spacing.unit * 3,
     margin: '0 auto',
-  }
+  },
 });
 
 const formats = {
@@ -42,18 +42,26 @@ class ReservationsCalendar extends React.Component {
       agendaItems,
       handleSlotSelect,
       handleSelectEvent,
-      classes
+      classes,
+      dayPropGetter,
+      slotPropGetter,
+      Event,
+      EventAgenda,
+      eventPropGetter,
     } = this.props;
 
     BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
 
     return (
-      <Paper className={classes.paper} elevation={4}>
+      <div className={classes.paper} elevation={4}>
         <BigCalendar
-          selectable={true}
+          selectable={'ignoreEvents'}
           events={agendaItems}
-          step={30}
+          step={10}
           formats={formats}
+          dayPropGetter={dayPropGetter}
+          slotPropGetter={slotPropGetter}
+          eventPropGetter={eventPropGetter}
           min={new Date('01/01/1970 8:00')}
           max={new Date('01/01/1970 22:00')}
           defaultView="week"
@@ -61,8 +69,14 @@ class ReservationsCalendar extends React.Component {
           toolbar={true}
           onSelectEvent={handleSlotSelect}
           onSelectSlot={handleSelectEvent}
-        />
-      </Paper>
+          components={{
+            event: Event,
+            agenda: {
+              event: EventAgenda,
+            },
+          }}
+          />
+      </div >
     );
   }
 }
@@ -70,5 +84,4 @@ ReservationsCalendar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withRoot(withStyles(styles)(ReservationsCalendar));
-  
+export default withStyles(styles)(ReservationsCalendar);

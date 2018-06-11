@@ -22,7 +22,7 @@ const dashboardRoutes = [
     component: RoomsContainer,
   },
   {
-    path: '/rooms/5afc2c4f0a876e4deb9656c6/',
+    path: '/rooms/:id/',
     sidebarName: 'User Profile',
     navbarName: 'Profile',
     icon: Person,
