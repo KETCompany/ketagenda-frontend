@@ -34,6 +34,7 @@ class ReservationForm extends React.Component {
   render() {
     const {
       handleNameChange,
+      handleDescChange,
       handleDateChange,
       handleStartTimeChange,
       handleEndTimeChange,
@@ -55,12 +56,13 @@ class ReservationForm extends React.Component {
           <div className={classes.column}>
             <TextField
               id="search"
-              label="Reservation name"
+              label="Name"
               className={classes.textField}
               margin="normal"
               onChange={handleNameChange}
             />
-          </div>
+            </div>
+            
           <div className={classes.column}>
             <DatePicker
               keyboard
@@ -94,6 +96,17 @@ class ReservationForm extends React.Component {
                 onChange={handleEndTimeChange}
               />
             </div>
+          </Toolbar>
+          <Toolbar>
+            <TextField
+              id="search"
+              multiline
+              rows="4"
+              label="Description"
+              className={classes.textField}
+              margin="normal"
+              onChange={handleDescChange}
+            />
           </Toolbar>
           <Button size="small" onClick={onSubmit} color="primary">
             Submit

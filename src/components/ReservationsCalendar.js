@@ -42,12 +42,10 @@ class ReservationsCalendar extends React.Component {
       agendaItems,
       handleSlotSelect,
       handleSelectEvent,
-      classes,
-      dayPropGetter,
-      slotPropGetter,
-      Event,
-      EventAgenda,
       eventPropGetter,
+      classes,
+      Event,
+      EventAgenda
     } = this.props;
 
     BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
@@ -57,11 +55,9 @@ class ReservationsCalendar extends React.Component {
         <BigCalendar
           selectable={'ignoreEvents'}
           events={agendaItems}
-          step={10}
-          formats={formats}
-          dayPropGetter={dayPropGetter}
-          slotPropGetter={slotPropGetter}
+          step={30}
           eventPropGetter={eventPropGetter}
+          formats={formats}
           min={new Date('01/01/1970 8:00')}
           max={new Date('01/01/1970 22:00')}
           defaultView="week"

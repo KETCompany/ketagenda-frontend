@@ -26,14 +26,12 @@ export const filters = async query => (
 );
 
 export const post = async postData => (
-  fetch(`${url}/rooms/reservation`, {
+  fetch(`${url}/events`, {
     method: 'POST',
     headers: {
-      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(postData),
   }).then(res => res.json())
-    .then(data => console.log(data))
     .catch(err => console.log(err))
 );
