@@ -127,6 +127,7 @@ class DataTable extends React.Component {
 
     this.state = {
       page: 0,
+      rowsPerPage: props.rowsPerPage,
     };
   }
 
@@ -139,10 +140,10 @@ class DataTable extends React.Component {
   };
 
   render() {
-    const { classes, data, columns, rowsPerPage, isEditable, isDeletable } = this.props;
+    const { classes, data, columns, isEditable, isDeletable } = this.props;
     
     if (data.length > 0) {
-      const { page } = this.state;
+      const { rowsPerPage, page } = this.state;
       const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
       return (
         <Paper className={classes.root}>
