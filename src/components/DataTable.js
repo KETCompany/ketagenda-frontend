@@ -140,7 +140,7 @@ class DataTable extends React.Component {
   };
 
   render() {
-    const { classes, data, columns, isEditable, isDeletable } = this.props;
+    const { classes, data, columns, isEditable, handleEdit, isDeletable, handleDelete } = this.props;
     
     if (data.length > 0) {
       const { rowsPerPage, page } = this.state;
@@ -164,20 +164,20 @@ class DataTable extends React.Component {
               </TableHead>
               <TableBody>
                 {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n) => (
-                    <TableRow key={n.id}>
+                    <TableRow key={n._id}>
                     {columns.map((item) => (
                       <TableCell>{n[item]}</TableCell>
                     ))}
                     {isEditable == true && (
                       <TableCell className={classes.editTableCel}>
-                        <IconButton className={classes.button} aria-label="Edit" color="secondary">
+                        <IconButton className={classes.button} aria-label="Edit" color="secondary" data-id={n._id} onClick={handleEdit}>
                           <Brush />
                         </IconButton>
                       </TableCell>
                     )}
                     {isDeletable == true && (
                       <TableCell className={classes.deleteTableCel}>
-                        <IconButton className={classes.button} aria-label="Delete" color="primary">
+                        <IconButton className={classes.button} aria-label="Delete" color="primary" data-id={n._id} onClick={handleDelete}>
                           <Delete />
                         </IconButton>
                       </TableCell>
@@ -198,6 +198,7 @@ class DataTable extends React.Component {
                     count={data.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
+                    rowsPerPageOptions={[10, 15, 20]}
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                     ActionsComponent={DataTableActionsWrapped}
