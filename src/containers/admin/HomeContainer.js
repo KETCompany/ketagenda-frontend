@@ -9,6 +9,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import { Switch, Route, Redirect } from 'react-router-dom';
+
 import _ from 'lodash';
 
 import DataTable from '../../components/DataTable';
@@ -33,6 +35,14 @@ const moment = require('moment');
 const styles = theme => ({
 
 });
+
+
+const Child = ({ match }) => (
+  <div>
+    <h3>URL ID parameter: {match.params.id}</h3>
+  </div>
+);
+
 
 class UsersContainer extends Component {
   constructor() {
@@ -70,24 +80,40 @@ class UsersContainer extends Component {
     this.setState({ users: Users });
   }
 
+  const 
+
   renderUsersTable() {
     const { users, columns: { usersTable } } = this.state;
+    const { match } = this.props;
     if (users.length === 0) {
       this.loadUsers();
     }
-
+    console.log(match);
+  
     return (
-      <div>
-        <DataTable
-          data={users}
-          rowsPerPage={15}
-          columns={usersTable}
-          isEditable={true}
-          isDeletable={true}
-        />
-      </div>
-    )
-  }
+      <Switch>
+        <Route path={`${match.path}`} render={({ id }) => { 
+          return (
+            <div>
+              <div>{id}</div>
+              {<DataTable
+                data={users}
+                rowsPerPage={15}
+                columns={usersTable}
+                isEditable={true}
+                isDeletable={true}
+              />}
+            </div>
+          )
+        }} />
+
+        <Route path={`${match.path}/:id`} component={Child} />
+      </Switch> 
+    );  
+    // <Route path={`${match.path}/react`} render={() => { return <h1>React by Fullstack.io book</h1> }} />
+    
+  };
+
 
   loadRooms = async () => {
     const Rooms = await RoomAPI.list(``)
@@ -118,6 +144,8 @@ class UsersContainer extends Component {
 
   render() {
     const { value } = this.state;
+    const { match } = this.props;
+
     return (
       <div>
           <AppBar position="static">
