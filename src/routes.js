@@ -11,9 +11,13 @@ import adminRouter from './routes/admin';
 const Routes = () => (
   <BrowserRouter>
     <Switch>
-      {indexRouter.map((prop, key) => 
-        <CustomRoute path={prop.path} component={prop.component} authorize={prop.authorize} key={key} />
-      )}
+      {indexRouter.map((prop, key) =>
+        <CustomRoute
+          path={prop.path}
+          component={prop.component}
+          authorize={prop.authorize}
+          key={key}
+        />)}
     </Switch>
   </BrowserRouter>
 );

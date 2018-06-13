@@ -1,7 +1,8 @@
 import RoomsContainer from '../containers/RoomsContainer';
-import RoomDetailContainer from '../containers/RoomDetailContainer';
+
 import ReservationContainer from '../containers/ReservationContainer';
 import UsersContainer from '../containers/admin/HomeContainer';
+import RoomDetailContainer from '../containers/RoomDetailContainer';
 
 import {
   Dashboard,
@@ -25,10 +26,8 @@ const dashboardRoutes = [
     authorize: ['user'],
   },
   {
-    path: '/rooms/:id/',
-    sidebarName: 'User Profile',
-    navbarName: 'Profile',
-    icon: Person,
+    path: '/rooms/:id',
+    hidden: true,
     component: RoomDetailContainer,
     authorize: ['user'],
   },
