@@ -10,7 +10,6 @@ import RoomFilters from '../components/RoomFilters';
 import RoomList from '../components/RoomList';
 
 import * as RoomAPI from '../api/RoomAPI';
-import QrDialogSlide from '../components/QrDialogSlide';
 
 
 const styles = theme => ({
@@ -41,8 +40,6 @@ class RoomsContainer extends Component {
         types: [],
       },
       type: '',
-      qrDialogOpen: false,
-      qrCodeValue: '',
     };
 
     this.getRoomFilters();
@@ -74,7 +71,6 @@ class RoomsContainer extends Component {
   }
 
   handleChange = type => name => (event) => {
-    const clicked = event.target.checked ? true : false
     const { filters } = this.state;
 
     this.setState({
@@ -190,20 +186,11 @@ class RoomsContainer extends Component {
     }
   }
 
-  handleQRClickOpen = id => () => {
-    this.setState({ qrDialogOpen: true, qrCodeValue: id });
-  };
-
-  onQRClickClose = () => {
-    this.setState({ qrDialogOpen: false, qrCodeValue: '' });
-  };
-
-
   render() {
     const { classes } = this.props;
     const {
       search, filters, filtersDisabled, rooms, noRooms, loading,
-      type, selectedDate, selectedTime, qrDialogOpen, qrCodeValue,
+      type, selectedDate, selectedTime
     } = this.state;
 
     return (
@@ -239,13 +226,7 @@ class RoomsContainer extends Component {
         <RoomList
           rooms={rooms}
           loading={loading}
-          noRooms={noRooms}
-          onQRClickOpen={this.handleQRClickOpen} />
-        <QrDialogSlide
-          open={qrDialogOpen}
-          value={qrCodeValue}
-          handleQRClickClose={this.onQRClickClose}
-         />
+          noRooms={noRooms}/>
       </div>
     );
   }

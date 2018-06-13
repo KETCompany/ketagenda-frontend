@@ -24,7 +24,6 @@ const RoomSearch = props => (
     <form onSubmit={props.onSubmitSearch}>
       <Toolbar>
         <Input
-          defaultValue=""
           placeholder="Search your room"
           className={props.classes.search}
           value={props.search}

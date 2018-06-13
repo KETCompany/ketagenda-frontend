@@ -18,7 +18,6 @@ import DataTable from '../../components/DataTable';
 import * as UserAPI from '../../api/UserAPI';
 import * as RoomAPI from '../../api/RoomAPI';
 
-
 import {
   RegularCard,
   A,
@@ -44,7 +43,7 @@ const Child = ({ match }) => (
 );
 
 
-class UsersContainer extends Component {
+class HomeContainer extends Component {
   constructor() {
     super();
     this.state = {
@@ -79,8 +78,6 @@ class UsersContainer extends Component {
 
     this.setState({ users: Users });
   }
-
-  const 
 
   renderUsersTable() {
     const { users, columns: { usersTable } } = this.state;
@@ -169,4 +166,4 @@ class UsersContainer extends Component {
   }
 }
 
-export default withStyles(styles)(UsersContainer);
+export default withStyles(styles)(HomeContainer);

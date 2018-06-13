@@ -6,6 +6,7 @@ import { withStyles } from 'material-ui/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import QRCode from 'qrcode.react';
 
 import * as RoomAPI from '../api/RoomAPI';
 
@@ -168,8 +169,14 @@ class RoomDetailContainer extends React.Component {
   };
 
   renderDetails() {
+    const { room } = this.state;
     return (
-      <ItemGrid xs={12} sm={12} md={12}>Item One</ItemGrid>
+      <ItemGrid xs={12} sm={12} md={12}>Item One
+        <QRCode
+        value={room._id}
+        size='128'
+      />
+      </ItemGrid>
     );
   }
 
