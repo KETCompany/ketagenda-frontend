@@ -8,7 +8,7 @@ import { withStyles } from 'material-ui';
 
 import { Header, Sidebar } from '../../components';
 
-import dashboardRoutes from '../../routes/search';
+import dashboardRoutes from '../../routes/dashboard';
 
 import appStyle from '../../assets/jss/material-dashboard-react/appStyle.jsx';
 

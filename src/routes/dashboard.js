@@ -1,6 +1,7 @@
 import RoomsContainer from '../containers/RoomsContainer';
 import RoomDetailContainer from '../containers/RoomDetailContainer';
 import ReservationContainer from '../containers/ReservationContainer';
+import UsersContainer from '../containers/admin/HomeContainer';
 
 import {
   Dashboard,
@@ -10,7 +11,8 @@ import {
   BubbleChart,
   LocationOn,
   Notifications,
-  PermContactCalendar
+  PermContactCalendar,
+  School
 } from '@material-ui/icons';
 
 const dashboardRoutes = [
@@ -20,6 +22,7 @@ const dashboardRoutes = [
     navbarName: 'Material Dashboard',
     icon: Dashboard,
     component: RoomsContainer,
+    authorize: ['user'],
   },
   {
     path: '/rooms/:id/',
@@ -27,6 +30,7 @@ const dashboardRoutes = [
     navbarName: 'Profile',
     icon: Person,
     component: RoomDetailContainer,
+    authorize: ['user'],
   },
   {
     path: '/reservation',
@@ -34,6 +38,7 @@ const dashboardRoutes = [
     navbarName: 'Reservation',
     icon: PermContactCalendar,
     component: ReservationContainer,
+    authorize: ['user'],
   },
   {
     path: '/typography',
@@ -41,6 +46,7 @@ const dashboardRoutes = [
     navbarName: 'Event list',
     icon: LibraryBooks,
     component: RoomsContainer,
+    authorize: ['user'],
   },
   {
     path: '/messages',
@@ -48,12 +54,22 @@ const dashboardRoutes = [
     navbarName: 'Messages',
     icon: Notifications,
     component: RoomsContainer,
+    authorize: ['user'],
+  },
+  {
+    path: '/admin',
+    sidebarName: 'Administration',
+    navbarName: 'Administration',
+    icon: School,
+    component: UsersContainer,
+    authorize: ['user'],
   },
   {
     redirect: true,
     path: '/',
     to: '/search',
     navbarName: 'Redirect',
+    authorize: ['user'],
   },
 ];
 

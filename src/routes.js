@@ -1,19 +1,19 @@
 import React from 'react';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Switch, BrowserRouter } from 'react-router-dom';
+import CustomRoute from './utils/Autorization';
 // import RoomSelection from './components/RoomDetail';
 import Reservation from './components/ReservationForm';
 import RoomsContainer from './containers/RoomsContainer';
 
-import indexRouters from './routes/index';
+import indexRouter from './routes/index';
+import adminRouter from './routes/admin';
 
 const Routes = () => (
   <BrowserRouter>
     <Switch>
-      {indexRouters.map((prop, key) =>
-        <Route path={prop.path} component={prop.component} key={key} />)}
-        {/* <Route exact path="/rooms" component={RoomsContainer} /> */}
-        {/* <Route exact path="/rooms/:id" component={RoomDetailContainer} /> */}
-        {/* <Route path="/reservation" component={Reservation} /> */}
+      {indexRouter.map((prop, key) => 
+        <CustomRoute path={prop.path} component={prop.component} authorize={prop.authorize} key={key} />
+      )}
     </Switch>
   </BrowserRouter>
 );
