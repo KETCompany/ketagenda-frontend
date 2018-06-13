@@ -5,10 +5,11 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import PerfectScrollbar from 'perfect-scrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import { withStyles } from 'material-ui';
+import CustomRoute from '../../utils/Autorization';
 
 import { Header, Sidebar } from '../../components';
 
-import dashboardRoutes from '../../routes/dashboard';
+import adminRoutes from '../../routes/admin';
 
 import appStyle from '../../assets/jss/material-dashboard-react/appStyle.jsx';
 
@@ -17,10 +18,10 @@ import logo from '../../assets/img/hrlogo.png';
 
 const switchRoutes = (
   <Switch>
-    {dashboardRoutes.map((prop, key) => {
+    {adminRoutes.map((prop, key) => {
       if (prop.redirect)
         return <Redirect from={prop.path} to={prop.to} key={key} />;
-      return <Route path={prop.path} component={prop.component} key={key} />;
+      return <CustomRoute path={prop.path} component={prop.component} authorize={prop.authorize} key={key} />;
     })}
   </Switch>
 );
@@ -49,7 +50,7 @@ class App extends React.Component {
     return (
       <div className={classes.wrapper}>
         <Sidebar
-          routes={dashboardRoutes}
+          routes={adminRoutes}
           logoText={'Ket Agenda'}
           logo={logo}
           image={image}
@@ -60,7 +61,7 @@ class App extends React.Component {
         />
         <div className={classes.mainPanel} ref='mainPanel'>
           <Header
-            routes={dashboardRoutes}
+            routes={adminRoutes}
             handleDrawerToggle={this.handleDrawerToggle}
             {...rest}
           />

@@ -6,7 +6,6 @@ import Reservation from './components/ReservationForm';
 import RoomsContainer from './containers/RoomsContainer';
 
 import indexRouter from './routes/index';
-import adminRouter from './routes/admin';
 
 const Routes = () => (
   <BrowserRouter>

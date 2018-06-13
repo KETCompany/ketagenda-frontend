@@ -1,11 +1,16 @@
-import Search from '../layouts/Search/Search.jsx';
+import Search from '../layouts/Default.jsx';
 import Admin from '../layouts/Admin/Default.jsx';
 
 const indexRoutes = [
-  {
-    path: '/',
+  { 
+    path: '/admin', 
+    component: Admin,
+    authorize: ['admin'],
+  },
+  { 
+    path: '/', 
     component: Search,
-    authorize: ['user'],
+    authorize: ['student', 'teacher', 'admin'],
   },
 ];
 

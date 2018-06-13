@@ -1,7 +1,6 @@
 import RoomsContainer from '../containers/RoomsContainer';
 
 import ReservationContainer from '../containers/ReservationContainer';
-import UsersContainer from '../containers/admin/HomeContainer';
 import RoomDetailContainer from '../containers/RoomDetailContainer';
 
 import {
@@ -23,21 +22,19 @@ const dashboardRoutes = [
     navbarName: 'Material Dashboard',
     icon: Dashboard,
     component: RoomsContainer,
-    authorize: ['user'],
+    authorize: ['student', 'teacher', 'admin'],
   },
   {
     path: '/rooms/:id',
     hidden: true,
     component: RoomDetailContainer,
-    authorize: ['user'],
+    authorize: ['student', 'teacher', 'admin'],
   },
   {
     path: '/reservation',
-    sidebarName: 'Reservation',
-    navbarName: 'Reservation',
-    icon: PermContactCalendar,
+    hidden: true,
     component: ReservationContainer,
-    authorize: ['user'],
+    authorize: ['student', 'teacher', 'admin'],
   },
   {
     path: '/typography',
@@ -45,7 +42,7 @@ const dashboardRoutes = [
     navbarName: 'Event list',
     icon: LibraryBooks,
     component: RoomsContainer,
-    authorize: ['user'],
+    authorize: ['student', 'teacher', 'admin'],
   },
   {
     path: '/messages',
@@ -53,22 +50,13 @@ const dashboardRoutes = [
     navbarName: 'Messages',
     icon: Notifications,
     component: RoomsContainer,
-    authorize: ['user'],
+    authorize: ['student', 'teacher', 'admin'],
   },
   {
-    path: '/admin',
-    sidebarName: 'Administration',
-    navbarName: 'Administration',
-    icon: School,
-    component: UsersContainer,
-    authorize: ['user'],
-  },
-  {
-    redirect: true,
     path: '/',
-    to: '/search',
-    navbarName: 'Redirect',
-    authorize: ['user'],
+    hidden: true,
+    component: RoomsContainer,
+    authorize: ['student', 'teacher', 'admin'],
   },
 ];
 
