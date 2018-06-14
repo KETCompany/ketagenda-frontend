@@ -41,7 +41,7 @@ const Transition = props => (<Slide direction="up" {...props} />);
 
 
 const RoomList = (props) => {
-  const { rooms, noRooms, classes, onQRClickOpen } = props;
+  const { rooms, noRooms, classes } = props;
   
   if (rooms.length > 0) {
     return (
@@ -70,11 +70,11 @@ const RoomList = (props) => {
                           (<div></div>)
                       }
                       
-                      <ListItemSecondaryAction>
+                      {/* <ListItemSecondaryAction>
                         <IconButton onClick={onQRClickOpen(room._id)} aria-label="Delete">
                           <PermDeviceInformationIcon />
                         </IconButton>
-                      </ListItemSecondaryAction>
+                      </ListItemSecondaryAction> */}
                       {/* <Avatar>
                         <ArrowForwardIcon color={i % 2 === 0 ? 'primary' : 'secondary'} />
                       </Avatar> */}
