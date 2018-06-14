@@ -13,7 +13,13 @@ import {
   School
 } from '@material-ui/icons';
 
-const adminRoutes = [  
+const adminRoutes = [
+  {
+    path: '/admin/home',
+    hidden: true,
+    component: HomeContainer,
+    authorize: ['admin'],
+  },
   {
     path: '/admin/user/:id',
     hidden: true,
@@ -23,7 +29,7 @@ const adminRoutes = [
   {
     redirect: true,
     path: '/',
-    to: '/admin',
+    to: '/admin/home',
     navbarName: 'Redirect',
     authorize: ['admin'],
   },
