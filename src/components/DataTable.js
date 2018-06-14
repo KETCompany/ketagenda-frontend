@@ -16,6 +16,8 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
+import { Link } from 'react-router-dom';
+
 import {
   Delete,
   Brush
@@ -140,7 +142,7 @@ class DataTable extends React.Component {
   };
 
   render() {
-    const { classes, data, columns, isEditable, handleEdit, isDeletable, handleDelete } = this.props;
+    const { classes, data, columns, isEditable, editLink, isDeletable, handleDelete } = this.props;
     
     if (data.length > 0) {
       const { rowsPerPage, page } = this.state;
@@ -170,9 +172,11 @@ class DataTable extends React.Component {
                     ))}
                     {isEditable == true && (
                       <TableCell className={classes.editTableCel}>
-                        <IconButton className={classes.button} aria-label="Edit" color="secondary" data-id={n._id} onClick={handleEdit}>
-                          <Brush />
-                        </IconButton>
+                        <Link to={`${editLink}${n._id}/`}>
+                          <IconButton className={classes.button} aria-label="Edit" color="secondary" data-id={n._id}>
+                            <Brush />
+                          </IconButton>
+                        </Link>
                       </TableCell>
                     )}
                     {isDeletable == true && (

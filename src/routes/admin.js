@@ -21,7 +21,7 @@ const adminRoutes = [
     authorize: ['admin'],
   },
   {
-    path: '/admin/user/:id',
+    path: '/admin/edit/:kind/:id',
     hidden: true,
     component: EditContainer,
     authorize: ['admin'],

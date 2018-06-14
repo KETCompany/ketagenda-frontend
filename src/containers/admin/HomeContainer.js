@@ -81,36 +81,23 @@ class HomeContainer extends Component {
 
   renderUsersTable() {
     const { users, columns: { usersTable } } = this.state;
-    const { match } = this.props;
     if (users.length === 0) {
       this.loadUsers();
     }
-    console.log(match);
   
     return (
-      <Switch>
-        <Route path={`${match.path}`} render={({ id }) => { 
-          return (
-            <div>
-              <div>{id}</div>
-              {<DataTable
-                data={users}
-                rowsPerPage={15}
-                columns={usersTable}
-                isEditable={true}
-                isDeletable={true}
-              />}
-            </div>
-          )
-        }} />
-
-        <Route path={`${match.path}/:id`} component={Child} />
-      </Switch> 
-    );  
-    // <Route path={`${match.path}/react`} render={() => { return <h1>React by Fullstack.io book</h1> }} />
-    
-  };
-
+      <div>
+        {<DataTable
+          data={users}
+          rowsPerPage={15}
+          columns={usersTable}
+          isEditable={true}
+          editLink={'/admin/edit/user/'}
+          isDeletable={true}
+        />}
+      </div>
+    );
+  }
 
   loadRooms = async () => {
     const Rooms = await RoomAPI.list(``)
@@ -132,6 +119,7 @@ class HomeContainer extends Component {
           rowsPerPage={15}
           columns={roomsTable}
           isEditable={true}
+          editLink={'/admin/edit/room/'}
           isDeletable={false}
         />
       </div>
@@ -141,7 +129,6 @@ class HomeContainer extends Component {
 
   render() {
     const { value } = this.state;
-    const { match } = this.props;
 
     return (
       <div>
