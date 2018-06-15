@@ -1,5 +1,7 @@
 import arrToObj from '../utils/arrMapper';
+import GroupAPI from './GroupAPI';
 const url = 'http://localhost:8080/api';
+
 
 export const list = async query => (
   fetch(`${url}/users${query}`)
@@ -24,6 +26,11 @@ export const filters = async query => (
       };
     })
 );
+
+export const initCreate = async => (
+  GroupAPI.list(null, ['name', 'id'])
+    .then(groups => ({ groups }))
+)
 
 export const post = async postData => (
   fetch(`${url}/users`, {

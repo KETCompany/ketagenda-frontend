@@ -37,11 +37,15 @@ class UsersContainer extends Component {
           role: {
             type: 'select',
             options: [
-              'student',
-              'teacher',
-              'admin',
+              'Student',
+              'Teacher',
+              'Admin',
             ],
           },
+          groups: {
+            type: 'multiSelect',
+            options: [],
+          }
         },
         group: {
           name: [],
@@ -65,14 +69,31 @@ class UsersContainer extends Component {
     this.setState({ data: { ...this.state.data, [e.target.name]: e.target.value } });
   }
 
-  loadData = (params) => {
+  loadData = async (params) => {
     if (!_.has(params, 'kind')) {
       console.error('No kind of form!');
       return;
     }
-
+    console.log(params.kind);
     const Api = _.get(this.state.api, params.kind);
-    this.setState({ dataLoaded: true, api: Api, formInputs: _.get(this.state.formInputs, params.kind) });
+    const formInputs = _.get(this.state.formInputs, params.kind);
+
+    const a = await Api.initCreate();
+
+    const populatedFormInputs = this.populateFormInputs(formInputs, a);
+    this.setState({ dataLoaded: true, api: Api, formInputs: populatedFormInputs  });
+  }
+
+  populateFormInputs = (formInputs, entry) => {
+    Object.entries(entry).forEach(([key, values]) => {
+      if (_.isArray(values)) {
+        formInputs[key].options = values;
+      } else {
+        formInputs[key] = values;
+      }
+    })
+
+    return formInputs;
   }
 
   saveData = async () => {

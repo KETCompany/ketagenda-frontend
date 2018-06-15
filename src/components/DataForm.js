@@ -35,6 +35,7 @@ class DataForm extends React.Component {
 
   render() {
     const { classes, data, formInputs, handleChange, handleSave, dataLoaded } = this.props;
+
     if (dataLoaded === true) {
       return (
         <div className={classes.root}>
@@ -62,6 +63,32 @@ class DataForm extends React.Component {
                       ))}
                     </Select>
                   </FormControl>
+                  </div>
+                );
+              } else if (_.get(formInputs[key], 'type') == 'multiSelect') {
+                return (
+                  <div>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel htmlFor="age-simple">{_.capitalize(key)}</InputLabel>
+                      <Select
+                        multiple
+                        value={data[key].map((v) => _.isObject(v) ? v['_id'] : v) || []}
+                        name={key}
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        {formInputs[key]['options'].map(({ name, _id }) => (
+                          <MenuItem
+                            key={_id}
+                            value={_id}
+                          >
+                            {name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </div>
                 );
               } else {

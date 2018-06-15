@@ -1,8 +1,8 @@
 import arrToObj from '../utils/arrMapper';
 const url = 'http://localhost:8080/api';
 
-export const list = async query => (
-  fetch(`${url}/groups${query}`)
+export const list = async (query, select) => (
+  fetch(`${url}/groups?select=${select ? select.join(',') : ''}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
@@ -46,3 +46,12 @@ export const put = async (postData, id) => (
   }).then(res => res.json())
     .catch(err => console.log(err))
 );
+
+
+export default {
+  list,
+  get,
+  filters,
+  post,
+  put,
+};

@@ -41,7 +41,11 @@ class UsersContainer extends Component {
               'Teacher',
               'Admin',
             ],
-          },
+          }, 
+          groups: {
+            type: 'multiSelect',
+            options: [],
+          }
         },
         group: {
           name: [],
@@ -75,13 +79,34 @@ class UsersContainer extends Component {
       console.error('No kind of form!');
       return;
     }
-    
+
     const Api = _.get(this.state.api, params.kind);
-    await Api.get(params.id, true)
-      .then(ApiData => this.setState({
-        data: ApiData, dataLoaded: true, api: Api, formInputs: _.get(this.state.formInputs, params.kind) 
-      }))
+
+    const formInputs = _.get(this.state.formInputs, params.kind);
+    await Promise.all([
+      Api.initCreate(),
+      Api.get(params.id, true),
+    ])
+      .then(([formInputData, ApiData]) => {
+        const populatedFormInputs = this.populateFormInputs(formInputs, formInputData);
+        
+        this.setState({
+          data: ApiData, dataLoaded: true, api: Api, formInputs: populatedFormInputs
+        });
+      })
       .catch(err => console.error(err));
+  }
+
+  populateFormInputs = (formInputs, entry) => {
+    Object.entries(entry).forEach(([key, values]) => {
+      if (_.isArray(values)) {
+        formInputs[key].options = values;
+      } else {
+        formInputs[key] = values;
+      }
+    })
+
+    return formInputs;
   }
 
   saveData = async () => {
