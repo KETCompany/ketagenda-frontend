@@ -72,7 +72,7 @@ class DataForm extends React.Component {
                       <InputLabel htmlFor="age-simple">{_.capitalize(key)}</InputLabel>
                       <Select
                         multiple
-                        value={data[key].map((v) => _.isObject(v) ? v['_id'] : v) || []}
+                        value={data[key] ? data[key].map((v) => _.isObject(v) ? v['_id'] : v) : []}
                         name={key}
                         onChange={handleChange}
                       >
