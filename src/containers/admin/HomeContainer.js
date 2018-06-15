@@ -35,14 +35,6 @@ const styles = theme => ({
 
 });
 
-
-const Child = ({ match }) => (
-  <div>
-    <h3>URL ID parameter: {match.params.id}</h3>
-  </div>
-);
-
-
 class HomeContainer extends Component {
   constructor() {
     super();
@@ -73,7 +65,7 @@ class HomeContainer extends Component {
   };
 
   loadUsers = async () => {
-    const Users = await UserAPI.list(``)
+    const Users = await UserAPI.list('')
       .catch(err => console.error(err));
 
     this.setState({ users: Users });
@@ -100,7 +92,7 @@ class HomeContainer extends Component {
   }
 
   loadRooms = async () => {
-    const Rooms = await RoomAPI.list(``)
+    const Rooms = await RoomAPI.list('')
       .catch(err => console.error(err));
 
     this.setState({ rooms: Rooms });

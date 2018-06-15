@@ -21,7 +21,7 @@ class UsersContainer extends Component {
     this.state = {
       value: 0,
       data: {},
-      apiClasses: {
+      api: {
         user: UserAPI,
         room: RoomAPI,
       },
@@ -50,20 +50,32 @@ class UsersContainer extends Component {
     this.loadData(props.match.params);
   }
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
+  handleChange = (e) => {
+    this.setState({ data: { ...this.state.data, [e.target.id]: e.target.value } });
+  }
 
   loadData = async (params) => {
-    if (!_.has(params, 'kind')) {
-      console.error('no kind');
+    if (!_.isEmpty(this.state.data)) {
+      console.log('Data is allready loaded!');
       return;
     }
-    const API = _.get(this.state.apiClasses, params.kind);
-    const APIData = await API.get(params.id)
+
+    if (!_.has(params, 'kind')) {
+      console.error('No kind of form!');
+      return;
+    }
+    
+    const Api = _.get(this.state.api, params.kind);
+    const APIData = await Api.get(params.id)
       .catch(err => console.error(err));
 
-    this.setState({ data: APIData, formInputs: _.get(this.state.formInputs, params.kind) });
+    this.setState({ data: APIData, api: Api, formInputs: _.get(this.state.formInputs, params.kind) });
+  }
+
+  saveData = async () => {
+    const Api = _.get(this.state, 'api');
+    await Api.put(this.state.data, this.state.data._id)
+      .catch(err => console.error(err));
   }
 
   render() {
@@ -76,6 +88,8 @@ class UsersContainer extends Component {
               <DataForm
                 data={data}
                 formInputs={formInputs}
+                handleChange={this.handleChange}
+                handleSave={this.saveData}
               />
             </div>
           }

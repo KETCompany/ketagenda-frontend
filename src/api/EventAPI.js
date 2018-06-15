@@ -2,19 +2,19 @@ import arrToObj from '../utils/arrMapper';
 const url = 'http://localhost:8080/api';
 
 export const list = async query => (
-  fetch(`${url}/rooms${query}`)
+  fetch(`${url}/events${query}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
 
 export const get = async (id, populate) => (
-  fetch(`${url}/rooms/${id}${populate ? '?populate' : ''}`)
+  fetch(`${url}/events/${id}${populate ? '?populate' : ''}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
 
 export const filters = async query => (
-  fetch(`${url}/rooms?filters${query}`)
+  fetch(`${url}/events?filters${query}`)
     .then(resp => resp.json())
     .then(({ locations, floors, types }) => {
       return {
@@ -26,7 +26,7 @@ export const filters = async query => (
 );
 
 export const post = async postData => (
-  fetch(`${url}/rooms`, {
+  fetch(`${url}/events`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export const post = async postData => (
 );
 
 export const put = async (postData, id) => (
-  fetch(`${url}/rooms/${id}`, {
+  fetch(`${url}/events/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

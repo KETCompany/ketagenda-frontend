@@ -9,6 +9,7 @@ import Tab from '@material-ui/core/Tab';
 import QRCode from 'qrcode.react';
 
 import * as RoomAPI from '../api/RoomAPI';
+import * as EventAPI from '../api/EventAPI';
 
 import ReservationsCalendar from '../components/ReservationsCalendar';
 import ReservationForm from '../components/ReservationForm';
@@ -155,7 +156,7 @@ class RoomDetailContainer extends React.Component {
       }],
     };
 
-    RoomAPI.post(reservation).then((res) => {
+    EventAPI.post(reservation).then((res) => {
       alert("success");
       this.setState({
         agendaItems: [],

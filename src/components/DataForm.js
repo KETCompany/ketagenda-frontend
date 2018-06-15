@@ -2,7 +2,8 @@ import React from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Table from '@material-ui/core/Table';
+
+import Button from './CustomButtons/Button.jsx';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -47,22 +48,25 @@ class DataForm extends React.Component {
   }
 
   render() {
-    const { classes, data, formInputs, handleSave } = this.props;
-    console.log(data);
+    const { classes, data, formInputs, handleChange, handleSave } = this.props;
     if (data._id) {
       return (
         <div className={classes.root}>
             {Object.keys(formInputs).map(key => (
               <div>
                 <TextField
-                  value={data[key]}
+                  defaultValue={data[key]}
                   id={key}
                   label={_.capitalize(key)}
                   className={classes.textField}
                   margin="normal"
+                  onChange={handleChange}
                 />
               </div>
             ))}
+            <Button size="small" onClick={handleSave} color="secondary">
+              Submit
+            </Button>
         </div>
       );
     } else {

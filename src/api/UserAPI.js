@@ -26,8 +26,19 @@ export const filters = async query => (
 );
 
 export const post = async postData => (
-  fetch(`${url}/events`, {
+  fetch(`${url}/users`, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(postData),
+  }).then(res => res.json())
+    .catch(err => console.log(err))
+);
+
+export const put = async (postData, id) => (
+  fetch(`${url}/users/${id}`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
