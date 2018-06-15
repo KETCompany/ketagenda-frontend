@@ -11,7 +11,7 @@ import {
   ClickAwayListener,
   Hidden,
 } from "material-ui";
-import { Person, Notifications, Home, Search } from "@material-ui/icons";
+import { Person, Notifications, Home, MyLocation } from "@material-ui/icons";
 
 import { Link } from 'react-router-dom';
 
@@ -43,6 +43,18 @@ class HeaderLinks extends React.Component {
             <Home className={classes.links} />
             <Hidden mdUp>
               <p className={classes.linkText}>Home</p>
+            </Hidden>
+          </IconButton>
+        </Link>
+        <Link to={'/admin'}>
+          <IconButton
+            color="inherit"
+            aria-label="Admin"
+            className={classes.buttonLink}
+          >
+            <MyLocation className={classes.buttonLink} />
+            <Hidden mdUp>
+              <p className={classes.linkText}>Admin</p>
             </Hidden>
           </IconButton>
         </Link>

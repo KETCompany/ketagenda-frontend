@@ -37,9 +37,9 @@ class UsersContainer extends Component {
           role: {
             type: 'select',
             options: [
-              'student',
-              'teacher',
-              'admin',
+              'Student',
+              'Teacher',
+              'Admin',
             ],
           },
         },
@@ -62,7 +62,7 @@ class UsersContainer extends Component {
   }
 
   handleChange = (e) => {
-    this.setState({ data: { ...this.state.data, [e.target.id]: e.target.value } });
+    this.setState({ data: { ...this.state.data, [e.target.name]: e.target.value } });
   }
 
   loadData = async (params) => {

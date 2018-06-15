@@ -4,14 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 import Button from './CustomButtons/Button.jsx';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 import TextField from 'material-ui/TextField';
 
@@ -20,7 +16,6 @@ import {
   Brush
 } from '@material-ui/icons';
 
-import withRoot from '../withRoot';
 import _ from 'lodash';
 
 const styles = theme => ({
@@ -28,18 +23,9 @@ const styles = theme => ({
     width: '100%',
     marginTop: theme.spacing.unit * 3,
   },
-  table: {
-    width: '100%',
+  formControl: {
+    minWidth: 185,
   },
-  tableWrapper: {
-    overflowX: 'auto',
-  },
-  editTableCel: {
-    width: '100px'
-  },
-  deleteTableCel: {
-    width: '100px'
-  }
 });
 
 class DataForm extends React.Component {
@@ -52,18 +38,47 @@ class DataForm extends React.Component {
     if (dataLoaded === true) {
       return (
         <div className={classes.root}>
-            {Object.keys(formInputs).map(key => (
-              <div>
-                <TextField
-                  defaultValue={data[key]}
-                  id={key}
-                  label={_.capitalize(key)}
-                  className={classes.textField}
-                  margin="normal"
-                  onChange={handleChange}
-                />
-              </div>
-            ))}
+            {Object.keys(formInputs).map(key => {
+              if(_.get(formInputs[key], 'type') == 'select'){
+                return (
+                  <div>
+                  <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="age-simple">{_.capitalize(key)}</InputLabel>
+                    <Select
+                      value={data[key]}
+                      name={key}
+                      onChange={handleChange}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      {formInputs[key]['options'].map(role => (
+                        <MenuItem
+                          key={role}
+                          value={role}
+                        >
+                          {role}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  </div>
+                );
+              } else {
+                return (
+                  <div>
+                    <TextField
+                      defaultValue={data[key]}
+                      name={key}
+                      label={_.capitalize(key)}
+                      className={classes.textField}
+                      margin="normal"
+                      onChange={handleChange}
+                    />
+                  </div>
+                );
+              }
+            })}
             <Button size="small" onClick={handleSave} color="secondary">
               Submit
             </Button>
