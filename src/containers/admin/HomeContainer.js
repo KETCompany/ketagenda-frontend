@@ -17,6 +17,7 @@ import DataTable from '../../components/DataTable';
 
 import * as UserAPI from '../../api/UserAPI';
 import * as RoomAPI from '../../api/RoomAPI';
+import * as GroupAPI from '../../api/GroupAPI';
 
 import {
   RegularCard,
@@ -41,6 +42,7 @@ class HomeContainer extends Component {
     this.state = {
       value: 0,
       users: [],
+      groups: [],
       rooms: [],
       columns: {
         usersTable: [
@@ -48,6 +50,10 @@ class HomeContainer extends Component {
           'short',
           'email',
           'role',
+        ],
+        groupsTable: [
+          'name',
+          'description',
         ],
         roomsTable: [
           'location',
@@ -64,54 +70,83 @@ class HomeContainer extends Component {
     this.setState({ value });
   };
 
-  loadUsers = async () => {
-    const Users = await UserAPI.list('')
+  handleDelete = (kind, id) => {
+    this.setState({ [kind]: this.state[kind].filter(item => item._id !== id) });
+  }
+
+  loadData = async (kind, api) => {
+    const data = await api.list('')
       .catch(err => console.error(err));
 
-    this.setState({ users: Users });
+    this.setState({ [kind]: data });
   }
 
   renderUsersTable() {
     const { users, columns: { usersTable } } = this.state;
+    const kind = 'users';
     if (users.length === 0) {
-      this.loadUsers();
+      this.loadData(kind, UserAPI);
     }
   
     return (
       <div>
         {<DataTable
           data={users}
+          kind={kind}
           rowsPerPage={15}
           columns={usersTable}
           isEditable={true}
           editLink={'/admin/edit/user/'}
+          createLink={'/admin/create/user/'}
+          handleDelete={this.handleDelete}
           isDeletable={true}
         />}
       </div>
     );
   }
 
-  loadRooms = async () => {
-    const Rooms = await RoomAPI.list('')
-      .catch(err => console.error(err));
-
-    this.setState({ rooms: Rooms });
+  renderGroupsTable() {
+    const { groups, columns: { groupsTable } } = this.state;
+    const kind = 'groups';
+    if (groups.length === 0) {
+      this.loadData(kind, GroupAPI);
+    }
+  
+    return (
+      <div>
+        {<DataTable
+          data={groups}
+          kind={kind}
+          rowsPerPage={15}
+          columns={groupsTable}
+          isEditable={true}
+          editLink={'/admin/edit/group/'}
+          createLink={'/admin/create/group/'}
+          handleDelete={this.handleDelete}
+          isDeletable={true}
+        />}
+      </div>
+    );
   }
 
   renderRoomsTable() {
     const { rooms, columns: { roomsTable } } = this.state;
+    const kind = 'rooms';
     if (rooms.length === 0) {
-      this.loadRooms();
+      this.loadData(kind, RoomAPI);
     }
 
     return (
       <div>
         <DataTable
           data={rooms}
+          kind={kind}
           rowsPerPage={15}
           columns={roomsTable}
           isEditable={true}
           editLink={'/admin/edit/room/'}
+          createLink={'/admin/create/room/'}
+          handleDelete={this.handleDelete}
           isDeletable={false}
         />
       </div>
@@ -127,19 +162,15 @@ class HomeContainer extends Component {
           <AppBar position="static">
             <Tabs value={value} onChange={this.handleChange}>
               <Tab label="Users" />
+              <Tab label="Groups" />
               <Tab label="Rooms" />
-              <Tab label="Reservations" />
             </Tabs>
           </AppBar>
-          <RegularCard 
-          content={
-            <div>
-              {value === 0 && this.renderUsersTable()}
-              {value === 1 && this.renderRoomsTable()}
-              {value === 2 && <ItemGrid xs={12} sm={12} md={12}>Reservations</ItemGrid>}
-            </div>
-          }
-        />
+          <div>
+            {value === 0 && this.renderUsersTable()}
+            {value === 1 && this.renderGroupsTable()}
+            {value === 2 && this.renderRoomsTable()}
+          </div>
       </div>
     )
   }

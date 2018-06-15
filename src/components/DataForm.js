@@ -48,8 +48,8 @@ class DataForm extends React.Component {
   }
 
   render() {
-    const { classes, data, formInputs, handleChange, handleSave } = this.props;
-    if (data._id) {
+    const { classes, data, formInputs, handleChange, handleSave, dataLoaded } = this.props;
+    if (dataLoaded === true) {
       return (
         <div className={classes.root}>
             {Object.keys(formInputs).map(key => (

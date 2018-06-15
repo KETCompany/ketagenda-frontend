@@ -11,9 +11,9 @@ import {
   ClickAwayListener,
   Hidden,
 } from "material-ui";
-import { Person, Notifications, Dashboard, Search } from "@material-ui/icons";
+import { Person, Notifications, Home, Search } from "@material-ui/icons";
 
-import { CustomInput, IconButton as SearchButton } from "../../components";
+import { Link } from 'react-router-dom';
 
 import headerLinksStyle from "../../assets/jss/material-dashboard-react/headerLinksStyle";
 
@@ -34,34 +34,18 @@ class HeaderLinks extends React.Component {
     const { notifications } = this.state;
     return (
       <div>
-        <CustomInput
-          formControlProps={{
-            className: classes.margin + " " + classes.search
-          }}
-          inputProps={{
-            placeholder: "Search",
-            inputProps: {
-              "aria-label": "Search"
-            }
-          }}
-        />
-        <SearchButton
-          color="white"
-          aria-label="edit"
-          customClass={classes.margin + " " + classes.searchButton}
-        >
-          <Search className={classes.searchIcon} />
-        </SearchButton>
-        <IconButton
-          color="inherit"
-          aria-label="Dashboard"
-          className={classes.buttonLink}
-        >
-          <Dashboard className={classes.links} />
-          <Hidden mdUp>
-            <p className={classes.linkText}>Dashboard</p>
-          </Hidden>
-        </IconButton>
+        <Link to={'/'}>
+          <IconButton
+            color="inherit"
+            aria-label="Home"
+            className={classes.buttonLink}
+          >
+            <Home className={classes.links} />
+            <Hidden mdUp>
+              <p className={classes.linkText}>Home</p>
+            </Hidden>
+          </IconButton>
+        </Link>
         <Manager style={{ display: 'inline-block' }}>
           <Target>
             <IconButton

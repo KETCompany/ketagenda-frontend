@@ -1,5 +1,6 @@
 import EditContainer from '../containers/admin/EditContainer';
 import HomeContainer from '../containers/admin/HomeContainer';
+import CreateContainer from '../containers/admin/CreateContainer';
 
 import {
   Dashboard,
@@ -16,7 +17,9 @@ import {
 const adminRoutes = [
   {
     path: '/admin/home',
-    hidden: true,
+    sidebarName: 'Management',
+    navbarName: 'Management',
+    icon: ContentPaste,
     component: HomeContainer,
     authorize: ['admin'],
   },
@@ -24,6 +27,12 @@ const adminRoutes = [
     path: '/admin/edit/:kind/:id',
     hidden: true,
     component: EditContainer,
+    authorize: ['admin'],
+  },
+  {
+    path: '/admin/create/:kind',
+    hidden: true,
+    component: CreateContainer,
     authorize: ['admin'],
   },
   {

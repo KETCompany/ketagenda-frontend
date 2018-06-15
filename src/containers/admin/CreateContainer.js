@@ -65,29 +65,20 @@ class UsersContainer extends Component {
     this.setState({ data: { ...this.state.data, [e.target.id]: e.target.value } });
   }
 
-  loadData = async (params) => {
-    if (!_.isEmpty(this.state.data)) {
-      console.log('Data is allready loaded!');
-      return;
-    }
-
+  loadData = (params) => {
     if (!_.has(params, 'kind')) {
       console.error('No kind of form!');
       return;
     }
-    
+
     const Api = _.get(this.state.api, params.kind);
-    await Api.get(params.id, true)
-      .then(ApiData => this.setState({
-        data: ApiData, dataLoaded: true, api: Api, formInputs: _.get(this.state.formInputs, params.kind) 
-      }))
-      .catch(err => console.error(err));
+    this.setState({ dataLoaded: true, api: Api, formInputs: _.get(this.state.formInputs, params.kind) });
   }
 
   saveData = async () => {
     const Api = _.get(this.state, 'api');
-    await Api.put(this.state.data, this.state.data._id)
-      .then(res => (res._id ? window.alert('Edited successful!') : window.alert('Something went wrong')) )
+    await Api.post(this.state.data)
+      .then(res => (res._id ? window.alert('Created successful!') : window.alert('Something went wrong')) )
       .catch(err => console.error(err));
   }
 

@@ -20,11 +20,13 @@ import { Link } from 'react-router-dom';
 
 import {
   Delete,
-  Brush
+  Brush,
+  Add,
 } from '@material-ui/icons';
 
 import withRoot from '../withRoot';
 import _ from 'lodash';
+import { Button } from '@material-ui/core';
 
 const actionsStyles = theme => ({
   root: {
@@ -116,11 +118,17 @@ const styles = theme => ({
     overflowX: 'auto',
   },
   editTableCel: {
-    width: '100px'
+    width: '100px',
   },
   deleteTableCel: {
-    width: '100px'
-  }
+    width: '100px',
+  },
+  fab: {
+    zIndex: 10000,
+    position: 'absolute',
+    bottom: theme.spacing.unit * 5,
+    right: theme.spacing.unit * 5,
+  },
 });
 
 class DataTable extends React.Component {
@@ -142,13 +150,18 @@ class DataTable extends React.Component {
   };
 
   render() {
-    const { classes, data, columns, isEditable, editLink, isDeletable, handleDelete } = this.props;
+    const { classes, kind, data, columns, isEditable, editLink, createLink, isDeletable, handleDelete } = this.props;
     
     if (data.length > 0) {
       const { rowsPerPage, page } = this.state;
       const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
       return (
         <Paper className={classes.root}>
+          <Link to={createLink}>
+            <Button variant="fab" color="secondary" aria-label="add" className={classes.fab}>
+              <Add />
+            </Button>
+          </Link>
           <div className={classes.tableWrapper}>
             <Table className={classes.table}>
               <TableHead>
@@ -166,7 +179,7 @@ class DataTable extends React.Component {
               </TableHead>
               <TableBody>
                 {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n) => (
-                    <TableRow key={n._id}>
+                  <TableRow key={n._id}>
                     {columns.map((item) => (
                       <TableCell>{n[item]}</TableCell>
                     ))}
@@ -181,12 +194,17 @@ class DataTable extends React.Component {
                     )}
                     {isDeletable == true && (
                       <TableCell className={classes.deleteTableCel}>
-                        <IconButton className={classes.button} aria-label="Delete" color="primary" data-id={n._id} onClick={handleDelete}>
+                        <IconButton
+                          className={classes.button}
+                          aria-label="Delete"
+                          color="primary"
+                          data-id={n._id}
+                          onClick={() =>{ if(window.confirm(`Are you sure to delete ${n.name}?`)) handleDelete(kind, n._id) } }>
                           <Delete />
                         </IconButton>
                       </TableCell>
                     )}
-                    </TableRow>
+                  </TableRow>
                   )
                 )}
                 {emptyRows > 0 && (
@@ -215,7 +233,9 @@ class DataTable extends React.Component {
       );
     } else {
       return (
-        <div>{'No data found'}</div>
+        <Paper className={classes.root}>
+          <div>{'No data found'}</div>
+        </Paper>
       )
     }
   }
