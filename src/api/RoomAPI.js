@@ -25,7 +25,7 @@ export const filters = async query => (
     })
 );
 
-export const initCreate = async => (
+export const initForm = async () => (
   Promise.all([
 
   ])

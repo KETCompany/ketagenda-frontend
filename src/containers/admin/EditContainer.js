@@ -105,14 +105,13 @@ class UsersContainer extends Component {
     const formInputs = _.get(this.state.formInputs, params.kind);
 
     await Promise.all([
-      Api.initCreate(),
+      Api.initForm(),
       Api.get(params.id, true),
     ])
       .then(([formInputData, ApiData]) => {
         const populatedFormInputs = this.populateFormInputs(formInputs, formInputData);
-        
         this.setState({
-          data: ApiData, dataLoaded: true, api: Api, formInputs: populatedFormInputs
+          data: ApiData, dataLoaded: true, api: Api, formInputs: populatedFormInputs,
         });
       })
       .catch(err => console.error(err));
