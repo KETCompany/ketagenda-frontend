@@ -46,3 +46,7 @@ export const put = async (postData, id) => (
   }).then(res => res.json())
     .catch(err => console.log(err))
 );
+
+export default {
+  list, get, filters, post, put,
+}

@@ -8,6 +8,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+
 
 import TextField from 'material-ui/TextField';
 
@@ -44,11 +46,13 @@ class DataForm extends React.Component {
                 return (
                   <div>
                   <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="age-simple">{_.capitalize(key)}</InputLabel>
+                    <InputLabel htmlFor={`a${key}`}>{_.capitalize(key)}</InputLabel>
                     <Select
                       value={data[key]}
                       name={key}
                       onChange={handleChange}
+                      input={<Input id={`a${key}`} />}
+
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -69,12 +73,13 @@ class DataForm extends React.Component {
                 return (
                   <div>
                     <FormControl className={classes.formControl}>
-                      <InputLabel htmlFor="age-simple">{_.capitalize(key)}</InputLabel>
+                      <InputLabel htmlFor={`b${key}`}>{_.capitalize(key)}</InputLabel>
                       <Select
                         multiple
                         value={data[key] ? data[key].map((v) => _.isObject(v) ? v['_id'] : v) : []}
                         name={key}
                         onChange={handleChange}
+                        input={<Input id={`b${key}`} />}
                       >
                         {formInputs[key]['options'].map(({ name, _id }) => (
                           <MenuItem

@@ -1,4 +1,7 @@
 import arrToObj from '../utils/arrMapper';
+import UserAPI from './UserAPI';
+import RoomAPI from './RoomAPI';
+import GroupAPI from './GroupAPI';
 const url = 'http://localhost:8080/api';
 
 export const list = async (query, select, populate) => (
@@ -36,6 +39,15 @@ export const post = async postData => (
     .catch(err => console.log(err))
 );
 
+export const initCreate = async => (
+  Promise.all([
+    UserAPI.list('', ['name', 'id']),
+    GroupAPI.list('', ['name', 'id']),
+    RoomAPI.list('', ['name', 'id']),
+  ]).then(([users, groups, rooms]) => ({ owner: users, groups, rooms }))
+    
+)
+
 export const put = async (postData, id) => (
   fetch(`${url}/events/${id}`, {
     method: 'PUT',
@@ -53,4 +65,5 @@ export default {
   post,
   get,
   filters,
+  initCreate,
 }
