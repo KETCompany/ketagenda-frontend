@@ -93,9 +93,10 @@ class DataForm extends React.Component {
                       <InputLabel htmlFor={`b${key}`}>{_.capitalize(key)}</InputLabel>
                       <Select
                         multiple
-                        value={data[key] ? data[key].map((v) => _.isObject(v) ? v['_id'] : v) : []}
+                        value={ data[key] ? data[key].map((v) => _.isObject(v) ? v['_id'] : v) : [] }
                         name={key}
                         onChange={handleChange}
+                        renderValue={selected => (<div>SELECT USERS</div>)}
                         input={<Input id={`b${key}`} />}
                       >
                         {formInputs[key]['options'].map(({ name, _id }) => (
@@ -107,7 +108,17 @@ class DataForm extends React.Component {
                           </MenuItem>
                         ))}
                       </Select>
+                     
                     </FormControl>
+                    <div>
+                      {data[key] ? data[key].map(v => {
+                        const userid = _.isObject(v) ? v['_id'] : v;
+                        const selectedUsers = formInputs[key]['options'].filter(i => i._id === userid )
+                        return (<div>
+                          {selectedUsers[0].name}
+                        </div>)
+                      }) : <div></div>}
+                    </div>
                   </div>
                 );
               } else if (_.get(formInputs[key], 'type') == 'calendar') {
