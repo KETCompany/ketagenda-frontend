@@ -37,7 +37,7 @@ class DataForm extends React.Component {
 
   render() {
     const { classes, data, formInputs, handleChange, handleSave, dataLoaded } = this.props;
-
+    
     if (dataLoaded === true) {
       return (
         <div className={classes.root}>
@@ -48,7 +48,7 @@ class DataForm extends React.Component {
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor={`a${key}`}>{_.capitalize(key)}</InputLabel>
                     <Select
-                      value={data[key]}
+                      value={data[key] && _.isObject(data[key]) ? data[key]['_id'] : data[key]}
                       name={key}
                       onChange={handleChange}
                       input={<Input id={`a${key}`} />}
