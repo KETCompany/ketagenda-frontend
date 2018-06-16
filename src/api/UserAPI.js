@@ -9,10 +9,21 @@ export const list = async query => (
     .catch(err => console.error(err))
 );
 
+export const listStudents = async () => (
+  fetch(`${url}/users/students`)
+    .then(resp => resp.json())
+    .catch(err => console.error(err))
+)
+
 export const get = async (id, populate) => (
   fetch(`${url}/users/${id}${populate ? '?populate' : ''}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
+);
+
+export const deleteById = async (id) => (
+  fetch(`${url}/users/${id}`, { method: 'DELETE' })
+    .then(resp => resp.json())
 );
 
 export const filters = async query => (
@@ -53,3 +64,7 @@ export const put = async (postData, id) => (
   }).then(res => res.json())
     .catch(err => console.log(err))
 );
+
+export default {
+  list, get, deleteById, initCreate, post, put, listStudents
+};

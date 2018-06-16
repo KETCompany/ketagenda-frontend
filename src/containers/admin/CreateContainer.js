@@ -37,9 +37,9 @@ class UsersContainer extends Component {
           role: {
             type: 'select',
             options: [
-              'Student',
-              'Teacher',
-              'Admin',
+              { _id: 'Student', name: 'Student'},
+              { _id: 'Teacher', name: 'Teacher' },
+              { _id: 'Admin', name: 'Admin' },
             ],
           },
           groups: {
@@ -50,6 +50,10 @@ class UsersContainer extends Component {
         group: {
           name: [],
           description: [],
+          users: {
+            type: 'multiSelect',
+            options: [],
+          }
         },
         room: {
           name: [],
@@ -87,7 +91,14 @@ class UsersContainer extends Component {
   populateFormInputs = (formInputs, entry) => {
     Object.entries(entry).forEach(([key, values]) => {
       if (_.isArray(values)) {
-        formInputs[key].options = values;
+        if (formInputs[key]) {
+          formInputs[key].options = values;
+        } else {
+          formInputs[key] = {
+            options: values,
+            type: 'select',
+          }
+        }
       } else {
         formInputs[key] = values;
       }

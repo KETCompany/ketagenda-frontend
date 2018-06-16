@@ -70,8 +70,12 @@ class HomeContainer extends Component {
     this.setState({ value });
   };
 
-  handleDelete = (kind, id) => {
-    this.setState({ [kind]: this.state[kind].filter(item => item._id !== id) });
+  handleDelete = (api) => (kind, id) => {
+    api.deleteById(id)
+      .then(() => {
+        this.setState({ [kind]: this.state[kind].filter(item => item._id !== id) });
+      }).catch(err => console.log(err));
+    
   }
 
   loadData = async (kind, api) => {
@@ -98,7 +102,7 @@ class HomeContainer extends Component {
           isEditable={true}
           editLink={'/admin/edit/user/'}
           createLink={'/admin/create/user/'}
-          handleDelete={this.handleDelete}
+          handleDelete={this.handleDelete(UserAPI)}
           isDeletable={true}
         />}
       </div>
@@ -122,7 +126,7 @@ class HomeContainer extends Component {
           isEditable={true}
           editLink={'/admin/edit/group/'}
           createLink={'/admin/create/group/'}
-          handleDelete={this.handleDelete}
+          handleDelete={this.handleDelete(GroupAPI)}
           isDeletable={true}
         />}
       </div>
@@ -146,7 +150,7 @@ class HomeContainer extends Component {
           isEditable={true}
           editLink={'/admin/edit/room/'}
           createLink={'/admin/create/room/'}
-          handleDelete={this.handleDelete}
+          handleDelete={this.handleDelete(RoomAPI)}
           isDeletable={false}
         />
       </div>

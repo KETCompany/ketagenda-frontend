@@ -53,12 +53,12 @@ class DataForm extends React.Component {
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      {formInputs[key]['options'].map(role => (
+                      {formInputs[key]['options'].map(({ _id, name }) => (
                         <MenuItem
-                          key={role}
-                          value={role}
+                          key={_id}
+                            value={_id}
                         >
-                          {role}
+                            {name}
                         </MenuItem>
                       ))}
                     </Select>
@@ -76,9 +76,6 @@ class DataForm extends React.Component {
                         name={key}
                         onChange={handleChange}
                       >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
                         {formInputs[key]['options'].map(({ name, _id }) => (
                           <MenuItem
                             key={_id}

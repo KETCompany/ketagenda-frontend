@@ -1,4 +1,7 @@
 import arrToObj from '../utils/arrMapper';
+import EventAPI from './EventAPI';
+import UserAPI from './UserAPI';
+
 const url = 'http://localhost:8080/api';
 
 export const list = async (query, select) => (
@@ -23,6 +26,18 @@ export const filters = async query => (
         types: types.map(type => ({ label: type })),
       };
     })
+);
+
+export const deleteById = async (id) => (
+  fetch(`${url}/groups/${id}`, { method: 'DELETE' })
+    .then(resp => resp.json())
+);
+
+export const initCreate = async => (
+  Promise.all([
+    EventAPI.list(null, ['name', 'id']),
+    UserAPI.listStudents(null, ['name', 'id'])
+  ]).then(([events, users]) => ({ events, users }))
 );
 
 export const post = async postData => (
@@ -54,4 +69,5 @@ export default {
   filters,
   post,
   put,
+  deleteById,
 };
