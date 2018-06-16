@@ -39,7 +39,7 @@ export const post = async postData => (
     .catch(err => console.log(err))
 );
 
-export const initCreate = async => (
+export const initForm = async () => (
   Promise.all([
     UserAPI.list('', ['name', 'id']),
     GroupAPI.list('', ['name', 'id']),
@@ -65,5 +65,5 @@ export default {
   post,
   get,
   filters,
-  initCreate,
+  initForm,
 }

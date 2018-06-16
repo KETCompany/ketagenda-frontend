@@ -9,8 +9,8 @@ export const list = async query => (
     .catch(err => console.error(err))
 );
 
-export const listStudents = async () => (
-  fetch(`${url}/users/students`)
+export const listUsers = async () => (
+  fetch(`${url}/users`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 )
@@ -38,7 +38,7 @@ export const filters = async query => (
     })
 );
 
-export const initCreate = async => (
+export const initForm = async => (
   GroupAPI.list(null, ['name', 'id'])
     .then(groups => ({ groups }))
 )
@@ -66,5 +66,5 @@ export const put = async (postData, id) => (
 );
 
 export default {
-  list, get, deleteById, initCreate, post, put, listStudents
+  list, get, deleteById, initForm, post, put, listUsers,
 };

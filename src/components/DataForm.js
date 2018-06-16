@@ -69,7 +69,6 @@ class DataForm extends React.Component {
                       name={key}
                       onChange={handleChange}
                       input={<Input id={`a${key}`} />}
-
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -96,7 +95,7 @@ class DataForm extends React.Component {
                         value={ data[key] ? data[key].map((v) => _.isObject(v) ? v['_id'] : v) : [] }
                         name={key}
                         onChange={handleChange}
-                        renderValue={selected => (<div>SELECT USERS</div>)}
+                        renderValue={selected => (<div>None</div>)}
                         input={<Input id={`b${key}`} />}
                       >
                         {formInputs[key]['options'].map(({ name, _id }) => (
@@ -122,7 +121,6 @@ class DataForm extends React.Component {
                   </div>
                 );
               } else if (_.get(formInputs[key], 'type') == 'calendar') {
-                console.log(data[key]);
                 return (
                 <ReservationsCalendar
                   agendaItems={data[key].map(a => ({...a, start: new Date(a.start), end: new Date(a.end)}))}

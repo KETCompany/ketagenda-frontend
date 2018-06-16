@@ -93,11 +93,11 @@ class UsersContainer extends Component {
       console.error('No kind of form!');
       return;
     }
-    console.log(params.kind);
+
     const Api = _.get(this.state.api, params.kind);
     const formInputs = _.get(this.state.formInputs, params.kind);
 
-    const a = await Api.initCreate();
+    const a = await Api.initForm();
 
     const populatedFormInputs = this.populateFormInputs(formInputs, a);
     this.setState({ dataLoaded: true, api: Api, formInputs: populatedFormInputs  });

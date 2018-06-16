@@ -33,10 +33,10 @@ export const deleteById = async (id) => (
     .then(resp => resp.json())
 );
 
-export const initCreate = async => (
+export const initForm = async () => (
   Promise.all([
     EventAPI.list(null, ['name', 'id']),
-    UserAPI.listStudents(null, ['name', 'id'])
+    UserAPI.listUsers(null, ['name', 'id'])
   ]).then(([events, users]) => ({ events, users }))
 );
 

@@ -23,7 +23,7 @@ export const filters = async query => (
     })
 ).catch(err => console.error(err))
 
-export const initCreate = async => (
+export const initForm = async () => (
   Promise.all([
 
   ])
