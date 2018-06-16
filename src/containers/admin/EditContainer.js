@@ -63,6 +63,7 @@ class UsersContainer extends Component {
           floor: [],
           number: [],
           type: [],
+          location: [],
         },
         event: {
           name: [],
@@ -102,6 +103,7 @@ class UsersContainer extends Component {
     const Api = _.get(this.state.api, params.kind);
 
     const formInputs = _.get(this.state.formInputs, params.kind);
+
     await Promise.all([
       Api.initCreate(),
       Api.get(params.id, true),

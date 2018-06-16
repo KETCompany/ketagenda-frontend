@@ -25,6 +25,12 @@ export const filters = async query => (
     })
 );
 
+export const initCreate = async => (
+  Promise.all([
+
+  ])
+);
+
 export const post = async postData => (
   fetch(`${url}/rooms`, {
     method: 'POST',

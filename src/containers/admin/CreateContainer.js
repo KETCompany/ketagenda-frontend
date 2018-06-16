@@ -62,6 +62,7 @@ class UsersContainer extends Component {
           floor: [],
           number: [],
           type: [],
+          location: [],
         },
         event: {
           name: [],

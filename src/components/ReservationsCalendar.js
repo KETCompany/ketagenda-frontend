@@ -49,7 +49,6 @@ class ReservationsCalendar extends React.Component {
     } = this.props;
 
     BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
-
     return (
       <div className={classes.paper} elevation={4}>
         <BigCalendar

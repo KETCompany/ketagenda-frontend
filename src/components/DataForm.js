@@ -20,6 +20,8 @@ import {
 
 import _ from 'lodash';
 
+import ReservationsCalendar from './ReservationsCalendar';
+
 const styles = theme => ({
   root: {
     width: '100%',
@@ -29,6 +31,21 @@ const styles = theme => ({
     minWidth: 185,
   },
 });
+
+const Event = ({ event: booking }) => {
+  const { event } = booking;
+  if (event && event.name) {
+    return (
+      <span>
+        <strong>{event.name}</strong>
+        {event.desc && ':  ' + event.desc}
+      </span>
+    )
+  } else {
+    return (<span></span>);
+  }
+}
+
 
 class DataForm extends React.Component {
   constructor(props) {
@@ -93,6 +110,13 @@ class DataForm extends React.Component {
                     </FormControl>
                   </div>
                 );
+              } else if (_.get(formInputs[key], 'type') == 'calendar') {
+                console.log(data[key]);
+                return (
+                <ReservationsCalendar
+                  agendaItems={data[key].map(a => ({...a, start: new Date(a.start), end: new Date(a.end)}))}
+                  Event={Event}
+                  />)
               } else {
                 return (
                   <div>

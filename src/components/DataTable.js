@@ -16,6 +16,9 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 
+import Input from '@material-ui/core/Input';
+import Toolbar from '@material-ui/core/Toolbar';
+
 import { Link } from 'react-router-dom';
 
 import {
@@ -129,6 +132,15 @@ const styles = theme => ({
     bottom: theme.spacing.unit * 5,
     right: theme.spacing.unit * 5,
   },
+  search: {
+    width: '100%',
+  },
+  paper: {
+    paddingTop: 16,
+    paddingBottom: 16,
+    marginTop: theme.spacing.unit * 3,
+    boxShadow: 'none',
+  },
 });
 
 class DataTable extends React.Component {
@@ -156,14 +168,20 @@ class DataTable extends React.Component {
       return { key: data, value: s => s[data] };
     }
   }
-  
+
 
   render() {
-    const { classes, kind, data, columns, isEditable, editLink, createLink, isDeletable, handleDelete } = this.props;
+    const { classes, kind, columns, isEditable, editLink, createLink, isDeletable, handleDelete, filter, handleFilterChange } = this.props;
+    let { data } = this.props;
+    data = data.filter(data => new RegExp(filter && filter[kind] ? filter[kind] : '', 'i').exec(data.name))
     const newColumns = columns.map(this.transformColumn);
-    if (data.length > 0) {
+    // if (data.length > 0) {
       const { rowsPerPage, page } = this.state;
+
+      
+
       const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+
       return (
         <Paper className={classes.root}>
           <Link to={createLink}>
@@ -171,82 +189,93 @@ class DataTable extends React.Component {
               <Add />
             </Button>
           </Link>
-          <div className={classes.tableWrapper}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  {newColumns.map((n) => (
-                    <TableCell>{_.capitalize(n.key)}</TableCell>
-                  ))}
-                  {isEditable == true && (
-                    <TableCell>{'Edit'}</TableCell>
-                  )}
-                  {isDeletable == true && (
-                    <TableCell>{'Delete'}</TableCell>
-                  )}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n) => (
-                  <TableRow key={n._id}>
-                    {newColumns.map((item) => (
-                      <TableCell>{item.value(n)}</TableCell>
+          <Paper className={classes.paper} elevation={4}>
+            <form>
+              <Toolbar>
+                <Input
+                  className={classes.search}
+                  placeholder={`search ${kind}`}
+                  value={filter && filter[kind] ? filter[kind] : ''}
+                  onChange={handleFilterChange(kind)}
+              />
+              </Toolbar>
+            </form>
+          </Paper>
+          {data.length > 0 ? 
+            (<div className={classes.tableWrapper}>
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    {newColumns.map((n) => (
+                      <TableCell>{_.capitalize(n.key)}</TableCell>
                     ))}
                     {isEditable == true && (
-                      <TableCell className={classes.editTableCel}>
-                        <Link to={`${editLink}${n._id}/`}>
-                          <IconButton className={classes.button} aria-label="Edit" color="secondary" data-id={n._id}>
-                            <Brush />
-                          </IconButton>
-                        </Link>
-                      </TableCell>
+                      <TableCell>{'Edit'}</TableCell>
                     )}
                     {isDeletable == true && (
-                      <TableCell className={classes.deleteTableCel}>
-                        <IconButton
-                          className={classes.button}
-                          aria-label="Delete"
-                          color="primary"
-                          data-id={n._id}
-                          onClick={() =>{ if(window.confirm(`Are you sure to delete ${n.name}?`)) handleDelete(kind, n._id) } }>
-                          <Delete />
-                        </IconButton>
-                      </TableCell>
+                      <TableCell>{'Delete'}</TableCell>
                     )}
                   </TableRow>
+                </TableHead>
+                <TableBody>
+                  {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n) => (
+                    <TableRow key={n._id}>
+                      {newColumns.map((item) => (
+                        <TableCell>{item.value(n)}</TableCell>
+                      ))}
+                      {isEditable == true && (
+                        <TableCell className={classes.editTableCel}>
+                          <Link to={`${editLink}${n._id}/`}>
+                            <IconButton className={classes.button} aria-label="Edit" color="secondary" data-id={n._id}>
+                              <Brush />
+                            </IconButton>
+                          </Link>
+                        </TableCell>
+                      )}
+                      {isDeletable == true && (
+                        <TableCell className={classes.deleteTableCel}>
+                          <IconButton
+                            className={classes.button}
+                            aria-label="Delete"
+                            color="primary"
+                            data-id={n._id}
+                            onClick={() => { if (window.confirm(`Are you sure to delete ${n.name}?`)) handleDelete(kind, n._id) }}>
+                            <Delete />
+                          </IconButton>
+                        </TableCell>
+                      )}
+                    </TableRow>
                   )
-                )}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 48 * emptyRows }}>
-                    <TableCell colSpan={6} />
+                  )}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 48 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      colSpan={3}
+                      count={data.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      rowsPerPageOptions={[10, 15, 20]}
+                      onChangePage={this.handleChangePage}
+                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                      ActionsComponent={DataTableActionsWrapped}
+                    />
                   </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    colSpan={3}
-                    count={data.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    rowsPerPageOptions={[10, 15, 20]}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                    ActionsComponent={DataTableActionsWrapped}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </div>
+                </TableFooter>
+              </Table>
+            </div>) :
+            (
+              <Paper className={classes.root}>
+                <div>{'No data found'}</div>
+              </Paper>
+            )}
         </Paper>
       );
-    } else {
-      return (
-        <Paper className={classes.root}>
-          <div>{'No data found'}</div>
-        </Paper>
-      )
-    }
   }
 }
 
