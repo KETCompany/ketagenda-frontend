@@ -24,7 +24,6 @@ const RoomSearch = props => (
     <form onSubmit={props.onSubmitSearch}>
       <Toolbar>
         <Input
-          defaultValue=""
           placeholder="Search your room"
           className={props.classes.search}
           value={props.search}
@@ -34,7 +33,5 @@ const RoomSearch = props => (
     </form>
   </Paper>
 );
-
-
 
 export default withStyles(styles)(RoomSearch);

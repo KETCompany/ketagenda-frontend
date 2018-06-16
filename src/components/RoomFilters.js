@@ -45,8 +45,6 @@ class RoomFilters extends Component {
   constructor() {
     super();
     this.state = {
-      selectedDate: new Date(),
-      selectedTime: new Date(),
       expanded: [],
     };
   }
@@ -70,9 +68,11 @@ class RoomFilters extends Component {
       clearFilters,
       onSearch,
       dateNow,
+      selectedDate, 
+      selectedTime
     } = this.props;
 
-    const { selectedDate, selectedTime, expanded } = this.state;
+    const { expanded } = this.state;
 
     return (
       <div className={classes.expansionPanelRoot}>
@@ -91,9 +91,11 @@ class RoomFilters extends Component {
                 keyboard
                 format="DD/MM/YYYY"
                 mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+                placeholder="11/11/2018"
                 value={selectedDate}
                 onChange={handleDateChange}
                 animateYearScrolling={false}
+                invalidDateMessage={'Select a date'}
               />
             </div>
             <div className={classes.column}>
@@ -104,20 +106,22 @@ class RoomFilters extends Component {
                 keyboard
                 mask={[/\d/, /\d/, ':', /\d/, /\d/]}
                 ampm={false}
-                value={selectedDate}
-                onChange={handleDateChange}
+                value={selectedTime}
+                onChange={handleTimeChange}
+                placeholder="13:37"
+                invalidDateMessage={'Select a time'}
               />
             </div>
           </ExpansionPanelDetails>
           <Divider />
           <ExpansionPanelActions>
-            <Button size="small" onClick={this.onSearch} color="primary">
+            <Button size="small" onClick={onSearch} color="primary">
               Search
           </Button>
           </ExpansionPanelActions>
         </ExpansionPanel>
 
-        <ExpansionPanel expanded={expanded.indexOf('panel2') >= 0} onChange={this.handleExpansionChange('panel2')} onChange={this.handleExpansionChange('panel2')} className={classes.paperNoMargin}>
+        <ExpansionPanel expanded={expanded.indexOf('panel2') >= 0} onChange={this.handleExpansionChange('panel2')} className={classes.paperNoMargin}>
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <div className={classes.column}>
               <Typography className={classes.heading}></Typography>
