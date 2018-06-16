@@ -149,9 +149,18 @@ class DataTable extends React.Component {
     this.setState({ rowsPerPage: event.target.value });
   };
 
+  transformColumn = data => {
+    if(_.isObject(data)) {
+      return { key: data.name, value: s => data.select.split('.').reduce((acc, cur) => acc ? acc[cur] : '', s) }
+    } else {
+      return { key: data, value: s => s[data] };
+    }
+  }
+  
+
   render() {
     const { classes, kind, data, columns, isEditable, editLink, createLink, isDeletable, handleDelete } = this.props;
-    
+    const newColumns = columns.map(this.transformColumn);
     if (data.length > 0) {
       const { rowsPerPage, page } = this.state;
       const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
@@ -166,8 +175,8 @@ class DataTable extends React.Component {
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
-                  {columns.map((n) => (
-                    <TableCell>{_.capitalize(n)}</TableCell>
+                  {newColumns.map((n) => (
+                    <TableCell>{_.capitalize(n.key)}</TableCell>
                   ))}
                   {isEditable == true && (
                     <TableCell>{'Edit'}</TableCell>
@@ -180,8 +189,8 @@ class DataTable extends React.Component {
               <TableBody>
                 {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n) => (
                   <TableRow key={n._id}>
-                    {columns.map((item) => (
-                      <TableCell>{n[item]}</TableCell>
+                    {newColumns.map((item) => (
+                      <TableCell>{item.value(n)}</TableCell>
                     ))}
                     {isEditable == true && (
                       <TableCell className={classes.editTableCel}>

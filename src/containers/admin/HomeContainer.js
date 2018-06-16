@@ -18,6 +18,7 @@ import DataTable from '../../components/DataTable';
 import * as UserAPI from '../../api/UserAPI';
 import * as RoomAPI from '../../api/RoomAPI';
 import * as GroupAPI from '../../api/GroupAPI';
+import * as EventAPI from '../../api/EventAPI';
 
 import {
   RegularCard,
@@ -44,6 +45,7 @@ class HomeContainer extends Component {
       users: [],
       groups: [],
       rooms: [],
+      events: [],
       columns: {
         usersTable: [
           'name',
@@ -62,6 +64,11 @@ class HomeContainer extends Component {
           'number',
           'type',
         ],
+        eventsTable: [
+          'name',
+          { name: 'owner', select: 'owner.short'},
+          'description',
+        ],
       }
     }
   }
@@ -79,7 +86,7 @@ class HomeContainer extends Component {
   }
 
   loadData = async (kind, api) => {
-    const data = await api.list('')
+    const data = await api.list('', [], true)
       .catch(err => console.error(err));
 
     this.setState({ [kind]: data });
@@ -157,6 +164,30 @@ class HomeContainer extends Component {
     )
   }
 
+  renderEventsTable() {
+    const { events, columns: { eventsTable } } = this.state;
+    const kind = 'events';
+    if (events.length === 0) {
+      this.loadData(kind, EventAPI);
+    }
+
+    return (
+      <div>
+        <DataTable
+          data={events}
+          kind={kind}
+          rowsPerPage={15}
+          columns={eventsTable}
+          isEditable={true}
+          editLink={'/admin/edit/event/'}
+          createLink={'/admin/create/event/'}
+          handleDelete={this.handleDelete(EventAPI)}
+          isDeletable={false}
+        />
+      </div>
+    )
+  }
+
 
   render() {
     const { value } = this.state;
@@ -168,12 +199,14 @@ class HomeContainer extends Component {
               <Tab label="Users" />
               <Tab label="Groups" />
               <Tab label="Rooms" />
+              <Tab label="Events" />
             </Tabs>
           </AppBar>
           <div>
             {value === 0 && this.renderUsersTable()}
             {value === 1 && this.renderGroupsTable()}
             {value === 2 && this.renderRoomsTable()}
+            {value === 3 && this.renderEventsTable()}
           </div>
       </div>
     )

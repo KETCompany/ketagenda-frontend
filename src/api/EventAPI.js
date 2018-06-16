@@ -1,8 +1,8 @@
 import arrToObj from '../utils/arrMapper';
 const url = 'http://localhost:8080/api';
 
-export const list = async (query, select) => (
-  fetch(`${url}/events?select=${select ? select.join(',') : ''}`)
+export const list = async (query, select, populate) => (
+  fetch(`${url}/events?select=${select ? select.join(',') : ''}${populate ? '&populate' : ''}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
