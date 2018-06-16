@@ -177,10 +177,13 @@ class RoomsContainer extends Component {
 
       const rooms = await RoomAPI.list(`?${searchQuery}`);
       const filtersDisabled = await RoomAPI.filters(`&${searchQuery.replace('&floor', '&floors')}`);
-      this.setState({
-        ...this.state, rooms: rooms || [], filtersDisabled, noRooms: rooms.length === 0, loading: false,
-        expanded: filtered ? this.state.expanded : []
-      });
+
+      if(rooms) {
+        this.setState({
+          ...this.state, rooms: rooms || [], filtersDisabled, noRooms: rooms.length === 0, loading: false,
+          expanded: filtered ? this.state.expanded : []
+        });
+      }
     } else {
       this.setState({ ...this.state, rooms: [], filtersDisabled: this.state.filters, loading: false });
     }

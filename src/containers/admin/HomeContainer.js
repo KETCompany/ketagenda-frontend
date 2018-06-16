@@ -87,9 +87,10 @@ class HomeContainer extends Component {
 
   loadData = async (kind, api) => {
     const data = await api.list('', [], true)
-      .catch(err => console.error(err));
-
-    this.setState({ [kind]: data });
+    
+    if (data) {
+      this.setState({ [kind]: data });
+    }
   }
 
   handleFilterChange = (kind) => (e) => {

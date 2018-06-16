@@ -4,14 +4,12 @@ const url = 'http://localhost:8080/api';
 export const list = async query => (
   fetch(`${url}/rooms${query}`)
     .then(resp => resp.json())
-    .catch(err => console.error(err))
-);
+).catch(err => console.error(err))
 
 export const get = async (id, populate) => (
   fetch(`${url}/rooms/${id}${populate ? '?populate' : ''}`)
     .then(resp => resp.json())
-    .catch(err => console.error(err))
-);
+).catch(err => console.error(err))
 
 export const filters = async query => (
   fetch(`${url}/rooms?filters${query}`)
@@ -23,13 +21,13 @@ export const filters = async query => (
         types: types.map(type => ({ label: type })),
       };
     })
-);
+).catch(err => console.error(err))
 
 export const initCreate = async => (
   Promise.all([
 
   ])
-);
+).catch(err => console.error(err))
 
 export const post = async postData => (
   fetch(`${url}/rooms`, {
@@ -40,7 +38,7 @@ export const post = async postData => (
     body: JSON.stringify(postData),
   }).then(res => res.json())
     .catch(err => console.log(err))
-);
+).catch(err => console.error(err))
 
 export const put = async (postData, id) => (
   fetch(`${url}/rooms/${id}`, {
@@ -51,7 +49,7 @@ export const put = async (postData, id) => (
     body: JSON.stringify(postData),
   }).then(res => res.json())
     .catch(err => console.log(err))
-);
+).catch(err => console.error(err))
 
 export default {
   list, get, filters, post, put,
