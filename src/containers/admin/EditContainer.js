@@ -6,6 +6,8 @@ import _ from 'lodash';
 import * as UserAPI from '../../api/UserAPI';
 import * as RoomAPI from '../../api/RoomAPI';
 import * as GroupAPI from '../../api/GroupAPI';
+import * as EventAPI from '../../api/EventAPI';
+
 
 import DataForm from '../../components/DataForm';
 
@@ -28,6 +30,7 @@ class UsersContainer extends Component {
         user: UserAPI,
         room: RoomAPI,
         group: GroupAPI,
+        event: EventAPI,
       },
       formInputs: {
         user: {
@@ -60,7 +63,20 @@ class UsersContainer extends Component {
           floor: [],
           number: [],
           type: [],
+          location: [],
         },
+        event: {
+          name: [],
+          description: [],
+          owner: {
+            type: 'select',
+            options: [],
+          },
+          bookings: {
+            type: 'calendar',
+            options: [],
+          },
+        }
       },
     };
   }
@@ -87,6 +103,7 @@ class UsersContainer extends Component {
     const Api = _.get(this.state.api, params.kind);
 
     const formInputs = _.get(this.state.formInputs, params.kind);
+
     await Promise.all([
       Api.initCreate(),
       Api.get(params.id, true),

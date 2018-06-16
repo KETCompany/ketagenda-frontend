@@ -25,6 +25,12 @@ export const filters = async query => (
     })
 );
 
+export const initCreate = async => (
+  Promise.all([
+
+  ])
+);
+
 export const post = async postData => (
   fetch(`${url}/rooms`, {
     method: 'POST',
@@ -46,3 +52,7 @@ export const put = async (postData, id) => (
   }).then(res => res.json())
     .catch(err => console.log(err))
 );
+
+export default {
+  list, get, filters, post, put,
+}

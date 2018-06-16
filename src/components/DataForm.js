@@ -8,6 +8,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+
 
 import TextField from 'material-ui/TextField';
 
@@ -17,6 +19,8 @@ import {
 } from '@material-ui/icons';
 
 import _ from 'lodash';
+
+import ReservationsCalendar from './ReservationsCalendar';
 
 const styles = theme => ({
   root: {
@@ -28,6 +32,21 @@ const styles = theme => ({
   },
 });
 
+const Event = ({ event: booking }) => {
+  const { event } = booking;
+  if (event && event.name) {
+    return (
+      <span>
+        <strong>{event.name}</strong>
+        {event.desc && ':  ' + event.desc}
+      </span>
+    )
+  } else {
+    return (<span></span>);
+  }
+}
+
+
 class DataForm extends React.Component {
   constructor(props) {
     super(props);
@@ -35,7 +54,7 @@ class DataForm extends React.Component {
 
   render() {
     const { classes, data, formInputs, handleChange, handleSave, dataLoaded } = this.props;
-
+    
     if (dataLoaded === true) {
       return (
         <div className={classes.root}>
@@ -44,11 +63,13 @@ class DataForm extends React.Component {
                 return (
                   <div>
                   <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="age-simple">{_.capitalize(key)}</InputLabel>
+                    <InputLabel htmlFor={`a${key}`}>{_.capitalize(key)}</InputLabel>
                     <Select
-                      value={data[key]}
+                      value={data[key] && _.isObject(data[key]) ? data[key]['_id'] : data[key]}
                       name={key}
                       onChange={handleChange}
+                      input={<Input id={`a${key}`} />}
+
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -69,12 +90,13 @@ class DataForm extends React.Component {
                 return (
                   <div>
                     <FormControl className={classes.formControl}>
-                      <InputLabel htmlFor="age-simple">{_.capitalize(key)}</InputLabel>
+                      <InputLabel htmlFor={`b${key}`}>{_.capitalize(key)}</InputLabel>
                       <Select
                         multiple
                         value={data[key] ? data[key].map((v) => _.isObject(v) ? v['_id'] : v) : []}
                         name={key}
                         onChange={handleChange}
+                        input={<Input id={`b${key}`} />}
                       >
                         {formInputs[key]['options'].map(({ name, _id }) => (
                           <MenuItem
@@ -88,6 +110,13 @@ class DataForm extends React.Component {
                     </FormControl>
                   </div>
                 );
+              } else if (_.get(formInputs[key], 'type') == 'calendar') {
+                console.log(data[key]);
+                return (
+                <ReservationsCalendar
+                  agendaItems={data[key].map(a => ({...a, start: new Date(a.start), end: new Date(a.end)}))}
+                  Event={Event}
+                  />)
               } else {
                 return (
                   <div>

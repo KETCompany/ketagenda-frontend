@@ -92,8 +92,19 @@ class HomeContainer extends Component {
     this.setState({ [kind]: data });
   }
 
+  handleFilterChange = (kind) => (e) => {
+    const { value } = e.target;
+
+    this.setState({
+      filter: {
+        ...this.state.filter,
+        [kind]: value
+      },
+    });
+  }
+
   renderUsersTable() {
-    const { users, columns: { usersTable } } = this.state;
+    const { users, columns: { usersTable }, filter} = this.state;
     const kind = 'users';
     if (users.length === 0) {
       this.loadData(kind, UserAPI);
@@ -104,6 +115,8 @@ class HomeContainer extends Component {
         {<DataTable
           data={users}
           kind={kind}
+          filter={filter}
+          handleFilterChange={this.handleFilterChange}
           rowsPerPage={15}
           columns={usersTable}
           isEditable={true}
@@ -117,7 +130,7 @@ class HomeContainer extends Component {
   }
 
   renderGroupsTable() {
-    const { groups, columns: { groupsTable } } = this.state;
+    const { groups, columns: { groupsTable }, filter } = this.state;
     const kind = 'groups';
     if (groups.length === 0) {
       this.loadData(kind, GroupAPI);
@@ -128,6 +141,8 @@ class HomeContainer extends Component {
         {<DataTable
           data={groups}
           kind={kind}
+          filter={filter}
+          handleFilterChange={this.handleFilterChange}
           rowsPerPage={15}
           columns={groupsTable}
           isEditable={true}
@@ -141,7 +156,7 @@ class HomeContainer extends Component {
   }
 
   renderRoomsTable() {
-    const { rooms, columns: { roomsTable } } = this.state;
+    const { rooms, columns: { roomsTable }, filter } = this.state;
     const kind = 'rooms';
     if (rooms.length === 0) {
       this.loadData(kind, RoomAPI);
@@ -152,6 +167,8 @@ class HomeContainer extends Component {
         <DataTable
           data={rooms}
           kind={kind}
+          filter={filter}
+          handleFilterChange={this.handleFilterChange}
           rowsPerPage={15}
           columns={roomsTable}
           isEditable={true}
@@ -165,7 +182,7 @@ class HomeContainer extends Component {
   }
 
   renderEventsTable() {
-    const { events, columns: { eventsTable } } = this.state;
+    const { events, columns: { eventsTable }, filter } = this.state;
     const kind = 'events';
     if (events.length === 0) {
       this.loadData(kind, EventAPI);
@@ -176,6 +193,8 @@ class HomeContainer extends Component {
         <DataTable
           data={events}
           kind={kind}
+          filter={filter}
+          handleFilterChange={this.handleFilterChange}
           rowsPerPage={15}
           columns={eventsTable}
           isEditable={true}
