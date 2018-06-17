@@ -1,6 +1,7 @@
 import arrToObj from '../utils/arrMapper';
 import GroupAPI from './GroupAPI';
 const url = 'http://localhost:8080/api';
+const baseUrl = 'http://localhost:8080';
 
 
 export const list = async query => (
@@ -65,6 +66,11 @@ export const put = async (postData, id) => (
     .catch(err => console.log(err))
 );
 
+export const login = async (code) => (
+  fetch(`${baseUrl}/auth/google/callback${code}`)
+    .then(res => res.json())
+);
+
 export default {
-  list, get, deleteById, initForm, post, put, listUsers,
+  list, get, deleteById, initForm, post, put, listUsers, login,
 };

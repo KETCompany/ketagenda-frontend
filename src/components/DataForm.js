@@ -59,7 +59,7 @@ class DataForm extends React.Component {
       return (
         <div className={classes.root}>
             {Object.keys(formInputs).map(key => {
-              if(_.get(formInputs[key], 'type') == 'select'){
+              if(_.get(formInputs[key], 'type') === 'select'){
                 return (
                   <div>
                   <FormControl className={classes.formControl}>
@@ -85,7 +85,7 @@ class DataForm extends React.Component {
                   </FormControl>
                   </div>
                 );
-              } else if (_.get(formInputs[key], 'type') == 'multiSelect') {
+              } else if (_.get(formInputs[key], 'type') === 'multiSelect') {
                 return (
                   <div>
                     <FormControl className={classes.formControl}>
@@ -120,7 +120,7 @@ class DataForm extends React.Component {
                     </div>
                   </div>
                 );
-              } else if (_.get(formInputs[key], 'type') == 'calendar') {
+              } else if (_.get(formInputs[key], 'type') === 'calendar') {
                 return (
                 <ReservationsCalendar
                   agendaItems={data[key].map(a => ({...a, start: new Date(a.start), end: new Date(a.end)}))}

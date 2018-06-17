@@ -1,18 +1,20 @@
 import arrToObj from '../utils/arrMapper';
+import fetcher from './fetcher';
+
 const url = 'http://localhost:8080/api';
 
 export const list = async query => (
-  fetch(`${url}/rooms${query}`)
+  fetcher.get(`${url}/rooms${query}`)
     .then(resp => resp.json())
 ).catch(err => console.error(err))
 
 export const get = async (id, populate) => (
-  fetch(`${url}/rooms/${id}${populate ? '?populate' : ''}`)
+  fetcher.get(`${url}/rooms/${id}${populate ? '?populate' : ''}`)
     .then(resp => resp.json())
 ).catch(err => console.error(err))
 
 export const filters = async query => (
-  fetch(`${url}/rooms?filters${query}`)
+  fetcher.get(`${url}/rooms?filters${query}`)
     .then(resp => resp.json())
     .then(({ locations, floors, types }) => {
       return {
