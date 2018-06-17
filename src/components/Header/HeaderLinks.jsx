@@ -17,12 +17,33 @@ import { Link } from 'react-router-dom';
 
 import headerLinksStyle from "../../assets/jss/material-dashboard-react/headerLinksStyle";
 
+import firebase from 'firebase/app';
+
 class HeaderLinks extends React.Component {
   state = {
     notifications: false
   };
   handleClick = (evt) => {
     const { name, value } = evt.currentTarget;
+
+    if(name === 'notifications') {
+      const messaging = firebase.messaging();
+      messaging.requestPermission().then(function () {
+        console.log('Notification permission granted.');
+        messaging.getToken().then(function (currentToken) {
+          console.log(currentToken);
+        }).catch(function (err) {
+          console.log('some error');
+          // console.log('An error occurred while retrieving token. ', err);
+          // showToken('Error retrieving Instance ID token. ', err);
+          // setTokenSentToServer(false);
+        });
+
+      }).catch(function (err) {
+        console.log('Unable to get permission to notify.', err);
+      });
+
+    }
     this.setState({ [name]: !value });
   };
 
@@ -34,6 +55,9 @@ class HeaderLinks extends React.Component {
   handleClose = () => {
     this.setState({ notifications: false });
   };
+
+
+
   render() {
     const { classes } = this.props;
     const { notifications } = this.state;

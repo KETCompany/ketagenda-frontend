@@ -7,6 +7,7 @@
     "@material-ui/icons": "1.0.0-beta.42",
     "classnames": "^2.2.5",
     "date-fns": "^2.0.0-alpha.7",
+    "firebase": "^5.0.4",
     "googleapis": "^32.0.0",
     "jss": "latest",
     "lodash": "^4.17.5",
