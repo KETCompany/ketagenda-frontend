@@ -2,22 +2,24 @@ import arrToObj from '../utils/arrMapper';
 import EventAPI from './EventAPI';
 import UserAPI from './UserAPI';
 
+import fetcher from './fetcher';
+
 const url = 'http://localhost:8080/api';
 
 export const list = async (query, select) => (
-  fetch(`${url}/groups?select=${select ? select.join(',') : ''}`)
+  fetcher.get(`${url}/groups?select=${select ? select.join(',') : ''}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
 
 export const get = async (id, populate) => (
-  fetch(`${url}/groups/${id}${populate ? '?populate' : ''}`)
+  fetcher.get(`${url}/groups/${id}${populate ? '?populate' : ''}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
 
 export const filters = async query => (
-  fetch(`${url}/groups?filters${query}`)
+  fetcher.get(`${url}/groups?filters${query}`)
     .then(resp => resp.json())
     .then(({ locations, floors, types }) => {
       return {
@@ -29,7 +31,7 @@ export const filters = async query => (
 );
 
 export const deleteById = async (id) => (
-  fetch(`${url}/groups/${id}`, { method: 'DELETE' })
+  fetcher.post(`${url}/groups/${id}`, { method: 'DELETE' })
     .then(resp => resp.json())
 );
 
@@ -41,7 +43,7 @@ export const initForm = async () => (
 );
 
 export const post = async postData => (
-  fetch(`${url}/groups`, {
+  fetcher.post(`${url}/groups`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -52,7 +54,7 @@ export const post = async postData => (
 );
 
 export const put = async (postData, id) => (
-  fetch(`${url}/groups/${id}`, {
+  fetcher.post(`${url}/groups/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

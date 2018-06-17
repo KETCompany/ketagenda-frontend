@@ -1,34 +1,38 @@
 import arrToObj from '../utils/arrMapper';
 import GroupAPI from './GroupAPI';
+import fetcher from './fetcher';
+
 const url = 'http://localhost:8080/api';
 const baseUrl = 'http://localhost:8080';
 
 
+
+
 export const list = async query => (
-  fetch(`${url}/users${query}`)
+  fetcher.get(`${url}/users${query}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
 
 export const listUsers = async () => (
-  fetch(`${url}/users`)
+  fetcher.get(`${url}/users`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 )
 
 export const get = async (id, populate) => (
-  fetch(`${url}/users/${id}${populate ? '?populate' : ''}`)
+  fetcher.get(`${url}/users/${id}${populate ? '?populate' : ''}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
 
 export const deleteById = async (id) => (
-  fetch(`${url}/users/${id}`, { method: 'DELETE' })
+  fetcher.post(`${url}/users/${id}`, { method: 'DELETE' })
     .then(resp => resp.json())
 );
 
 export const filters = async query => (
-  fetch(`${url}/users?filters${query}`)
+  fetcher.get(`${url}/users?filters${query}`)
     .then(resp => resp.json())
     .then(({ locations, floors, types }) => {
       return {
@@ -45,7 +49,7 @@ export const initForm = async => (
 )
 
 export const post = async postData => (
-  fetch(`${url}/users`, {
+  fetcher.post(`${url}/users`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -56,7 +60,7 @@ export const post = async postData => (
 );
 
 export const put = async (postData, id) => (
-  fetch(`${url}/users/${id}`, {
+  fetcher.post(`${url}/users/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -71,6 +75,10 @@ export const login = async (code) => (
     .then(res => res.json())
 );
 
+export const profile = async () =>
+  fetcher.get(`${baseUrl}/api/users/profile`)
+  .then(res => res.json());
+
 export default {
-  list, get, deleteById, initForm, post, put, listUsers, login,
+  list, get, deleteById, initForm, post, put, listUsers, login, profile,
 };

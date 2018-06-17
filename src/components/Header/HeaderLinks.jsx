@@ -26,6 +26,11 @@ class HeaderLinks extends React.Component {
     this.setState({ [name]: !value });
   };
 
+  handleLogout = (evt) => {
+    sessionStorage.removeItem('role');
+    sessionStorage.removeItem('jwtToken');
+  }
+
   handleClose = () => {
     this.setState({ notifications: false });
   };
@@ -137,7 +142,7 @@ class HeaderLinks extends React.Component {
           aria-label="Person"
           className={classes.buttonLink}
         >
-          <Person className={classes.links} onClick={this.handleClick} />
+          <Person className={classes.links} name="notifications" value={'something'} onClick={this.handleLogout} />
           <Hidden mdUp>
             <p className={classes.linkText}>Profile</p>
           </Hidden>

@@ -2,22 +2,24 @@ import arrToObj from '../utils/arrMapper';
 import UserAPI from './UserAPI';
 import RoomAPI from './RoomAPI';
 import GroupAPI from './GroupAPI';
+import fetcher from './fetcher';
+
 const url = 'http://localhost:8080/api';
 
 export const list = async (query, select, populate) => (
-  fetch(`${url}/events?select=${select ? select.join(',') : ''}${populate ? '&populate' : ''}`)
+  fetcher.get(`${url}/events?select=${select ? select.join(',') : ''}${populate ? '&populate' : ''}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
 
 export const get = async (id, populate) => (
-  fetch(`${url}/events/${id}${populate ? '?populate' : ''}`)
+  fetcher.get(`${url}/events/${id}${populate ? '?populate' : ''}`)
     .then(resp => resp.json())
     .catch(err => console.error(err))
 );
 
 export const filters = async query => (
-  fetch(`${url}/events?filters${query}`)
+  fetcher.get(`${url}/events?filters${query}`)
     .then(resp => resp.json())
     .then(({ locations, floors, types }) => {
       return {
@@ -29,7 +31,7 @@ export const filters = async query => (
 );
 
 export const post = async postData => (
-  fetch(`${url}/events`, {
+  fetcher.post(`${url}/events`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -49,7 +51,7 @@ export const initForm = async () => (
 )
 
 export const put = async (postData, id) => (
-  fetch(`${url}/events/${id}`, {
+  fetcher.post(`${url}/events/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

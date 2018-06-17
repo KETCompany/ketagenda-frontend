@@ -22,19 +22,19 @@ const dashboardRoutes = [
     navbarName: 'Material Dashboard',
     icon: Dashboard,
     component: RoomsContainer,
-    authorize: ['Student', 'teacher', 'admin'],
+    authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
     path: '/rooms/:id',
     hidden: true,
     component: RoomDetailContainer,
-    authorize: ['Student', 'teacher', 'admin'],
+    authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
     path: '/reservation',
     hidden: true,
     component: ReservationContainer,
-    authorize: ['Student', 'teacher', 'admin'],
+    authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
     path: '/typography',
@@ -42,7 +42,7 @@ const dashboardRoutes = [
     navbarName: 'Event list',
     icon: LibraryBooks,
     component: RoomsContainer,
-    authorize: ['Student', 'teacher', 'admin'],
+    authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
     path: '/messages',
@@ -50,13 +50,13 @@ const dashboardRoutes = [
     navbarName: 'Messages',
     icon: Notifications,
     component: RoomsContainer,
-    authorize: ['Student', 'teacher', 'admin'],
+    authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
     path: '/',
     hidden: true,
     component: RoomsContainer,
-    authorize: ['Student', 'teacher', 'admin'],
+    authorize: ['Student', 'Teacher', 'Admin'],
   },
 ];
 

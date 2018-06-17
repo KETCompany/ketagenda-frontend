@@ -32,7 +32,7 @@ export const initForm = async () => (
 ).catch(err => console.error(err))
 
 export const post = async postData => (
-  fetch(`${url}/rooms`, {
+  fetcher.post(`${url}/rooms`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const post = async postData => (
 ).catch(err => console.error(err))
 
 export const put = async (postData, id) => (
-  fetch(`${url}/rooms/${id}`, {
+  fetcher.post(`${url}/rooms/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

@@ -9,6 +9,19 @@ import Icon from '@material-ui/core/Icon';
 
 import UserAPI from '../api/UserAPI';
 import { Redirect } from 'react-router-dom';
+import { GoogleLogin } from 'react-google-login';
+
+
+const responseGoogleF = (response) => {
+  console.log('----> ', response);
+}
+const responseGoogle = (response) => {
+  console.log(response);
+  UserAPI.login(`?code=${response.code}`)
+    .then(user => console.log(user));
+}
+
+
 
 const styles = (theme) => ({
   paper: {
@@ -45,45 +58,45 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
 
-    if (this.props.location.search) {
-      UserAPI.login(this.props.location.search)
-        .then(response => {
-          if (response && !response.description) {
-            sessionStorage.setItem('role', response.user.role);
-            sessionStorage.setItem('jwtToken', response.token);
-
-          }
-        })
+    this.state = {
+      role: '',
+      token: '',
     }
   }
 
-  onClick = (e) => {
-    window.location = 'http://localhost:8080/auth/google';
+  componentWillMount() {
+    const query = new URLSearchParams(this.props.location.search)
+
+    const token = query.get('token')
+    if (token) {
+      sessionStorage.setItem('jwtToken', token);
+      UserAPI.profile().then(profile => {
+        sessionStorage.setItem('role', profile.role);
+        this.setState({
+          role: profile.role,
+          token,
+        });
+      });
+    }
   }
 
   render() {
     const { classes, ...rest } = this.props;
-    return (
-      <div className={classes.root}>
-        {sessionStorage.getItem('role') ? <Redirect to={'/'} key={'key'} /> : null}
-       <Typography variant="display1" gutterBottom>
-          KET-Agenda
-        </Typography>
-        <Typography variant="subheading" gutterBottom>
-          Key for electronic technolgies in agenda's
-        </Typography>
 
-        <Paper className={classes.paper} elevation={4}>
-          <Typography variant="title" gutterBottom>
-            Log in
-          </Typography>
-          <Button onClick={this.onClick} variant="contained" color="primary" className={classes.button}>
-            Login
-          </Button>
-        </Paper>
+    const { role, token } = this.state;
+    console.log(role, token);
 
-      </div>
-    );
+    if (role && token) {
+      return (
+        <div className={classes.root}>
+          <Redirect to={'/'} key={'key'} />
+        </div>
+      );
+    } else {
+      return (<div></div>);
+    }
+
+    
   }
 }
 
