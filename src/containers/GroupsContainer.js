@@ -13,7 +13,6 @@ const styles = theme => ({
 class GroupsContainer extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       data: [],
       noData: false,

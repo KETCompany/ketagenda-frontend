@@ -17,6 +17,7 @@ import {
 } from '@material-ui/icons';
 import GroupsContainer from '../containers/GroupsContainer';
 import EventsContainer from '../containers/EventsContainer';
+import GroupDetailContainer from '../containers/GroupDetailContainer';
 
 const dashboardRoutes = [
   {
@@ -44,7 +45,7 @@ const dashboardRoutes = [
   {
     path: '/group/:id',
     hidden: true,
-    component: EventDetailContainer,
+    component: GroupDetailContainer,
     authorize: ['Student', 'Teacher', 'Admin'],
   },
   {

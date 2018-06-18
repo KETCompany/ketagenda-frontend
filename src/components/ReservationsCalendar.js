@@ -37,6 +37,15 @@ const formats = {
 };
 
 class ReservationsCalendar extends React.Component {
+  EventAgenda = ({ event }) => {
+    return (
+      <span>
+        <em style={{ color: 'red' }}>{event.title}</em>
+        <p>{event.desc}</p>
+      </span>
+    )
+  }
+
   render = () => {
     const {
       agendaItems,
@@ -45,7 +54,6 @@ class ReservationsCalendar extends React.Component {
       eventPropGetter,
       classes,
       Event,
-      EventAgenda
     } = this.props;
 
     BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
@@ -57,7 +65,7 @@ class ReservationsCalendar extends React.Component {
           step={30}
           eventPropGetter={eventPropGetter}
           formats={formats}
-          min={new Date('01/01/1970 8:00')}
+          min={new Date('01/01/1970 7:00')}
           max={new Date('01/01/1970 22:00')}
           defaultView="week"
           defaultDate={new Date()}
@@ -67,7 +75,7 @@ class ReservationsCalendar extends React.Component {
           components={{
             event: Event,
             agenda: {
-              event: EventAgenda,
+              event: this.EventAgenda,
             },
           }}
           />
