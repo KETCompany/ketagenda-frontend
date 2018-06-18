@@ -39,14 +39,16 @@ class HeaderLinks extends React.Component {
     };
   }
 
+  notificationTokenCheck = profile => profile.fmcToken !== undefined && profile.fmcToken !== '' ? true : false
+
   componentDidMount = () => {
     const { profile } = this.props;
     this.setState({
       profile: profile,
-      notificationsOn: profile.fmcToken !== '' ? true : false
+      notificationsOn: this.notificationTokenCheck(profile),
     });
 
-    if (profile.fmcToken !== '') {
+    if (this.notificationTokenCheck(profile) ) {
       this.initMessaging(firebase.messaging());
     }
   }
@@ -112,7 +114,7 @@ class HeaderLinks extends React.Component {
 
   turnOffNotifications = () =>
     UserApi.updateProfile({ fmcToken: '' })
-      .then(newProfile => {
+      .then(() => {
         sessionStorage.setItem('profile', JSON.stringify({
           ...this.state.profile, fmcToken: ''
         }));

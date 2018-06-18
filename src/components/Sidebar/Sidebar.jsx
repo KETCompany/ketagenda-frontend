@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import cx from "classnames";
@@ -12,26 +12,39 @@ import {
   ListItemText
 } from "material-ui";
 
-import { HeaderLinks } from "../../components";
-
 import sidebarStyle from "../../assets/jss/material-dashboard-react/sidebarStyle.jsx";
 
-const Sidebar = ({ ...props }) => {
+class Sidebar extends Component {
+  
   // verifies if routeName is the one active (in browser input)
-  function activeRoute(routeName) {
-    return props.location.pathname.indexOf(routeName) > -1 ? true : false;
+  activeRoute = routeName => this.props.location.pathname.indexOf(routeName) > -1 ? true : false;
+
+  renderLogo = () => {
+    const { classes, logo, logoText } = this.props;
+    return (
+      <div className={classes.logo}>
+        <NavLink
+          to={'/'}
+          className={classes.logoLink}
+          key={'/'}
+        >
+          <div className={classes.logoImage}>
+            <img src={logo} alt="logo" className={classes.img} />
+          </div>
+          {logoText}
+        </NavLink>
+      </div>
+    )
   }
-  const { classes, color, logo, image, logoText, routes } = props;
-  var links = (
+
+  renderLinks = () => {
+    const { classes, routes, color } = this.props;
+    return (
     <List className={classes.list}>
       {routes.map((prop, key) => {
         if (prop.redirect || prop.hidden) return null;
-        const listItemClasses = cx({
-          [" " + classes[color]]: activeRoute(prop.path)
-        });
-        const whiteFontClasses = cx({
-          [" " + classes.whiteFont]: activeRoute(prop.path)
-        });
+        const listItemClasses = cx({ [" " + classes[color]]: this.activeRoute(prop.path) });
+        const whiteFontClasses = cx({ [" " + classes.whiteFont]: this.activeRoute(prop.path) });
         return (
           <NavLink
             to={prop.path}
@@ -53,66 +66,62 @@ const Sidebar = ({ ...props }) => {
         );
       })}
     </List>
-  );
-  var brand = (
-    <div className={classes.logo}>
-      <a className={classes.logoLink}>
-        <div className={classes.logoImage}>
-          <img src={logo} alt="logo" className={classes.img} />
-        </div>
-        {logoText}
-      </a>
-    </div>
-  );
-  return (
-    <div>
-      <Hidden mdUp>
-        <Drawer
-          variant="temporary"
-          anchor="right"
-          open={props.open}
-          classes={{
-            paper: classes.drawerPaper
-          }}
-          onClose={props.handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true // Better open performance on mobile.
-          }}
-        >
-          {brand}
-          <div className={classes.sidebarWrapper}>
-            <HeaderLinks />
-            {links}
-          </div>
-          {image !== undefined ? (
-            <div
-              className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
-            />
-          ) : null}
-        </Drawer>
-      </Hidden>
-      <Hidden smDown>
-        <Drawer
-          anchor="left"
-          variant="permanent"
-          open
-          classes={{
-            paper: classes.drawerPaper
-          }}
-        >
-          {brand}
-          <div className={classes.sidebarWrapper}>{links}</div>
-          {image !== undefined ? (
-            <div
-              className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
-            />
-          ) : null}
-        </Drawer>
-      </Hidden>
-    </div>
-  );
+    )
+  }
+
+  render() {
+    const { classes, image, open, handleDrawerToggle } = this.props;
+    return (
+      <div>
+        <Hidden mdUp>
+          <Drawer
+            variant="temporary"
+            anchor="right"
+            open={open}
+            classes={{
+              paper: classes.drawerPaper
+            }}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true // Better open performance on mobile.
+            }}
+          >
+            {this.renderLogo()}
+            <div className={classes.sidebarWrapper}>
+              {this.renderLinks()}
+            </div>
+            {image !== undefined ? (
+              <div
+                className={classes.background}
+                style={{ backgroundImage: "url(" + image + ")" }}
+              />
+            ) : null}
+          </Drawer>
+        </Hidden>
+        <Hidden smDown>
+          <Drawer
+            anchor="left"
+            variant="permanent"
+            open
+            classes={{
+              paper: classes.drawerPaper
+            }}
+          >
+            {this.renderLogo()}
+            <div className={classes.sidebarWrapper}>
+              {this.renderLinks()}
+            </div>
+            {image !== undefined ? (
+              <div
+                className={classes.background}
+                style={{ backgroundImage: "url(" + image + ")" }}
+              />
+            ) : null}
+          </Drawer>
+        </Hidden>
+      </div>
+    );
+  }
 };
 
 Sidebar.propTypes = {
