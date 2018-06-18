@@ -19,10 +19,11 @@ firebase.initializeApp({ 'messagingSenderId': '598561209308'});
 // [START background_handler]
 messaging.setBackgroundMessageHandler((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
+
   // Customize notification here
-  const notificationTitle = 'Background Message Title';
+  const notificationTitle = payload.data.title || 'Background message';
   const notificationOptions = {
-    body: 'Background Message body.'
+    body: payload.data.message || '',
     // icon: '/firebase-logo.png'
   };
 

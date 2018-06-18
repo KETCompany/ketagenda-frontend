@@ -22,7 +22,6 @@ firebase.initializeApp(config);
 
 // sessionStorage.setItem('role', 'admin');
 
-
 ReactDOM.render(
     <App />,
     document.getElementById('root')

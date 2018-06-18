@@ -13,10 +13,10 @@ import Input from '@material-ui/core/Input';
 
 import TextField from 'material-ui/TextField';
 
-import {
-  Delete,
-  Brush
-} from '@material-ui/icons';
+// import {
+//   Delete,
+//   Brush
+// } from '@material-ui/icons';
 
 import _ from 'lodash';
 

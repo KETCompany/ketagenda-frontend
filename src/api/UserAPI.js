@@ -79,6 +79,16 @@ export const profile = async () =>
   fetcher.get(`${baseUrl}/api/users/profile`)
   .then(res => res.json());
 
+export const updateProfile = async (obj) => (
+  fetcher.post(`${url}/users/profile`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(obj),
+  }).then(res => res.json())
+).catch(err => console.log(err))
+
 export default {
-  list, get, deleteById, initForm, post, put, listUsers, login, profile,
+  list, get, deleteById, initForm, post, put, listUsers, login, profile, updateProfile,
 };

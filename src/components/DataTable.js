@@ -27,7 +27,6 @@ import {
   Add,
 } from '@material-ui/icons';
 
-import withRoot from '../withRoot';
 import _ from 'lodash';
 import { Button } from '@material-ui/core';
 
@@ -207,10 +206,10 @@ class DataTable extends React.Component {
                   {newColumns.map((n) => (
                     <TableCell>{_.capitalize(n.key)}</TableCell>
                   ))}
-                  {isEditable == true && (
+                  {isEditable === true && (
                     <TableCell>{'Edit'}</TableCell>
                   )}
-                  {isDeletable == true && (
+                  {isDeletable === true && (
                     <TableCell>{'Delete'}</TableCell>
                   )}
                 </TableRow>
@@ -221,7 +220,7 @@ class DataTable extends React.Component {
                     {newColumns.map((item) => (
                       <TableCell>{item.value(n)}</TableCell>
                     ))}
-                    {isEditable == true && (
+                    {isEditable === true && (
                       <TableCell className={classes.editTableCel}>
                         <Link to={`${editLink}${n._id}/`}>
                           <IconButton className={classes.button} aria-label="Edit" color="secondary" data-id={n._id}>
@@ -230,7 +229,7 @@ class DataTable extends React.Component {
                         </Link>
                       </TableCell>
                     )}
-                    {isDeletable == true && (
+                    {isDeletable === true && (
                       <TableCell className={classes.deleteTableCel}>
                         <IconButton
                           className={classes.button}

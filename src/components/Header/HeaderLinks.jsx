@@ -1,6 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import { Manager, Target, Popper } from "react-popper";
+import Snackbar from '../Snackbar/Snackbar';
 import {
   withStyles,
   IconButton,
@@ -19,29 +20,54 @@ import headerLinksStyle from "../../assets/jss/material-dashboard-react/headerLi
 
 import firebase from 'firebase/app';
 
+import UserApi from '../../api/UserAPI';
+
 class HeaderLinks extends React.Component {
   state = {
-    notifications: false
+    notifications: false,
+    showNotification: false,
+    currentNotification: {
+      title: '',
+      message: '',
+    }
   };
+  
+  componentDidMount() {
+    if (!this.state.notifications) {
+      const messaging = firebase.messaging();
+      messaging.requestPermission().then(() => {
+        messaging.getToken().then((currentToken) => {
+          UserApi.updateProfile({ fmcToken: currentToken })
+            .then(() => {
+              messaging.onMessage((payload) => {
+                this.setState({
+                  currentNotification: {
+                    message: payload.data.message,
+                  }
+                });
+                this.showNotification();
+              });
+            })
+        })
+      })
+    }
+  }
+
+  showNotification() {
+    this.setState({ showNotification: true });
+    setTimeout(
+      function () {
+        this.setState({ showNotification: false });
+      }.bind(this),
+      6000
+    );
+  }
+
   handleClick = (evt) => {
     const { name, value } = evt.currentTarget;
 
     if(name === 'notifications') {
-      const messaging = firebase.messaging();
-      messaging.requestPermission().then(function () {
-        console.log('Notification permission granted.');
-        messaging.getToken().then(function (currentToken) {
-          console.log(currentToken);
-        }).catch(function (err) {
-          console.log('some error');
-          // console.log('An error occurred while retrieving token. ', err);
-          // showToken('Error retrieving Instance ID token. ', err);
-          // setTokenSentToServer(false);
-        });
-
-      }).catch(function (err) {
-        console.log('Unable to get permission to notify.', err);
-      });
+    
 
     }
     this.setState({ [name]: !value });
@@ -88,6 +114,14 @@ class HeaderLinks extends React.Component {
           </IconButton>
         </Link>
         <Manager style={{ display: 'inline-block' }}>
+          <Snackbar
+            place="tr"
+            variant='info'
+            message={this.state.currentNotification.message}
+            open={this.state.showNotification}
+            closeNotification={() => this.setState({ showNotification: false })}
+            close
+          />
           <Target>
             <IconButton
               color="inherit"
