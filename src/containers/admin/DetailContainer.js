@@ -17,7 +17,7 @@ const styles = theme => ({
 
 });
 
-class UsersContainer extends Component {
+class DetailConatainer extends Component {
   constructor(props) {
     super();
     this.state = {
@@ -149,4 +149,4 @@ class UsersContainer extends Component {
   }
 }
 
-export default withStyles(styles)(UsersContainer);
+export default withStyles(styles)(DetailConatainer);
