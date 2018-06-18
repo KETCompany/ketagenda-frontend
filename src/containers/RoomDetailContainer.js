@@ -13,6 +13,7 @@ import * as EventAPI from '../api/EventAPI';
 
 import ReservationsCalendar from '../components/ReservationsCalendar';
 import ReservationForm from '../components/ReservationForm';
+import { Redirect } from 'react-router-dom';
 
 import _ from 'lodash';
 
@@ -139,7 +140,8 @@ class RoomDetailContainer extends React.Component {
     });
   }
 
-  handleSlotSelect = event => alert(event.title)
+  handleSlotSelect = booking =>
+    this.props.history.push(`/event/${booking.event._id}`)
 
   handleSubmit = (event) => {
     event.preventDefault();
