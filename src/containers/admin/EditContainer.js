@@ -19,7 +19,7 @@ const styles = theme => ({
 
 });
 
-class UsersContainer extends Component {
+class EditContainer extends Component {
   constructor(props) {
     super();
     this.state = {
@@ -74,7 +74,6 @@ class UsersContainer extends Component {
           },
           bookings: {
             type: 'calendar',
-            options: [],
           },
         }
       },
@@ -144,6 +143,7 @@ class UsersContainer extends Component {
   }
 
   render() {
+    console.log(this.state.data);
     const { data, formInputs, dataLoaded } = this.state;
     return (
       <div>
@@ -165,4 +165,4 @@ class UsersContainer extends Component {
   }
 }
 
-export default withStyles(styles)(UsersContainer);
+export default withStyles(styles)(EditContainer);

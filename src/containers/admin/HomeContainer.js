@@ -105,7 +105,7 @@ class HomeContainer extends Component {
   }
 
   renderUsersTable() {
-    const { users, columns: { usersTable }, filter} = this.state;
+    const { users, columns: { usersTable }, filter } = this.state;
     const kind = 'users';
     if (users.length === 0) {
       this.loadData(kind, UserAPI);

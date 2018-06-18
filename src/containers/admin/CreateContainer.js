@@ -18,9 +18,9 @@ const styles = theme => ({
 
 });
 
-class UsersContainer extends Component {
+class CreateContainer extends Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       value: 0,
       data: {},
@@ -151,4 +151,4 @@ class UsersContainer extends Component {
   }
 }
 
-export default withStyles(styles)(UsersContainer);
+export default withStyles(styles)(CreateContainer);

@@ -15,26 +15,16 @@ import {
   PermContactCalendar,
   School
 } from '@material-ui/icons';
+import GroupsContainer from '../containers/GroupsContainer';
+import EventsContainer from '../containers/EventsContainer';
 
 const dashboardRoutes = [
   {
     path: '/search',
-    sidebarName: 'Search',
-    navbarName: 'Material Dashboard',
+    sidebarName: 'Rooms',
+    navbarName: 'Room list',
     icon: Dashboard,
     component: RoomsContainer,
-    authorize: ['Student', 'Teacher', 'Admin'],
-  },
-  {
-    path: '/room/:id',
-    hidden: true,
-    component: RoomDetailContainer,
-    authorize: ['Student', 'Teacher', 'Admin'],
-  },
-  {
-    path: '/event/:id',
-    hidden: true,
-    component: EventDetailContainer,
     authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
@@ -44,11 +34,43 @@ const dashboardRoutes = [
     authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
-    path: '/typography',
-    sidebarName: 'Event list',
-    navbarName: 'Event list',
+    path: '/groups',
+    sidebarName: 'Groups',
+    navbarName: 'Group list',
     icon: LibraryBooks,
+    component: GroupsContainer,
+    authorize: ['Student', 'Teacher', 'Admin'],
+  },
+  {
+    path: '/group/:id',
+    hidden: true,
+    component: EventDetailContainer,
+    authorize: ['Student', 'Teacher', 'Admin'],
+  },
+  {
+    path: '/events',
+    sidebarName: 'Events',
+    navbarName: 'Event list',
+    icon: PermContactCalendar,
+    component: EventsContainer,
+    authorize: ['Student', 'Teacher', 'Admin'],
+  },
+  {
+    path: '/event/:id',
+    hidden: true,
+    component: EventDetailContainer,
+    authorize: ['Student', 'Teacher', 'Admin'],
+  },
+  {
+    path: '/rooms',
+    hidden: true,
     component: RoomsContainer,
+    authorize: ['Student', 'Teacher', 'Admin'],
+  },
+  {
+    path: '/room/:id',
+    hidden: true,
+    component: RoomDetailContainer,
     authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
