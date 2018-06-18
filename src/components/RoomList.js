@@ -58,7 +58,7 @@ const RoomList = (props) => {
                   >
                     <ListItem button>
                       <Avatar>
-                        {i % 2 === 0 ? <EventBusyIcon color="primary" /> : <EventAvailableIcon color="secondary" />}
+                        {(room.location ? room.location : room.name.substring(0, 2))}
                       </Avatar>
                       <ListItemText primary={room.name} secondary={room.type} />
                       {
@@ -69,15 +69,9 @@ const RoomList = (props) => {
                           primary={`Booked by ${(room.booked[0].tutor)}`} />) :
                           (<div></div>)
                       }
-                      
-                      {/* <ListItemSecondaryAction>
-                        <IconButton onClick={onQRClickOpen(room._id)} aria-label="Delete">
-                          <PermDeviceInformationIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction> */}
-                      {/* <Avatar>
-                        <ArrowForwardIcon color={i % 2 === 0 ? 'primary' : 'secondary'} />
-                      </Avatar> */}
+                      <Avatar>
+                        <ArrowForwardIcon color={'primary'} />
+                      </Avatar>
                     </ListItem>
                   <Divider inset component="li" />
                 </NavLink>
@@ -92,7 +86,7 @@ const RoomList = (props) => {
       <Paper className={classes.paper} elevation={4}>
         <Typography variant="subheading" gutterBottom>
           Sorry no rooms have been found
-            </Typography>
+        </Typography>
       </Paper>
     );
   }
