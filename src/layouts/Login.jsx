@@ -58,7 +58,6 @@ class Login extends React.Component {
           if (response && !response.description) {
             sessionStorage.setItem('role', response.user.role);
             sessionStorage.setItem('jwtToken', response.token);
-
           }
         })
     }

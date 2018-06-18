@@ -31,7 +31,7 @@ class Login extends React.Component {
         sessionStorage.setItem('profile', JSON.stringify(profile));
         this.setState({
           role: profile.role,
-          token,
+          profile: profile
         });
       }).then(() => 
         this.props.history.push(`/`)

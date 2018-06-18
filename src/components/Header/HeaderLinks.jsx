@@ -26,6 +26,7 @@ class HeaderLinks extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      profile: null,
       notifications: false,
       notificationsOn: false,
       showNotification: false,
@@ -41,6 +42,7 @@ class HeaderLinks extends React.Component {
   componentDidMount = () => {
     const { profile } = this.props;
     this.setState({
+      profile: profile,
       notificationsOn: profile.fmcToken !== '' ? true : false
     });
 
@@ -63,10 +65,10 @@ class HeaderLinks extends React.Component {
     return UserApi.updateProfile({ 
       fmcToken: currentToken,
     })
-      .then(() => {
+      .then(newProfile => {
         sessionStorage.setItem('profile', 
           JSON.stringify({
-            ...this.state.profile, fmcToken: currentToken,
+            ...newProfile, fmcToken: currentToken,
           }),
         );
         return this.initNotification(messaging);
@@ -110,8 +112,10 @@ class HeaderLinks extends React.Component {
 
   turnOffNotifications = () =>
     UserApi.updateProfile({ fmcToken: '' })
-      .then(() => {
-        sessionStorage.setItem('profile', JSON.stringify({...this.state.profile, fmcToken: ''}));
+      .then(newProfile => {
+        sessionStorage.setItem('profile', JSON.stringify({
+          ...this.state.profile, fmcToken: ''
+        }));
         this.setState({
           notificationsOn: false,
         })
@@ -288,7 +292,7 @@ class HeaderLinks extends React.Component {
                       onClick={this.handleLogout}
                       className={classes.dropdownItem}
                     >
-                      Logout
+                      {'Logout'}
                     </MenuItem>
                   </MenuList>
                 </Paper>
