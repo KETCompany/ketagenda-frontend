@@ -8,14 +8,10 @@ const url = 'http://localhost:8080/api';
 
 export const list = async (query, select) => (
   fetcher.get(`${url}/groups?select=${select ? select.join(',') : ''}`)
-    .then(resp => resp.json())
-    .catch(err => console.error(err))
 );
 
 export const get = async (id, populate) => (
   fetcher.get(`${url}/groups/${id}${populate ? '?populate' : ''}`)
-    .then(resp => resp.json())
-    .catch(err => console.error(err))
 );
 
 export const filters = async query => (

@@ -71,8 +71,8 @@ export const updateProfile = async (obj) => (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(obj),
-  }).then(res => res.json())
-).catch(err => console.log(err))
+  })
+)
 
 export default {
   list, get, deleteById, initForm, post, put, listUsers, login, profile, updateProfile,
