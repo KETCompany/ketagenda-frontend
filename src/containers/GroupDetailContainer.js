@@ -8,8 +8,7 @@ import Tab from '@material-ui/core/Tab';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import QRCode from 'qrcode.react';
 
-import * as RoomAPI from '../api/RoomAPI';
-import * as EventAPI from '../api/EventAPI';
+import * as GroupAPI from '../api/GroupAPI';
 
 import ReservationsCalendar from '../components/ReservationsCalendar';
 import ReservationForm from '../components/ReservationForm';
@@ -28,8 +27,6 @@ import {
 } from '../components';
 
 const moment = require('moment');
-
-const officeHours = [{ from: '9:00', to: '12:00' }, { from: '13:00', to: '17:00' }];
 
 const styles = theme => ({
 
@@ -60,22 +57,13 @@ const eventPropGetter = (event) => {
   return {};
 }
 
-const EventAgenda = ({ event }) => {
-  return (
-    <span>
-      <em style={{ color: 'red' }}>{event.title}</em>
-      <p>{event.desc}</p>
-    </span>
-  )
-}
-
-class EventDetailContainer extends React.Component {
+class GroupDetailContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       pageLoaded: false,
-      event: null,
+      group: null,
       agendaItems: [],
       value: 0,
       reservation: {
@@ -86,21 +74,20 @@ class EventDetailContainer extends React.Component {
         end: moment().toDate(),
       },
     };
-    this.getEvent(this.props.match.params.id)
+    this.getGroup(this.props.match.params.id)
       .then(() => this.setState({ pageLoaded: true }));
   }
 
-  getEvent = async (id) => {
-    const event = await EventAPI.get(id, true);
-    if (event && event.bookings) {
-      const eventBookings = event.bookings.map(booking => ({
+  getGroup = async (id) => {
+    const group = await GroupAPI.get(id, true);
+    if (group && group.bookings) {
+      const groupBookings = group.bookings.map(booking => ({
         ...booking,
         start: new Date(booking.start),
         end: new Date(booking.end),
-        eventId: id,
+        groupId: id,
       }));
-      this.setState({ event: { ...event, bookings: eventBookings } });
-      console.log(event);
+      this.setState({ group: { ...group, bookings: groupBookings } });
     }
   }
 
@@ -128,7 +115,7 @@ class EventDetailContainer extends React.Component {
     this.setState({ reservation: { ...this.state.reservation, end: moment(this.state.reservation.end).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
   }
 
-  handleSelectEvent = (slotInfo) => {
+  handleSelectGroup = (slotInfo) => {
     this.handleDateChange(slotInfo.start);
     this.handleStartTimeChange(slotInfo.start);
     this.handleEndTimeChange(slotInfo.end);
@@ -151,11 +138,11 @@ class EventDetailContainer extends React.Component {
       }],
     };
 
-    EventAPI.post(reservation).then((res) => {
+    GroupAPI.post(reservation).then((res) => {
       this.setState({
         agendaItems: [],
       });
-      this.getEvent(this.state.event._id);
+      this.getGroup(this.state.group._id);
     });
   }
 
@@ -164,7 +151,7 @@ class EventDetailContainer extends React.Component {
   };
 
   handleJoin = (e) => {
-    EventAPI.subscribe(this.state.event._id, true)
+    GroupAPI.subscribe(this.state.group._id, true)
       .then(res => console.log(res));
   }
 
@@ -189,7 +176,7 @@ class EventDetailContainer extends React.Component {
   }
 
   renderReservation() {
-    const { event, agendaItems } = this.state;
+    const { group, agendaItems } = this.state;
 
     return (
     <ItemGrid xs={12} sm={12} md={12}>
@@ -203,30 +190,28 @@ class EventDetailContainer extends React.Component {
         handleStartTimeChange={this.handleStartTimeChange}
         handleEndTimeChange={this.handleEndTimeChange}
         booking={this.state.reservation}
-        officeHours={officeHours}
       />
       <ReservationsCalendar
-        agendaItems={[...event.bookings, ...agendaItems]}
+        agendaItems={[...group.bookings, ...agendaItems]}
         handleSlotSelect={this.handleSlotSelect}
-        handleSelectEvent={this.handleSelectEvent}
+        handleSelectGroup={this.handleSelectGroup}
         eventPropGetter={this.eventPropGetter}
         Event={Event}
-        EventAgenda={EventAgenda}
       />
     </ItemGrid>
     );
   }
 
   render() {
-    const { event, value, pageLoaded } = this.state;
+    const { group, value, pageLoaded } = this.state;
     if (pageLoaded === false) {
       this.renderLoad();
     }
 
-    if (event === null) {
+    if (group === null) {
       return (
         <Card>
-          No Event found
+          No Group found
         </Card>
       );
     }
@@ -241,10 +226,10 @@ class EventDetailContainer extends React.Component {
         </AppBar>
         <RegularCard
           headerColor="orange"
-          cardTitle={`Event: ${event.name}`}
+          cardTitle={`Group: ${group.name}`}
           cardSubtitle={
             <P>
-              {event.type}
+              {group.type}
             </P>
           }
           content={
@@ -261,4 +246,4 @@ class EventDetailContainer extends React.Component {
   }
 }
 
-export default withStyles(styles)(EventDetailContainer);
+export default withStyles(styles)(GroupDetailContainer);

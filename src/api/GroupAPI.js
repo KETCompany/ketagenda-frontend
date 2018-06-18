@@ -46,6 +46,16 @@ export const post = async postData => (
   })
 );
 
+export const subscribe = async (postData, subscribed) => (
+  fetcher.post(`${url}/groups/subscribe`, {
+    method: (subscribed ? 'DELETE' : 'POST'),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(postData),
+  })
+);
+
 export const put = async (postData, id) => (
   fetcher.post(`${url}/groups/${id}`, {
     method: 'PUT',
@@ -55,7 +65,6 @@ export const put = async (postData, id) => (
     body: JSON.stringify(postData),
   })
 );
-
 
 export default {
   list,

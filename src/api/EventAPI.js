@@ -25,9 +25,9 @@ export const filters = async query => (
     })
 );
 
-export const subscribe = async postData => (
+export const subscribe = async (postData, subscribed) => (
   fetcher.post(`${url}/events/subscribe`, {
-    method: 'POST',
+    method: (subscribed ? 'DELETE' : 'POST'),
     headers: {
       'Content-Type': 'application/json',
     },
