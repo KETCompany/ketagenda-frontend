@@ -137,7 +137,7 @@ class EventDetailContainer extends React.Component {
     });
   }
 
-  handleSlotSelect = event => alert(event.title)
+  handleSlotSelect = booking => console.log(booking)
 
   handleSubmit = (event) => {
     event.preventDefault();
