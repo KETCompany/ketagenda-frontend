@@ -8,19 +8,14 @@ const url = 'http://localhost:8080/api';
 
 export const list = async (query, select, populate) => (
   fetcher.get(`${url}/events?select=${select ? select.join(',') : ''}${populate ? '&populate' : ''}`)
-    .then(resp => resp.json())
-    .catch(err => console.error(err))
 );
 
 export const get = async (id, populate) => (
   fetcher.get(`${url}/events/${id}${populate ? '?populate' : ''}`)
-    .then(resp => resp.json())
-    .catch(err => console.error(err))
 );
 
 export const filters = async query => (
   fetcher.get(`${url}/events?filters${query}`)
-    .then(resp => resp.json())
     .then(({ locations, floors, types }) => {
       return {
         locations: arrToObj(locations),
@@ -30,6 +25,16 @@ export const filters = async query => (
     })
 );
 
+export const subscribe = async postData => (
+  fetcher.post(`${url}/events/subscribe`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(postData),
+  })
+);
+
 export const post = async postData => (
   fetcher.post(`${url}/events`, {
     method: 'POST',
@@ -37,8 +42,7 @@ export const post = async postData => (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(postData),
-  }).then(res => res.json())
-    .catch(err => console.log(err))
+  })
 );
 
 export const initForm = async () => (
@@ -57,8 +61,7 @@ export const put = async (postData, id) => (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(postData),
-  }).then(res => res.json())
-    .catch(err => console.log(err))
+  })
 );
 
 export default {
