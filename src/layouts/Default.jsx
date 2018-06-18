@@ -16,9 +16,6 @@ import appStyle from '../assets/jss/material-dashboard-react/appStyle.jsx';
 import image from '../assets/img/sidebar-2.jpg';
 import logo from '../assets/img/hrlogo.png';
 
-import UserAPI from '../api/UserAPI';
-
-
 const switchRoutes = (
   <Switch>
     {dashboardRoutes.map((prop, key) => {

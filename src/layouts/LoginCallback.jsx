@@ -11,49 +11,6 @@ import UserAPI from '../api/UserAPI';
 import { Redirect } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login';
 
-
-const responseGoogleF = (response) => {
-  console.log('----> ', response);
-}
-const responseGoogle = (response) => {
-  console.log(response);
-  UserAPI.login(`?code=${response.code}`)
-    .then(user => console.log(user));
-}
-
-
-
-const styles = (theme) => ({
-  paper: {
-    paddingTop: 16,
-    paddingBottom: 16,
-    marginTop: theme.spacing.unit * 3,
-    width: 300,
-    margin: '0 auto',
-  },
-  center: {
-    textAlign: 'left',
-  },
-  item: {
-    position: 'relative',
-    display: 'block',
-    textDecoration: 'none',
-  },
-  root: {
-    textAlign: 'center',
-    paddingTop: theme.spacing.unit * 15,
-  },
-  button: {
-    margin: theme.spacing.unit,
-  },
-  iconSmall: {
-    fontSize: 20,
-  },
-  rightIcon: {
-    marginLeft: theme.spacing.unit,
-  },
-})
-
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -66,7 +23,6 @@ class Login extends React.Component {
 
   componentWillMount() {
     const query = new URLSearchParams(this.props.location.search)
-
     const token = query.get('token')
     if (token) {
       sessionStorage.setItem('jwtToken', token);
@@ -77,32 +33,15 @@ class Login extends React.Component {
           role: profile.role,
           token,
         });
-      });
+      }).then(() => 
+        this.props.history.push(`/`)
+      );
     }
   }
 
   render() {
-    const { classes, ...rest } = this.props;
-
-    const { role, token } = this.state;
-    console.log(role, token);
-
-    if (role && token) {
-      return (
-        <div className={classes.root}>
-          <Redirect to={'/'} key={'key'} />
-        </div>
-      );
-    } else {
-      return (<div></div>);
-    }
-
-    
+    return (<div></div>);
   }
 }
 
-Login.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(Login);
+export default Login;
