@@ -1,5 +1,8 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import classNames from "classnames";
+
+import { Person, Notifications, Home, MyLocation } from "@material-ui/icons";
 import { Manager, Target, Popper } from "react-popper";
 import Snackbar from '../Snackbar/Snackbar';
 import {
@@ -12,61 +15,77 @@ import {
   ClickAwayListener,
   Hidden,
 } from "material-ui";
-import { Person, Notifications, Home, MyLocation } from "@material-ui/icons";
-
-import { Link } from 'react-router-dom';
 
 import headerLinksStyle from "../../assets/jss/material-dashboard-react/headerLinksStyle";
-
+import { Link } from 'react-router-dom';
 import firebase from 'firebase/app';
 
 import UserApi from '../../api/UserAPI';
 
 class HeaderLinks extends React.Component {
-  state = {
-    notifications: false,
-    notificationsOn: false,
-    showNotification: false,
-    currentNotification: {
-      title: '',
-      message: '',
-      variant: '',
-    },
-    profileOpen: false,
-  };
-  
-  componentDidMount() {
-    const profile = JSON.parse(sessionStorage.getItem('profile'));
-    
-    this.setState({
-      profile,
-      notificationsOn: profile.fmcToken !== '' ? true : false
-    })
+  constructor(props) {
+    super(props);
+    this.state = {
+      notifications: false,
+      notificationsOn: false,
+      showNotification: false,
+      currentNotification: {
+        title: '',
+        message: '',
+        variant: '',
+      },
+      profileOpen: false,
+    };
+  }
 
-    console.log(profile.fmcToken);
+  componentDidMount = () => {
+    const { profile } = this.props;
+    this.setState({
+      notificationsOn: profile.fmcToken !== '' ? true : false
+    });
+
     if (profile.fmcToken !== '') {
-      const messaging = firebase.messaging();
-      messaging.requestPermission().then(() => {
-        messaging.getToken().then((currentToken) => {
-          UserApi.updateProfile({ fmcToken: currentToken })
-            .then(() => {
-              sessionStorage.setItem('profile', JSON.stringify({ ...this.state.profile, fmcToken: currentToken }));
-              messaging.onMessage((payload) => {
-                this.setState({
-                  currentNotification: {
-                    message: payload.data.message,
-                    variant: payload.data.variant
-                  }
-                });
-                this.showNotification();
-              });
-            })
-        })
-      })
+      this.initMessaging(firebase.messaging());
     }
   }
 
-  showNotification() {
+  initMessaging = messaging => {
+    messaging.requestPermission()
+      .then(() => {
+        messaging.getToken()
+          .then((currentToken) => {
+            this.updateNotificationProfile(messaging, currentToken);
+          })
+      })
+  }
+
+  updateNotificationProfile = (messaging, currentToken) => {
+    return UserApi.updateProfile({ 
+      fmcToken: currentToken,
+    })
+      .then(() => {
+        sessionStorage.setItem('profile', 
+          JSON.stringify({
+            ...this.state.profile, fmcToken: currentToken,
+          }),
+        );
+        return this.initNotification(messaging);
+      })
+  }
+
+  initNotification = messaging => {
+    messaging.onMessage((payload) => {
+      this.setState({
+        currentNotification: {
+          message: payload.data.message,
+          variant: payload.data.variant
+        }
+      });
+      this.showNotification();
+    });
+  }
+
+  showNotification = () => {
     this.setState({ showNotification: true });
     setTimeout(
       function () {
@@ -77,69 +96,45 @@ class HeaderLinks extends React.Component {
   }
 
   handleClick = (evt) => {
-    const { name, value } = evt.currentTarget;
-
     if (this.state.notificationsOn) {
       this.setState({
         notifications: !this.state.notifications,
       });
     } else {
-      const messaging = firebase.messaging();
-      messaging.requestPermission().then(() => {
-        messaging.getToken().then((currentToken) => {
-          UserApi.updateProfile({ fmcToken: currentToken })
-            .then(() => {
-              sessionStorage.setItem('profile', JSON.stringify({ ...this.state.profile, fmcToken: currentToken }));
-              messaging.onMessage((payload) => {
-                this.setState({
-                  currentNotification: {
-                    message: payload.data.message,
-                    variant: payload.data.variant
-                  }
-                });
-                this.showNotification();
-              });
-            })
-        })
-      })
-
+      this.initMessaging(firebase.messaging());
       this.setState({
         notificationsOn: true,
       })
     }
   };
 
-  turnOffNotifications = () => {
+  turnOffNotifications = () =>
     UserApi.updateProfile({ fmcToken: '' })
-    .then(() => {
-      sessionStorage.setItem('profile', JSON.stringify({...this.state.profile, fmcToken: ''}));
-      this.setState({
-        notificationsOn: false,
+      .then(() => {
+        sessionStorage.setItem('profile', JSON.stringify({...this.state.profile, fmcToken: ''}));
+        this.setState({
+          notificationsOn: false,
+        })
       })
-    })
-  }
 
-  handleClickProfile = (evt) => {
+  handleClickProfile = evt =>
     this.setState({
       profileOpen: !this.state.profileOpen,
     })
-  }
 
-  handleLogout = (evt) => {
+  handleLogout = evt => {
     sessionStorage.removeItem('role');
     sessionStorage.removeItem('profile');
     sessionStorage.removeItem('jwtToken');
 
-    window.location.reload()
+    window.location.reload();
   }
 
   handleClose = () => {
     this.setState({ notifications: false });
   };
 
-
-
-  render() {
+  render = () => {
     const { classes } = this.props;
     const { notifications, profileOpen, notificationsOn } = this.state;
 
@@ -251,10 +246,6 @@ class HeaderLinks extends React.Component {
             </ClickAwayListener>
           </Popper>
         </Manager>
-
-
-
-
         <Manager style={{ display: "inline-block" }}>
           <Target>
             <IconButton
@@ -309,5 +300,9 @@ class HeaderLinks extends React.Component {
     );
   }
 }
+
+HeaderLinks.propTypes = {
+  profile: PropTypes.object.isRequired,
+};
 
 export default withStyles(headerLinksStyle)(HeaderLinks);

@@ -7,47 +7,39 @@ import {
   Toolbar,
   IconButton,
   Hidden,
-  Button
+  Button,
 } from 'material-ui';
 import cx from 'classnames';
 
 import headerStyle from '../../assets/jss/material-dashboard-react/headerStyle.jsx';
-
 import HeaderLinks from './HeaderLinks';
 
-function Header({ ...props }) {
-  function makeBrand() {
-    let name;
-    props.routes.map((prop) => {
-      if (prop.path === props.location.pathname) {
-        name = prop.navbarName;
-      }
-      return null;
-    });
-    return name;
-  }
-  const { classes, color } = props;
+const Header = ({ ...props }) => {
+  const {
+    classes, color, location, routes, handleDrawerToggle, profile,
+  } = props;
+
   const appBarClasses = cx({
     [` ${classes[color]}`]: color,
   });
+  
   return (
     <AppBar className={classes.appBar + appBarClasses}>
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
-          {/* Here we create navbar brand, based on route name */}
           <Button href='#' className={classes.title}>
-            {makeBrand()}
+            {routes.map(prop => (prop.path === location.pathname) ? prop.navbarName : '')}
           </Button>
         </div>
         <Hidden smDown implementation='css'>
-          <HeaderLinks />
+          <HeaderLinks profile={profile} />
         </Hidden>
         <Hidden mdUp>
           <IconButton
             className={classes.appResponsive}
             color='inherit'
             aria-label='open drawer'
-            onClick={props.handleDrawerToggle}
+            onClick={handleDrawerToggle}
           >
             <Menu />
           </IconButton>
@@ -59,7 +51,11 @@ function Header({ ...props }) {
 
 Header.propTypes = {
   classes: PropTypes.object.isRequired,
-  color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger'])
+  color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
+  location: PropTypes.object.isRequired,
+  routes: PropTypes.array.isRequired,
+  handleDrawerToggle: PropTypes.func.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
 export default withStyles(headerStyle)(Header);
