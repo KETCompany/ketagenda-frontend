@@ -10,6 +10,13 @@ import Icon from '@material-ui/core/Icon';
 import UserAPI from '../api/UserAPI';
 import { Redirect } from 'react-router-dom';
 
+import { GoogleLogin } from 'react-google-login';
+
+
+const responseGoogle = (response) => {
+  console.log(response);
+}
+
 const styles = (theme) => ({
   paper: {
     paddingTop: 16,

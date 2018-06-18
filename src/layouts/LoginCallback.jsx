@@ -72,6 +72,7 @@ class Login extends React.Component {
       sessionStorage.setItem('jwtToken', token);
       UserAPI.profile().then(profile => {
         sessionStorage.setItem('role', profile.role);
+        sessionStorage.setItem('profile', JSON.stringify(profile));
         this.setState({
           role: profile.role,
           token,

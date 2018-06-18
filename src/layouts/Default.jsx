@@ -16,6 +16,9 @@ import appStyle from '../assets/jss/material-dashboard-react/appStyle.jsx';
 import image from '../assets/img/sidebar-2.jpg';
 import logo from '../assets/img/hrlogo.png';
 
+import UserAPI from '../api/UserAPI';
+
+
 const switchRoutes = (
   <Switch>
     {dashboardRoutes.map((prop, key) => {
@@ -29,22 +32,28 @@ const switchRoutes = (
 class App extends React.Component {
   state = {
     mobileOpen: false,
+    profile: {},
   };
+
   handleDrawerToggle = () => {
     this.setState({ mobileOpen: !this.state.mobileOpen });
   };
+
   getRoute() {
     return this.props.location.pathname !== '/maps';
   }
+
   componentDidMount() {
     if (navigator.platform.indexOf('Win') > -1) {
       // eslint-disable-next-line
       const ps = new PerfectScrollbar(this.refs.mainPanel);
     }
   }
+
   componentDidUpdate() {
     this.refs.mainPanel.scrollTop = 0;
   }
+
   render() {
     const { classes, ...rest } = this.props;
     return (

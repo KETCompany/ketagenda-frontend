@@ -25,24 +25,37 @@ import UserApi from '../../api/UserAPI';
 class HeaderLinks extends React.Component {
   state = {
     notifications: false,
+    notificationsOn: false,
     showNotification: false,
     currentNotification: {
       title: '',
       message: '',
-    }
+      variant: '',
+    },
+    profileOpen: false,
   };
   
   componentDidMount() {
-    if (!this.state.notifications) {
+    const profile = JSON.parse(sessionStorage.getItem('profile'));
+    
+    this.setState({
+      profile,
+      notificationsOn: profile.fmcToken !== '' ? true : false
+    })
+
+    console.log(profile.fmcToken);
+    if (profile.fmcToken !== '') {
       const messaging = firebase.messaging();
       messaging.requestPermission().then(() => {
         messaging.getToken().then((currentToken) => {
           UserApi.updateProfile({ fmcToken: currentToken })
             .then(() => {
+              sessionStorage.setItem('profile', JSON.stringify({ ...this.state.profile, fmcToken: currentToken }));
               messaging.onMessage((payload) => {
                 this.setState({
                   currentNotification: {
                     message: payload.data.message,
+                    variant: payload.data.variant
                   }
                 });
                 this.showNotification();
@@ -66,16 +79,58 @@ class HeaderLinks extends React.Component {
   handleClick = (evt) => {
     const { name, value } = evt.currentTarget;
 
-    if(name === 'notifications') {
-    
+    if (this.state.notificationsOn) {
+      this.setState({
+        notifications: !this.state.notifications,
+      });
+    } else {
+      const messaging = firebase.messaging();
+      messaging.requestPermission().then(() => {
+        messaging.getToken().then((currentToken) => {
+          UserApi.updateProfile({ fmcToken: currentToken })
+            .then(() => {
+              sessionStorage.setItem('profile', JSON.stringify({ ...this.state.profile, fmcToken: currentToken }));
+              messaging.onMessage((payload) => {
+                this.setState({
+                  currentNotification: {
+                    message: payload.data.message,
+                    variant: payload.data.variant
+                  }
+                });
+                this.showNotification();
+              });
+            })
+        })
+      })
 
+      this.setState({
+        notificationsOn: true,
+      })
     }
-    this.setState({ [name]: !value });
   };
+
+  turnOffNotifications = () => {
+    UserApi.updateProfile({ fmcToken: '' })
+    .then(() => {
+      sessionStorage.setItem('profile', JSON.stringify({...this.state.profile, fmcToken: ''}));
+      this.setState({
+        notificationsOn: false,
+      })
+    })
+  }
+
+  handleClickProfile = (evt) => {
+    this.setState({
+      profileOpen: !this.state.profileOpen,
+    })
+  }
 
   handleLogout = (evt) => {
     sessionStorage.removeItem('role');
+    sessionStorage.removeItem('profile');
     sessionStorage.removeItem('jwtToken');
+
+    window.location.reload()
   }
 
   handleClose = () => {
@@ -86,7 +141,8 @@ class HeaderLinks extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { notifications } = this.state;
+    const { notifications, profileOpen, notificationsOn } = this.state;
+
     return (
       <div>
         <Link to={'/'}>
@@ -116,7 +172,7 @@ class HeaderLinks extends React.Component {
         <Manager style={{ display: 'inline-block' }}>
           <Snackbar
             place="tr"
-            variant='info'
+            variant={this.state.currentNotification.variant}
             message={this.state.currentNotification.message}
             open={this.state.showNotification}
             closeNotification={() => this.setState({ showNotification: false })}
@@ -124,7 +180,7 @@ class HeaderLinks extends React.Component {
           />
           <Target>
             <IconButton
-              color="inherit"
+              color={notificationsOn ? "secondary" : "primary"}
               aria-label="Notifications"
               aria-owns={notifications ? 'menu-list' : null}
               aria-haspopup="true"
@@ -134,7 +190,7 @@ class HeaderLinks extends React.Component {
               value={notifications}
             >
               <Notifications className={classes.links} />
-              <span className={classes.notifications}>5</span>
+              {notificationsOn ? (<span className={classes.notifications}>5</span>) : <span></span>}
               <Hidden mdUp>
                 <p onClick={this.handleClick} className={classes.linkText}>
                   Notification
@@ -184,10 +240,10 @@ class HeaderLinks extends React.Component {
                       Another Notification
                     </MenuItem>
                     <MenuItem
-                      onClick={this.handleClose}
+                      onClick={this.turnOffNotifications}
                       className={classes.dropdownItem}
                     >
-                      Another One
+                      TURN OFF NOTIFICATIONS
                     </MenuItem>
                   </MenuList>
                 </Paper>
@@ -195,16 +251,60 @@ class HeaderLinks extends React.Component {
             </ClickAwayListener>
           </Popper>
         </Manager>
-        <IconButton
-          color="inherit"
-          aria-label="Person"
-          className={classes.buttonLink}
-        >
-          <Person className={classes.links} name="notifications" value={'something'} onClick={this.handleLogout} />
-          <Hidden mdUp>
-            <p className={classes.linkText}>Profile</p>
-          </Hidden>
-        </IconButton>
+
+
+
+
+        <Manager style={{ display: "inline-block" }}>
+          <Target>
+            <IconButton
+              color="inherit"
+              aria-label="Person"
+              aria-owns={profileOpen ? "menu-list" : null}
+              className={classes.buttonLink}
+              onClick={this.handleClickProfile}
+            >
+              <Person className={classes.links}/>
+              <Hidden mdUp>
+                <p onClick={this.handleClickProfile} className={classes.linkText}>Profile</p>
+              </Hidden>
+            </IconButton>
+          </Target>
+          <Popper
+            placement="bottom-start"
+            eventsEnabled={profileOpen}
+            className={
+              classNames({ [classes.popperClose]: !profileOpen }) +
+              " " +
+              classes.pooperResponsive
+            }
+          >
+            <ClickAwayListener onClickAway={this.handleClose}>
+              <Grow
+                in={profileOpen}
+                id="menu-list"
+                style={{ transformOrigin: "0 0 0" }}
+              >
+                <Paper className={classes.dropdown}>
+                  <MenuList role="menu">
+                    <MenuItem
+                      onClick={this.handleClose}
+                      className={classes.dropdownItem}
+                    >
+                      {this.state.profile ? this.state.profile.name : ''}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={this.handleLogout}
+                      className={classes.dropdownItem}
+                    >
+                      Logout
+                    </MenuItem>
+                  </MenuList>
+                </Paper>
+              </Grow>
+            </ClickAwayListener>
+          </Popper>
+        </Manager>
       </div>
     );
   }
