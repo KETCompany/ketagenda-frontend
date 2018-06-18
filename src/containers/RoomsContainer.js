@@ -45,7 +45,7 @@ class RoomsContainer extends Component {
     this.getRoomFilters();
     this.onSearch();
   }
-
+  
   getRoomFilters = () => {
     RoomAPI.filters('')
       .then((filters) => {

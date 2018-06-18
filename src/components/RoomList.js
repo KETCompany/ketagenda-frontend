@@ -51,7 +51,7 @@ const RoomList = (props) => {
             {rooms.map((room, i) => (
                 <div key={room._id}>
                   <NavLink
-                    to={`rooms/${room._id}`}
+                    to={`room/${room._id}`}
                     className={classes.item}
                     activeClassName="active"
                     key={i}
