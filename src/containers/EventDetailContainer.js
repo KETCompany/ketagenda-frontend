@@ -69,42 +69,40 @@ const EventAgenda = ({ event }) => {
   )
 }
 
-class RoomDetailContainer extends React.Component {
+class EventDetailContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       pageLoaded: false,
+      event: null,
       agendaItems: [],
-      room: null,
       value: 0,
       reservation: {
         name: '',
         description: '',
-        owner: '5b1dc950ce0c3b20c5f9d005', // TODO: get user id of loggedin user
         subscribers: [],
         start: moment().toDate(),
         end: moment().toDate(),
       },
     };
-    this.getRoom(this.props.match.params.id)
+    this.getEvent(this.props.match.params.id)
       .then(() => this.setState({ pageLoaded: true }));
   }
 
-  getRoom = async (id) => {
-    const room = await RoomAPI.get(id, true);
-    if (room && room.bookings) {
-      const roomBookings = room.bookings.map(booking => ({
+  getEvent = async (id) => {
+    const event = await EventAPI.get(id, true);
+    if (event && event.bookings) {
+      const eventBookings = event.bookings.map(booking => ({
         ...booking,
         start: new Date(booking.start),
         end: new Date(booking.end),
-        roomId: id,
+        eventId: id,
       }));
-      this.setState({ room: { ...room, bookings: roomBookings } });
+      this.setState({ event: { ...event, bookings: eventBookings } });
+      console.log(event);
     }
   }
-
-  validateDate = () => true;
 
   checkTimeDiff = (start, end) => moment(end).isAfter(start);
 
@@ -154,11 +152,10 @@ class RoomDetailContainer extends React.Component {
     };
 
     EventAPI.post(reservation).then((res) => {
-      alert("success");
       this.setState({
         agendaItems: [],
       });
-      this.getRoom(this.state.room.id);
+      this.getEvent(this.state.event._id);
     });
   }
 
@@ -166,6 +163,10 @@ class RoomDetailContainer extends React.Component {
     this.setState({ value });
   };
 
+  handleJoin = (e) => {
+    EventAPI.subscribe(this.state.event._id)
+      .then(res => console.log(res));
+  }
 
   renderLoad = () => (
     <div style={{position: 'relative'}}>     
@@ -180,19 +181,15 @@ class RoomDetailContainer extends React.Component {
   )
 
   renderDetails() {
-    const { room } = this.state;
     return (
       <div>
-        <QRCode
-          value={room._id}
-          size='128'
-        />
+        <Button onClick={this.handleJoin}>Join</Button>
       </div>
     );
   }
 
   renderReservation() {
-    const { room, agendaItems } = this.state;
+    const { event, agendaItems } = this.state;
 
     return (
     <ItemGrid xs={12} sm={12} md={12}>
@@ -209,7 +206,7 @@ class RoomDetailContainer extends React.Component {
         officeHours={officeHours}
       />
       <ReservationsCalendar
-        agendaItems={[...room.bookings, ...agendaItems]}
+        agendaItems={[...event.bookings, ...agendaItems]}
         handleSlotSelect={this.handleSlotSelect}
         handleSelectEvent={this.handleSelectEvent}
         eventPropGetter={this.eventPropGetter}
@@ -221,19 +218,18 @@ class RoomDetailContainer extends React.Component {
   }
 
   render() {
-    const { room, value, pageLoaded } = this.state;
+    const { event, value, pageLoaded } = this.state;
     if (pageLoaded === false) {
       this.renderLoad();
     }
 
-    if (room === null) {
+    if (event === null) {
       return (
         <Card>
-          No room found
+          No Event found
         </Card>
       );
     }
-    console.log(room);
 
     return (
       <div>
@@ -245,11 +241,10 @@ class RoomDetailContainer extends React.Component {
         </AppBar>
         <RegularCard
           headerColor="orange"
-          cardTitle={`Room: ${room.name}`}
-          
+          cardTitle={`Event: ${event.name}`}
           cardSubtitle={
             <P>
-              {room.type}
+              {event.type}
             </P>
           }
           content={
@@ -257,27 +252,6 @@ class RoomDetailContainer extends React.Component {
               <Grid container>
                 {value === 0 && this.renderDetails()}
                 {value === 1 && this.renderReservation()}
-                {value === 2 && <ItemGrid xs={12} sm={12} md={12}>Item Three</ItemGrid>}
-                <ItemGrid xs={12} sm={12} md={6}>
-                </ItemGrid>
-              </Grid>
-              <br />
-              <br />
-              <Grid container justify="center">
-                <ItemGrid xs={12} sm={12} md={6} style={{ textAlign: "center" }}>
-                </ItemGrid>
-              </Grid>
-              <Grid container justify="center">
-                <ItemGrid xs={12} sm={12} md={10} lg={8}>
-                  <Grid container>
-                  </Grid>
-                </ItemGrid>
-              </Grid>
-              <Grid container justify={"center"}>
-                <ItemGrid xs={12} sm={12} md={10} lg={8}>
-                  <Grid container>
-                  </Grid>
-                </ItemGrid>
               </Grid>
             </div>
           }
@@ -287,4 +261,4 @@ class RoomDetailContainer extends React.Component {
   }
 }
 
-export default withStyles(styles)(RoomDetailContainer);
+export default withStyles(styles)(EventDetailContainer);

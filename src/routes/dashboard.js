@@ -2,6 +2,7 @@ import RoomsContainer from '../containers/RoomsContainer';
 
 import ReservationContainer from '../containers/ReservationContainer';
 import RoomDetailContainer from '../containers/RoomDetailContainer';
+import EventDetailContainer from '../containers/EventDetailContainer';
 
 import {
   Dashboard,
@@ -25,9 +26,15 @@ const dashboardRoutes = [
     authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
-    path: '/rooms/:id',
+    path: '/room/:id',
     hidden: true,
     component: RoomDetailContainer,
+    authorize: ['Student', 'Teacher', 'Admin'],
+  },
+  {
+    path: '/event/:id',
+    hidden: true,
+    component: EventDetailContainer,
     authorize: ['Student', 'Teacher', 'Admin'],
   },
   {

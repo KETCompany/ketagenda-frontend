@@ -20,7 +20,6 @@ export const get = async (id, populate) => (
 
 export const filters = async query => (
   fetcher.get(`${url}/groups?filters${query}`)
-    .then(resp => resp.json())
     .then(({ locations, floors, types }) => {
       return {
         locations: arrToObj(locations),
@@ -30,9 +29,8 @@ export const filters = async query => (
     })
 );
 
-export const deleteById = async (id) => (
+export const deleteById = async id => (
   fetcher.post(`${url}/groups/${id}`, { method: 'DELETE' })
-    .then(resp => resp.json())
 );
 
 export const initForm = async () => (
@@ -49,8 +47,7 @@ export const post = async postData => (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(postData),
-  }).then(res => res.json())
-    .catch(err => console.log(err))
+  })
 );
 
 export const put = async (postData, id) => (
@@ -60,8 +57,7 @@ export const put = async (postData, id) => (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(postData),
-  }).then(res => res.json())
-    .catch(err => console.log(err))
+  })
 );
 
 
