@@ -32,17 +32,19 @@ const styles = theme => ({
   paper: {
     paddingTop: 16,
     paddingBottom: 16,
-    // marginTop: theme.spacing.unit * 3,
-    // width: 1200,
-    margin: '0 auto', 
+    margin: '0 auto',
   },
   formControl: {
     minWidth: 185,
   },
+  select: {
+    minWidth: 150,
+    marginRight: 10,
+  },
 });
 
 class ReservationForm extends React.Component {
-  render() {
+  render(props) {
     const {
       handleNameChange,
       handleDescChange,
@@ -78,50 +80,6 @@ class ReservationForm extends React.Component {
             />
             </div>
             
-          <div className={classes.column}>
-            <DatePicker
-              keyboard
-              disablePast={true}
-              autoOk={true}
-              value={start}
-              format="DD-MM-YYYY"
-              mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
-              onChange={handleDateChange}
-            />
-          </div>
-          <div className={classes.column}>
-            <TimePicker
-              keyboard
-              ampm={false}
-              autoOk={true}
-              disablePast={true}
-              value={start}
-              format="HH:mm"
-              mask={[/\d/, /\d/, ':', /\d/, /\d/]}
-              onChange={handleStartTimeChange}
-              />
-              <TimePicker
-                keyboard
-                ampm={false}
-                autoOk={true}
-                disablePast={true}
-                value={end}
-                format="HH:mm"
-                mask={[/\d/, /\d/, ':', /\d/, /\d/]}
-                onChange={handleEndTimeChange}
-              />
-            </div>
-          </Toolbar>
-          <Toolbar>
-            <TextField
-              id="search"
-              multiline
-              rows="4"
-              label="Description"
-              className={classes.textField}
-              margin="normal"
-              onChange={handleDescChange}
-            />
             {Object.keys(formInputs).map(key => {
               if(_.get(formInputs[key], 'type') === 'select'){
                 return (
@@ -133,6 +91,7 @@ class ReservationForm extends React.Component {
                       name={key}
                       onChange={handleChange}
                       input={<Input id={`a${key}`} />}
+                      className={classes.select}
                     >
                       <MenuItem value="">
                         <em>Select {kind}</em>
@@ -161,6 +120,7 @@ class ReservationForm extends React.Component {
                         onChange={handleChange}
                         renderValue={selected => (<div>None</div>)}
                         input={<Input id={`b${key}`} />}
+                        className={classes.select}
                       >
                         {formInputs[key]['options'].map(({ name, _id }) => (
                           <MenuItem
@@ -186,6 +146,17 @@ class ReservationForm extends React.Component {
                 );
               }
             })}
+          </Toolbar>
+          <Toolbar>
+            <TextField
+              id="search"
+              multiline
+              rows="4"
+              label="Description"
+              className={classes.textField}
+              margin="normal"
+              onChange={handleDescChange}
+            />
           </Toolbar>
           <Button size="small" onClick={onSubmit} color="primary">
             Submit

@@ -17,26 +17,26 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     margin: '0 auto',
   },
-});
-
-const formats = {
-  timeGutterFormat: (time, culture, localizer) =>
-    localizer.format(time, 'H:mm', culture),
-
-  selectRangeFormat: ({ start, end }, culture, localizer) =>
-    `${localizer.format(start, 'H:mm', culture)} - ${localizer.format(end, 'H:mm', culture)}`,
-
-  agendaTimeFormat: (time, culture, localizer) =>
-    localizer.format(time, 'H:mm', culture),
-
-  agendaTimeRangeFormat: ({ start, end }, culture, localizer) =>
-    `${localizer.format(start, 'H:mm', culture)} - ${localizer.format(end, 'H:mm', culture)}`,
-
-  eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
-    `${localizer.format(start, 'H:mm', culture)} - ${localizer.format(end, 'H:mm', culture)}`,
-};
+}); 
 
 class ReservationsCalendar extends React.Component {
+  formats = {
+    timeGutterFormat: (time, culture, localizer) =>
+      localizer.format(time, 'H:mm', culture),
+
+    selectRangeFormat: ({ start, end }, culture, localizer) =>
+      `${localizer.format(start, 'H:mm', culture)} - ${localizer.format(end, 'H:mm', culture)}`,
+
+    agendaTimeFormat: (time, culture, localizer) =>
+      localizer.format(time, 'H:mm', culture),
+
+    agendaTimeRangeFormat: ({ start, end }, culture, localizer) =>
+      `${localizer.format(start, 'H:mm', culture)} - ${localizer.format(end, 'H:mm', culture)}`,
+
+    eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
+      `${localizer.format(start, 'H:mm', culture)} - ${localizer.format(end, 'H:mm', culture)}`,
+  };
+
   EventAgenda = ({ event }) => {
     return (
       <span>
@@ -46,14 +46,33 @@ class ReservationsCalendar extends React.Component {
     )
   }
 
+  Event = ({ event: booking }) => {
+    const { event } = booking;
+    if (event && event.name) {
+      return (
+        <span>
+          <strong>{event.name}</strong>
+          {event.desc && ':  ' + event.desc}
+        </span>
+      );
+    } else if(booking && booking.name) {
+      return (
+        <span>
+          <strong>{booking.name}</strong>
+          {booking.desc && ':  ' + booking.desc}
+        </span>
+      );
+    } else {
+      return (<div></div>);
+    };
+  }
+
   render = () => {
     const {
       agendaItems,
       handleSlotSelect,
       handleSelectEvent,
-      eventPropGetter,
       classes,
-      Event,
     } = this.props;
 
     BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment));
@@ -63,8 +82,7 @@ class ReservationsCalendar extends React.Component {
           selectable={'ignoreEvents'}
           events={agendaItems}
           step={30}
-          eventPropGetter={eventPropGetter}
-          formats={formats}
+          formats={this.formats}
           min={new Date('01/01/1970 7:00')}
           max={new Date('01/01/1970 22:00')}
           defaultView="week"
@@ -73,7 +91,7 @@ class ReservationsCalendar extends React.Component {
           onSelectEvent={handleSlotSelect}
           onSelectSlot={handleSelectEvent}
           components={{
-            event: Event,
+            event: this.Event,
             agenda: {
               event: this.EventAgenda,
             },
@@ -83,6 +101,7 @@ class ReservationsCalendar extends React.Component {
     );
   }
 }
+
 ReservationsCalendar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
