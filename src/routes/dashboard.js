@@ -1,6 +1,4 @@
 import RoomsContainer from '../containers/RoomsContainer';
-
-import ReservationContainer from '../containers/ReservationContainer';
 import RoomDetailContainer from '../containers/RoomDetailContainer';
 import EventDetailContainer from '../containers/EventDetailContainer';
 
@@ -18,6 +16,7 @@ import {
 import GroupsContainer from '../containers/GroupsContainer';
 import EventsContainer from '../containers/EventsContainer';
 import GroupDetailContainer from '../containers/GroupDetailContainer';
+import ReservationContainer from '../containers/ReservationContainer';
 
 const dashboardRoutes = [
   {
@@ -30,7 +29,9 @@ const dashboardRoutes = [
   },
   {
     path: '/reservation',
-    hidden: true,
+    sidebarName: 'Reservation',
+    navbarName: 'Event reservation',
+    icon: BubbleChart,
     component: ReservationContainer,
     authorize: ['Student', 'Teacher', 'Admin'],
   },

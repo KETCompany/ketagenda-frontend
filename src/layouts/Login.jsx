@@ -10,13 +10,7 @@ import Icon from '@material-ui/core/Icon';
 import UserAPI from '../api/UserAPI';
 import { Redirect } from 'react-router-dom';
 
-import { GoogleLogin } from 'react-google-login';
-
-
-const responseGoogle = (response) => {
-  console.log(response);
-}
-
+const { apiUrl } = require('../config');
 const styles = (theme) => ({
   paper: {
     paddingTop: 16,
@@ -51,12 +45,12 @@ const styles = (theme) => ({
 class Login extends React.Component {
   constructor(props) {
     super(props);
-
     if (this.props.location.search) {
       UserAPI.login(this.props.location.search)
         .then(response => {
           if (response && !response.description) {
             sessionStorage.setItem('role', response.user.role);
+            sessionStorage.setItem('profile', JSON.stringify(response.user));
             sessionStorage.setItem('jwtToken', response.token);
           }
         })
@@ -64,7 +58,7 @@ class Login extends React.Component {
   }
 
   onClick = (e) => {
-    window.location = 'http://localhost:8080/auth/google';
+    window.location = `${apiUrl}/auth/google`;
   }
 
   render() {
