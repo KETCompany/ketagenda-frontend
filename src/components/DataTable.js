@@ -204,7 +204,7 @@ class DataTable extends React.Component {
               <TableHead>
                 <TableRow>
                   {newColumns.map((n) => (
-                    <TableCell>{_.capitalize(n.key)}</TableCell>
+                    <TableCell key={n.key}>{_.capitalize(n.key)}</TableCell>
                   ))}
                   {isEditable === true && (
                     <TableCell>{'Edit'}</TableCell>
@@ -215,10 +215,10 @@ class DataTable extends React.Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((n) => (
+                {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => (
                   <TableRow key={n._id}>
-                    {newColumns.map((item) => (
-                      <TableCell>{item.value(n)}</TableCell>
+                    {newColumns.map((item, key) => (
+                      <TableCell key={key}>{item.value(n)}</TableCell>
                     ))}
                     {isEditable === true && (
                       <TableCell className={classes.editTableCel}>

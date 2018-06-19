@@ -9,8 +9,6 @@ import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
-
-
 import TextField from 'material-ui/TextField';
 
 // import {
@@ -53,7 +51,7 @@ class DataForm extends React.Component {
   }
 
   render() {
-    const { classes, data, formInputs, handleChange, handleSave, dataLoaded } = this.props;
+    const { classes, kind, data, formInputs, handleChange, handleSave, dataLoaded } = this.props;
     
     if (dataLoaded === true) {
       return (
@@ -61,22 +59,22 @@ class DataForm extends React.Component {
             {Object.keys(formInputs).map(key => {
               if(_.get(formInputs[key], 'type') === 'select'){
                 return (
-                  <div>
+                  <div key={key}>
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor={`a${key}`}>{_.capitalize(key)}</InputLabel>
                     <Select
-                      value={data[key] && _.isObject(data[key]) ? data[key]['_id'] : data[key]}
+                      value={data[key] ? data[key] : ''}
                       name={key}
                       onChange={handleChange}
                       input={<Input id={`a${key}`} />}
                     >
                       <MenuItem value="">
-                        <em>None</em>
+                        <em>Select {kind}</em>
                       </MenuItem>
                       {formInputs[key]['options'].map(({ _id, name }) => (
                         <MenuItem
                           key={_id}
-                            value={_id}
+                          value={_id}
                         >
                             {name}
                         </MenuItem>
@@ -87,12 +85,12 @@ class DataForm extends React.Component {
                 );
               } else if (_.get(formInputs[key], 'type') === 'multiSelect') {
                 return (
-                  <div>
+                  <div key={key}>
                     <FormControl className={classes.formControl}>
                       <InputLabel htmlFor={`b${key}`}>{_.capitalize(key)}</InputLabel>
                       <Select
                         multiple
-                        value={ data[key] ? data[key].map((v) => _.isObject(v) ? v['_id'] : v) : [] }
+                        value={data[key] ? data[key].map((v) => _.isObject(v) ? v['_id'] : v) : []}
                         name={key}
                         onChange={handleChange}
                         renderValue={selected => (<div>None</div>)}
@@ -122,13 +120,18 @@ class DataForm extends React.Component {
                 );
               } else if (_.get(formInputs[key], 'type') === 'calendar') {
                 return (
-                <ReservationsCalendar
-                  agendaItems={data[key].map(a => ({...a, start: new Date(a.start), end: new Date(a.end)}))}
-                  Event={Event}
-                  />)
+                  <div key={key}>
+                  <ReservationsCalendar
+                    agendaItems={data[key] ? data[key].map(a => ({...a, start: new Date(a.start), end: new Date(a.end)})) : []}
+                    Event={Event}
+                    handleSlotSelect={formInputs[key]['handleSlotSelect']}
+                    handleSelectEvent={formInputs[key]['handleSelectEvent']}
+                    />
+                  </div>
+                )
               } else {
                 return (
-                  <div>
+                  <div key={key}>
                     <TextField
                       defaultValue={data[key]}
                       name={key}
@@ -141,7 +144,7 @@ class DataForm extends React.Component {
                 );
               }
             })}
-            <Button size="small" onClick={handleSave} color="secondary">
+            <Button size="small" onClick={handleSave} color="info">
               Submit
             </Button>
         </div>
