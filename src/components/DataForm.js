@@ -43,12 +43,14 @@ class DataForm extends React.Component {
         <div className={classes.root}>
             {Object.keys(formInputs).map(key => {
               if(_.get(formInputs[key], 'type') === 'select'){
+                const Value = data[key] ? (_.isObject(data[key]) ? _.get(data[key], '_id') : _.isArray(data[key]) ? _.get(_.first(data[key]), '_id') : '') : '';
+                console.log(Value);
                 return (
                   <div key={key}>
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor={`a${key}`}>{_.capitalize(key)}</InputLabel>
                     <Select
-                      value={data[key] ? data[key] : ''}
+                      value={Value}
                       name={key}
                       onChange={handleChange}
                       input={<Input id={`a${key}`} />}

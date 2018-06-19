@@ -1,11 +1,9 @@
 import React from 'react';
-import { Switch, BrowserRouter } from 'react-router-dom';
+import { Switch, BrowserRouter, Route } from 'react-router-dom';
 import CustomRoute from './utils/Autorization';
-// import RoomSelection from './components/RoomDetail';
-import Reservation from './components/ReservationForm';
-import RoomsContainer from './containers/RoomsContainer';
-
 import indexRouter from './routes/index';
+import NotFoundContainer from './containers/error/NotFoundContainer';
+
 
 const Routes = () => (
   <BrowserRouter>
@@ -17,6 +15,7 @@ const Routes = () => (
           authorize={prop.authorize}
           key={key}
         />)}
+        <Route component={NotFoundContainer}/>
     </Switch>
   </BrowserRouter>
 );

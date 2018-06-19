@@ -6,30 +6,16 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import QRCode from 'qrcode.react';
-
-import * as RoomAPI from '../api/RoomAPI';
 import * as EventAPI from '../api/EventAPI';
 
 import ReservationsCalendar from '../components/ReservationsCalendar';
-import ReservationForm from '../components/ReservationForm';
-
-import _ from 'lodash';
 
 import {
   RegularCard,
-  A,
   P,
-  Small,
   Button,
-  SnackbarContent,
-  Snackbar,
   ItemGrid
 } from '../components';
-
-const moment = require('moment');
-
-const officeHours = [{ from: '9:00', to: '12:00' }, { from: '13:00', to: '17:00' }];
 
 const styles = theme => ({
 
@@ -75,7 +61,7 @@ class EventDetailContainer extends React.Component {
   }
 
   renderLoad = () => (
-    <div style={{position: 'relative'}}>     
+    <div style={{ position: 'relative' }}>     
       <CircularProgress
         size={40}
         left={-20}

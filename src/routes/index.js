@@ -18,11 +18,10 @@ const indexRoutes = [
     component: LoginCallback,
   },
   { 
-    path: '/', 
+    path: '/',
     component: Search,
     authorize: ['Student', 'Teacher', 'Admin'],
   },
-  
 ];
 
 export default indexRoutes;

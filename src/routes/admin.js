@@ -3,16 +3,10 @@ import HomeContainer from '../containers/admin/HomeContainer';
 import CreateContainer from '../containers/admin/CreateContainer';
 
 import {
-  Dashboard,
-  Person,
   ContentPaste,
-  LibraryBooks,
   BubbleChart,
-  LocationOn,
-  Notifications,
-  PermContactCalendar,
-  School
 } from '@material-ui/icons';
+import ReservationContainer from '../containers/ReservationContainer';
 
 const adminRoutes = [
   {
@@ -22,6 +16,14 @@ const adminRoutes = [
     icon: ContentPaste,
     component: HomeContainer,
     authorize: ['Admin'],
+  },
+  {
+    path: '/reservation',
+    sidebarName: 'Reservation',
+    navbarName: 'Event reservation',
+    icon: BubbleChart,
+    component: ReservationContainer,
+    authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
     path: '/admin/edit/:kind/:id',

@@ -123,7 +123,9 @@ class ReservationContainer extends Component {
     return new Promise((resolve) => {
       resolve(this.validateDate());
     })
-      .then(() => EventAPI.post(this.state.booking)).catch(error => console.log);
+      .then(() => EventAPI.post(this.state.booking)).catch(error => {
+        (error['data'] ? alert(error['data']) : console.log(error))
+      });
   }
 
   render() {
