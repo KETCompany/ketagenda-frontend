@@ -106,7 +106,17 @@ class ReservationContainer extends Component {
     });
   }
 
-  handleSlotSelect = event => alert(event.title)
+  handleSlotSelect = event => {
+    this.setState({
+      booking: {
+        ...this.state.booking,
+        bookings:
+        [
+          ...this.state.booking.bookings.filter(booking => booking.start !== moment(event.start).unix() && booking.end !== moment(event.end).unix())
+        ]
+      }
+    });
+  }
 
   handleSubmit = (event) => {
     event.preventDefault();
