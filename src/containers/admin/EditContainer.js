@@ -9,6 +9,7 @@ import * as GroupAPI from '../../api/GroupAPI';
 import * as EventAPI from '../../api/EventAPI';
 
 
+import Button from '../../components/CustomButtons/Button.jsx';
 import DataForm from '../../components/DataForm';
 
 import {
@@ -16,7 +17,10 @@ import {
 } from '../../components';
 
 const styles = theme => ({
-
+  buttonRight: {
+    right: 0,
+    position: 'absolute', 
+  }
 });
 
 class EditContainer extends Component {
@@ -140,6 +144,8 @@ class EditContainer extends Component {
     return formInputs;
   }
 
+  handleBack = () => this.props.history.goBack();
+
   saveData = async () => {
     const Api = _.get(this.state, 'api');
     await Api.put(this.state.data, this.state.data._id)
@@ -149,9 +155,12 @@ class EditContainer extends Component {
 
   render() {
     const { data, formInputs, dataLoaded, kind } = this.state;
+    const { classes } = this.props;
     return (
       <div>
         <RegularCard
+          headerColor="red"
+          cardTitle={(<div>{kind} <Button onClick={this.handleBack} className={classes.buttonRight}>Back</Button></div>)}
           content={
             <div>
               <DataForm

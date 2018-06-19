@@ -10,12 +10,17 @@ import * as EventAPI from '../../api/EventAPI';
 
 import DataForm from '../../components/DataForm';
 
+import Button from '../../components/CustomButtons/Button.jsx';
+
 import {
   RegularCard,
 } from '../../components';
 
 const styles = theme => ({
-
+  buttonRight: {
+    right: 0,
+    position: 'absolute', 
+  }
 });
 
 class CreateContainer extends Component {
@@ -121,6 +126,8 @@ class CreateContainer extends Component {
     const populatedFormInputs = this.populateFormInputs(formInputs, a);
     this.setState({ dataLoaded: true, api: Api, formInputs: populatedFormInputs, kind: params.kind });
   }
+  
+  handleBack = () => this.props.history.goBack();
 
   populateFormInputs = (formInputs, entry) => {
     Object.entries(entry).forEach(([key, values]) => {
@@ -150,9 +157,12 @@ class CreateContainer extends Component {
 
   render() {
     const { data, formInputs, dataLoaded, kind } = this.state;
+    const { classes } = this.props;
     return (
       <div>
         <RegularCard
+          headerColor="red"
+          cardTitle={(<div>{kind} <Button onClick={this.handleBack} className={classes.buttonRight}>Back</Button></div>)}
           content={
             <div>
               <DataForm

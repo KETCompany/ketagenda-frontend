@@ -30,21 +30,6 @@ const styles = theme => ({
   },
 });
 
-const Event = ({ event: booking }) => {
-  const { event } = booking;
-  if (event && event.name) {
-    return (
-      <span>
-        <strong>{event.name}</strong>
-        {event.desc && ':  ' + event.desc}
-      </span>
-    )
-  } else {
-    return (<span></span>);
-  }
-}
-
-
 class DataForm extends React.Component {
   constructor(props) {
     super(props);
@@ -123,7 +108,6 @@ class DataForm extends React.Component {
                   <div key={key}>
                   <ReservationsCalendar
                     agendaItems={data[key] ? data[key].map(a => ({...a, start: new Date(a.start), end: new Date(a.end)})) : []}
-                    Event={Event}
                     handleSlotSelect={formInputs[key]['handleSlotSelect']}
                     handleSelectEvent={formInputs[key]['handleSelectEvent']}
                     />

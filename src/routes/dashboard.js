@@ -81,6 +81,7 @@ const dashboardRoutes = [
     navbarName: 'Messages',
     icon: Notifications,
     component: RoomsContainer,
+    hidden: true,
     authorize: ['Student', 'Teacher', 'Admin'],
   },
   {
