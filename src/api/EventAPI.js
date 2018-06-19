@@ -4,7 +4,8 @@ import RoomAPI from './RoomAPI';
 import GroupAPI from './GroupAPI';
 import fetcher from './fetcher';
 
-const url = 'http://localhost:8080/api';
+const { apiUrl } = require('../config');
+const url = `${apiUrl}/api`;
 
 export const list = async (query, select, populate) => (
   fetcher.get(`${url}/events?select=${select ? select.join(',') : ''}${populate ? '&populate' : ''}`)
@@ -50,7 +51,7 @@ export const initForm = async () => (
     UserAPI.list('', ['name', 'id']),
     GroupAPI.list('', ['name', 'id']),
     RoomAPI.list('', ['name', 'id']),
-  ]).then(([users, groups, rooms]) => ({ owner: users, groups, rooms }))
+  ]).then(([users, groups, room]) => ({ owner: users, groups, room }))
     
 )
 

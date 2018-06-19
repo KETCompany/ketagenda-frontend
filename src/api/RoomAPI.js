@@ -1,15 +1,14 @@
 import arrToObj from '../utils/arrMapper';
 import fetcher from './fetcher';
 
-const url = 'http://localhost:8080/api';
+const { apiUrl } = require('../config');
+const url = `${apiUrl}/api`;
 
-export const list = async query => (
-  fetcher.get(`${url}/rooms${query}`)
-)
+export const list = async query =>
+  fetcher.get(`${url}/rooms${query}`);
 
-export const get = async (id, populate) => (
-  fetcher.get(`${url}/rooms/${id}${populate ? '?populate' : ''}`)
-)
+export const get = async (id, populate) => 
+  fetcher.get(`${url}/rooms/${id}${populate ? '?populate' : ''}`);
 
 export const filters = async query => (
   fetcher.get(`${url}/rooms?filters${query}`)

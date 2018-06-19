@@ -1,10 +1,10 @@
 import arrToObj from '../utils/arrMapper';
 import EventAPI from './EventAPI';
 import UserAPI from './UserAPI';
-
 import fetcher from './fetcher';
 
-const url = 'http://localhost:8080/api';
+const { apiUrl } = require('../config');
+const url = `${apiUrl}/api`;
 
 export const list = async (query, select) => (
   fetcher.get(`${url}/groups?select=${select ? select.join(',') : ''}`)

@@ -2,8 +2,8 @@ import arrToObj from '../utils/arrMapper';
 import GroupAPI from './GroupAPI';
 import fetcher from './fetcher';
 
-const url = 'http://localhost:8080/api';
-const baseUrl = 'http://localhost:8080';
+const { apiUrl } = require('../config');
+const url = `${apiUrl}/api`;
 
 export const list = async query => (
   fetcher.get(`${url}/users${query}`)
@@ -57,20 +57,19 @@ export const put = async (postData, id) => (
   })
 );
 
-export const login = async code => (
-  fetch(`${baseUrl}/auth/google/callback${code}`)
-);
+export const login = async code =>
+  fetcher.get(`${apiUrl}/auth/google/callback${code}`)
 
 export const profile = async () =>
-  fetcher.get(`${baseUrl}/api/users/profile`)
+  fetcher.get(`${url}/users/profile`)
 
-export const updateProfile = async (obj) => (
+export const updateProfile = async postData => (
   fetcher.post(`${url}/users/profile`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(obj),
+    body: JSON.stringify(postData),
   })
 )
 
