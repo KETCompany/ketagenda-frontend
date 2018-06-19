@@ -35,40 +35,6 @@ const styles = theme => ({
 
 });
 
-const Event = ({ event: booking }) => {
-  const { event } = booking;
-  if (event && event.name) {
-    return (
-      <span>
-        <strong>{event.name}</strong>
-        {event.desc && ':  ' + event.desc}
-      </span>
-    )
-  } else {
-    return (<span></span>);
-  }
-}
-
-const eventPropGetter = (event) => {
-  if(event._id) {
-    return { style: {
-      background: '#333',
-    }
-  }
-  }
-
-  return {};
-}
-
-const EventAgenda = ({ event }) => {
-  return (
-    <span>
-      <em style={{ color: 'red' }}>{event.title}</em>
-      <p>{event.desc}</p>
-    </span>
-  )
-}
-
 class EventDetailContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -137,17 +103,16 @@ class EventDetailContainer extends React.Component {
       <br />
       <ReservationsCalendar
         agendaItems={[...event.bookings, ...agendaItems]}
-        handleSelectEvent={this.handleSelectEvent}
-        eventPropGetter={this.eventPropGetter}
-        Event={Event}
-        EventAgenda={EventAgenda}
       />
     </ItemGrid>
     );
   }
+  
+  handleBack = () => this.props.history.goBack();
 
   render() {
     const { event, value, pageLoaded } = this.state;
+    const { classes } = this.props;
     if (pageLoaded === false) {
       this.renderLoad();
     }
@@ -170,7 +135,7 @@ class EventDetailContainer extends React.Component {
         </AppBar>
         <RegularCard
           headerColor="orange"
-          cardTitle={`Event: ${event.name}`}
+          cardTitle={(<div>Event: {event.name} <Button onClick={this.handleBack} className={classes.buttonRight}>Back</Button></div>)}
           cardSubtitle={
             <P>
               {event.type}

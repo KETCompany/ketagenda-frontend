@@ -30,45 +30,9 @@ import {
 
 const moment = require('moment');
 
-const officeHours = [{ from: '9:00', to: '12:00' }, { from: '13:00', to: '17:00' }];
-
 const styles = theme => ({
 
 });
-
-const Event = ({ event: booking }) => {
-  const { event } = booking;
-  if (event && event.name) {
-    return (
-      <span>
-        <strong>{event.name}</strong>
-        {event.desc && ':  ' + event.desc}
-      </span>
-    )
-  } else {
-    return (<span></span>);
-  }
-}
-
-const eventPropGetter = (event) => {
-  if(event._id) {
-    return { style: {
-      background: '#333',
-    }
-  }
-  }
-
-  return {};
-}
-
-const EventAgenda = ({ event }) => {
-  return (
-    <span>
-      <em style={{ color: 'red' }}>{event.title}</em>
-      <p>{event.desc}</p>
-    </span>
-  )
-}
 
 class RoomDetailContainer extends React.Component {
   constructor(props) {
@@ -204,16 +168,16 @@ class RoomDetailContainer extends React.Component {
         agendaItems={[...room.bookings, ...agendaItems]}
         handleSlotSelect={this.handleSlotSelect}
         handleSelectEvent={this.handleSelectEvent}
-        eventPropGetter={this.eventPropGetter}
-        Event={Event}
-        EventAgenda={EventAgenda}
       />
     </ItemGrid>
     );
   }
 
+  handleBack = () => this.props.history.goBack();
+
   render() {
     const { room, value, pageLoaded } = this.state;
+    const { classes } = this.props;
     if (pageLoaded === false) {
       this.renderLoad();
     }
@@ -225,7 +189,6 @@ class RoomDetailContainer extends React.Component {
         </Card>
       );
     }
-    console.log(room);
 
     return (
       <div>
@@ -237,8 +200,7 @@ class RoomDetailContainer extends React.Component {
         </AppBar>
         <RegularCard
           headerColor="orange"
-          cardTitle={`Room: ${room.name}`}
-          
+          cardTitle={(<div>Room: {room.name}  <Button onClick={this.handleBack} className={classes.buttonRight}>Back</Button></div>)}
           cardSubtitle={
             <P>
               {room.type}

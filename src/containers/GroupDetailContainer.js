@@ -32,31 +32,6 @@ const styles = theme => ({
 
 });
 
-const Event = ({ event: booking }) => {
-  const { event } = booking;
-  if (event && event.name) {
-    return (
-      <span>
-        <strong>{event.name}</strong>
-        {event.desc && ':  ' + event.desc}
-      </span>
-    )
-  } else {
-    return (<span></span>);
-  }
-}
-
-const eventPropGetter = (event) => {
-  if(event._id) {
-    return { style: {
-      background: '#333',
-    }
-  }
-  }
-
-  return {};
-}
-
 class GroupDetailContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -75,15 +50,17 @@ class GroupDetailContainer extends React.Component {
     const group = await GroupAPI.get(id, true);
     if (group) {
       let groupBookings = [];
-      if (group.bookings) {
-        groupBookings = group.bookings.map(booking => ({
-          ...booking,
-          start: new Date(booking.start),
-          end: new Date(booking.end),
-          groupId: id,
-        }));
+      if (group.events) {
+        group.events.map(event => {
+          groupBookings = event.bookings.map(booking => ({
+            ...booking,
+            start: new Date(booking.start),
+            end: new Date(booking.end),
+            name: event.name,
+            event_id: event._id,
+          }))
+        })
       }
-      console.log(group);
       this.setState({ group: { ...group, bookings: groupBookings } });
     }
   }
@@ -93,7 +70,7 @@ class GroupDetailContainer extends React.Component {
   };
 
   handleSlotSelect = booking =>
-    this.props.history.push(`/event/${booking.event._id}`)
+    this.props.history.push(`/event/${booking.event_id}`)
 
   handleJoin = (e) => {
     GroupAPI.subscribe(this.state.group._id, true)
@@ -130,15 +107,16 @@ class GroupDetailContainer extends React.Component {
       <ReservationsCalendar
         agendaItems={[...group.bookings, ...agendaItems]}
         handleSlotSelect={this.handleSlotSelect}
-        eventPropGetter={this.eventPropGetter}
-        Event={Event}
       />
     </ItemGrid>
     );
   }
+  
+  handleBack = () => this.props.history.goBack();
 
   render() {
     const { group, value, pageLoaded } = this.state;
+    const { classes } = this.props;
     if (pageLoaded === false) {
       this.renderLoad();
     }
@@ -161,7 +139,7 @@ class GroupDetailContainer extends React.Component {
         </AppBar>
         <RegularCard
           headerColor="orange"
-          cardTitle={`Group: ${group.name}`}
+          cardTitle={(<div>Group: {group.name} <Button onClick={this.handleBack} className={classes.buttonRight}>Back</Button></div>)}
           cardSubtitle={
             <P>
               {group.type}
