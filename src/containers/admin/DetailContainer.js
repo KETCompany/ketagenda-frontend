@@ -6,36 +6,28 @@ import _ from 'lodash';
 import * as UserAPI from '../../api/UserAPI';
 import * as RoomAPI from '../../api/RoomAPI';
 import * as GroupAPI from '../../api/GroupAPI';
-import * as EventAPI from '../../api/EventAPI';
 
 import DataForm from '../../components/DataForm';
-
-import Button from '../../components/CustomButtons/Button.jsx';
 
 import {
   RegularCard,
 } from '../../components';
 
 const styles = theme => ({
-  buttonRight: {
-    right: 0,
-    position: 'absolute', 
-  }
+
 });
 
-class CreateContainer extends Component {
+class DetailConatainer extends Component {
   constructor(props) {
-    super(props);
+    super();
     this.state = {
       value: 0,
       data: {},
       dataLoaded: false,
-      kind: null,
       api: {
         user: UserAPI,
         room: RoomAPI,
         group: GroupAPI,
-        event: EventAPI,
       },
       formInputs: {
         user: {
@@ -45,7 +37,7 @@ class CreateContainer extends Component {
           role: {
             type: 'select',
             options: [
-              { _id: 'Student', name: 'Student'},
+              { _id: 'Student', name: 'Student' },
               { _id: 'Teacher', name: 'Teacher' },
               { _id: 'Admin', name: 'Admin' },
             ],
@@ -68,40 +60,9 @@ class CreateContainer extends Component {
           floor: [],
           number: [],
           type: [],
-          location: [],
         },
-        event: {
-          name: [],
-          description: [],
-          owner: {
-            type: 'select',
-            options: [],
-          },
-          bookings: {
-            type: 'calendar',
-            options: [],
-            handleSlotSelect: this.handleSlotSelect,
-            handleSelectEvent: this.handleSelectEvent
-          },
-        }
       },
     };
-  }
-
-  handleSelectEvent = (e) => alert(e);
-
-  handleSlotSelect = (e) => {
-    // this.setState({ booking: { ...this.state.booking, start: moment(this.state.booking.start).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
-    // this.setState({ booking: { ...this.state.booking, end: moment(this.state.booking.end).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
-    
-    // this.setState({
-    //   booking: {
-    //     ...this.state.booking,
-    //     start: moment(this.state.booking.start).date(date.getDate()).month(date.getMonth()).toDate(),
-    //     end: moment(this.state.booking.end).date(date.getDate()).month(date.getMonth()).toDate(),
-    //   },
-    // });
-    console.log(e);
   }
 
   componentDidMount = () => {
@@ -113,21 +74,32 @@ class CreateContainer extends Component {
   }
 
   loadData = async (params) => {
+    if (!_.isEmpty(this.state.data)) {
+      console.log('Data is allready loaded!');
+      return;
+    }
+
     if (!_.has(params, 'kind')) {
       console.error('No kind of form!');
       return;
     }
 
     const Api = _.get(this.state.api, params.kind);
+
     const formInputs = _.get(this.state.formInputs, params.kind);
+    await Promise.all([
+      Api.initCreate(),
+      Api.get(params.id, true),
+    ])
+      .then(([formInputData, ApiData]) => {
+        const populatedFormInputs = this.populateFormInputs(formInputs, formInputData);
 
-    const a = await Api.initForm();
-
-    const populatedFormInputs = this.populateFormInputs(formInputs, a);
-    this.setState({ dataLoaded: true, api: Api, formInputs: populatedFormInputs, kind: params.kind });
+        this.setState({
+          data: ApiData, dataLoaded: true, api: Api, formInputs: populatedFormInputs
+        });
+      })
+      .catch(err => console.error(err));
   }
-  
-  handleBack = () => this.props.history.goBack();
 
   populateFormInputs = (formInputs, entry) => {
     Object.entries(entry).forEach(([key, values]) => {
@@ -150,19 +122,16 @@ class CreateContainer extends Component {
 
   saveData = async () => {
     const Api = _.get(this.state, 'api');
-    await Api.post(this.state.data)
-      .then(res => (res._id ? window.alert('Created successful!') : window.alert('Something went wrong')) )
+    await Api.put(this.state.data, this.state.data._id)
+      .then(res => (res._id ? window.alert('Edited successful!') : window.alert('Something went wrong')))
       .catch(err => console.error(err));
   }
 
   render() {
-    const { data, formInputs, dataLoaded, kind } = this.state;
-    const { classes } = this.props;
+    const { data, formInputs, dataLoaded } = this.state;
     return (
       <div>
         <RegularCard
-          headerColor="red"
-          cardTitle={(<div>{kind} <Button onClick={this.handleBack} className={classes.buttonRight}>Back</Button></div>)}
           content={
             <div>
               <DataForm
@@ -171,7 +140,6 @@ class CreateContainer extends Component {
                 formInputs={formInputs}
                 handleChange={this.handleChange}
                 handleSave={this.saveData}
-                kind={kind}
               />
             </div>
           }
@@ -181,4 +149,4 @@ class CreateContainer extends Component {
   }
 }
 
-export default withStyles(styles)(CreateContainer);
+export default withStyles(styles)(DetailConatainer);

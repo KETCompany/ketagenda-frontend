@@ -21,26 +21,26 @@ const adminRoutes = [
     navbarName: 'Management',
     icon: ContentPaste,
     component: HomeContainer,
-    authorize: ['admin'],
+    authorize: ['Admin'],
   },
   {
     path: '/admin/edit/:kind/:id',
     hidden: true,
     component: EditContainer,
-    authorize: ['admin'],
+    authorize: ['Admin'],
   },
   {
     path: '/admin/create/:kind',
     hidden: true,
     component: CreateContainer,
-    authorize: ['admin'],
+    authorize: ['Admin'],
   },
   {
     redirect: true,
     path: '/',
     to: '/admin/home',
     navbarName: 'Redirect',
-    authorize: ['admin'],
+    authorize: ['Admin'],
   },
 ];
 

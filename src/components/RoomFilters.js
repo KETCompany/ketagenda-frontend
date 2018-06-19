@@ -134,21 +134,21 @@ class RoomFilters extends Component {
             <div className={classes.column}>
               <SwitchFilters
                 handleChange={handleChange('locations')}
-                filters={filters.locations}
+                filters={filters ? filters.locations : []}
                 text={'Locations:'}
               />
             </div>
             <div className={classes.column}>
               <SwitchFilters
                 handleChange={handleChange('floors')}
-                filters={filters.floors}
-                filtersDisabled={filtersDisabled.floors}
+                filters={filters ? filters.floors : []}
+                filtersDisabled={filtersDisabled ? filtersDisabled.floors : []}
                 text={'Floors:'}
               />
             </div>
             <div className={classes.column}>
               <TextFilter
-                filters={filtersDisabled.types || []}
+                filters={filtersDisabled ? filtersDisabled.types : []}
                 value={type}
                 handleChange={handleChangeSingle('type')} />
             </div>

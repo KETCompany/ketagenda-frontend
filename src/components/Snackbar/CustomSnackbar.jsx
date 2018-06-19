@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -12,11 +13,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import WarningIcon from '@material-ui/icons/Warning';
 import { withStyles } from '@material-ui/core/styles';
-
-import { Close } from "@material-ui/icons";
-import cx from "classnames";
-
-import snackbarContentStyle from "../../assets/jss/material-dashboard-react/snackbarContentStyle.jsx";
 
 const variantIcon = {
   success: CheckCircleIcon,
@@ -33,7 +29,7 @@ const styles1 = theme => ({
     backgroundColor: theme.palette.error.dark,
   },
   info: {
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.primary.dark,
   },
   warning: {
     backgroundColor: amber[700],
@@ -91,59 +87,79 @@ MySnackbarContent.propTypes = {
 
 const MySnackbarContentWrapper = withStyles(styles1)(MySnackbarContent);
 
+const styles2 = theme => ({
+  margin: {
+    margin: theme.spacing.unit,
+  },
+});
 
+class CustomizedSnackbars extends React.Component {
+  state = {
+    open: false,
+  };
 
-function Snackbar2({ ...props }) {
-  const { classes, message, variant, close, icon, place, open } = props;
-  var action = [];
-  const messageClasses = cx({
-    [classes.iconMessage]: icon !== undefined
-  });
-  if (close !== undefined) {
-    action = [
-      <IconButton
-        className={classes.iconButton}
-        key="close"
-        aria-label="Close"
-        color="inherit"
-        onClick={() => props.closeNotification()}
-      >
-        <Close className={classes.close} />
-      </IconButton>
-    ];
+  handleClick = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({ open: false });
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <div>
+        <Button className={classes.margin} onClick={this.handleClick}>
+          Open success snackbar
+        </Button>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.open}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+        >
+          <MySnackbarContentWrapper
+            onClose={this.handleClose}
+            variant="success"
+            message="This is a success message!"
+          />
+        </Snackbar>
+        <MySnackbarContentWrapper
+          variant="error"
+          className={classes.margin}
+          message="This is an error message!"
+        />
+        <MySnackbarContentWrapper
+          variant="warning"
+          className={classes.margin}
+          message="This is a warning message!"
+        />
+        <MySnackbarContentWrapper
+          variant="info"
+          className={classes.margin}
+          message="This is an information message!"
+        />
+        <MySnackbarContentWrapper
+          variant="success"
+          className={classes.margin}
+          message="This is a success message!"
+        />
+      </div>
+    );
   }
-  return (
-    <Snackbar
-      anchorOrigin={{
-        vertical: place.indexOf("t") === -1 ? "bottom" : "top",
-        horizontal:
-          place.indexOf("l") !== -1
-            ? "left"
-            : place.indexOf("c") !== -1 ? "center" : "right"
-      }}
-      open={open}
-      autoHideDuration={6000}
-      onClose={props.closeNotification}
-    >
-      <MySnackbarContentWrapper
-        onClose={props.closeNotification}
-        variant={variant}
-        message={message}
-      />
-    </Snackbar>
-  );
 }
 
-Snackbar2.propTypes = {
+CustomizedSnackbars.propTypes = {
   classes: PropTypes.object.isRequired,
-  message: PropTypes.node.isRequired,
-  color: PropTypes.oneOf(["info", "success", "warning", "danger", "primary"]),
-  close: PropTypes.bool,
-  icon: PropTypes.func,
-  place: PropTypes.oneOf(["tl", "tr", "tc", "br", "bl", "bc"]),
-  open: PropTypes.bool
 };
 
-export default withStyles(snackbarContentStyle)(Snackbar2);
-
-
+export default withStyles(styles2)(CustomizedSnackbars);

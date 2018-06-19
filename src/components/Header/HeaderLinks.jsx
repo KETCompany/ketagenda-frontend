@@ -1,6 +1,10 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import classNames from "classnames";
+
+import { Person, Notifications, Home, MyLocation } from "@material-ui/icons";
 import { Manager, Target, Popper } from "react-popper";
+import Snackbar from '../Snackbar/Snackbar';
 import {
   withStyles,
   IconButton,
@@ -11,27 +15,135 @@ import {
   ClickAwayListener,
   Hidden,
 } from "material-ui";
-import { Person, Notifications, Home, MyLocation } from "@material-ui/icons";
-
-import { Link } from 'react-router-dom';
 
 import headerLinksStyle from "../../assets/jss/material-dashboard-react/headerLinksStyle";
+import { Link } from 'react-router-dom';
+import firebase from 'firebase/app';
+
+import UserApi from '../../api/UserAPI';
 
 class HeaderLinks extends React.Component {
-  state = {
-    notifications: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      profile: null,
+      notifications: false,
+      notificationsOn: false,
+      showNotification: false,
+      currentNotification: {
+        title: '',
+        message: '',
+        variant: '',
+      },
+      profileOpen: false,
+    };
+  }
+
+  notificationTokenCheck = profile => profile.fmcToken !== undefined && profile.fmcToken !== '' ? true : false
+
+  componentDidMount = () => {
+    const { profile } = this.props;
+    this.setState({
+      profile: profile,
+      notificationsOn: this.notificationTokenCheck(profile),
+    });
+
+    if (this.notificationTokenCheck(profile) ) {
+      this.initMessaging(firebase.messaging());
+    }
+  }
+
+  initMessaging = messaging => {
+    messaging.requestPermission()
+      .then(() => {
+        messaging.getToken()
+          .then((currentToken) => {
+            this.updateNotificationProfile(messaging, currentToken);
+          })
+      })
+  }
+
+  updateNotificationProfile = (messaging, currentToken) => {
+    return UserApi.updateProfile({ 
+      fmcToken: currentToken,
+    })
+      .then(newProfile => {
+        sessionStorage.setItem('profile', 
+          JSON.stringify({
+            ...newProfile, fmcToken: currentToken,
+          }),
+        );
+        return this.initNotification(messaging);
+      })
+  }
+
+  initNotification = messaging => {
+    messaging.onMessage((payload) => {
+      this.setState({
+        currentNotification: {
+          message: payload.data.message,
+          variant: payload.data.variant
+        }
+      });
+      this.showNotification();
+    });
+  }
+
+  showNotification = () => {
+    this.setState({ showNotification: true });
+    setTimeout(
+      function () {
+        this.setState({ showNotification: false });
+      }.bind(this),
+      6000
+    );
+  }
+
   handleClick = (evt) => {
-    const { name, value } = evt.currentTarget;
-    this.setState({ [name]: !value });
+    if (this.state.notificationsOn) {
+      this.setState({
+        notifications: !this.state.notifications,
+      });
+    } else {
+      this.initMessaging(firebase.messaging());
+      this.setState({
+        notificationsOn: true,
+      })
+    }
   };
+
+  turnOffNotifications = () =>
+    UserApi.updateProfile({ fmcToken: '' })
+      .then(() => {
+        sessionStorage.setItem('profile', JSON.stringify({
+          ...this.state.profile, fmcToken: ''
+        }));
+        this.setState({
+          notificationsOn: false,
+        })
+      })
+
+  handleClickProfile = evt =>
+    this.setState({
+      profileOpen: !this.state.profileOpen,
+    })
+
+  handleLogout = evt => {
+    sessionStorage.removeItem('role');
+    sessionStorage.removeItem('profile');
+    sessionStorage.removeItem('jwtToken');
+
+    window.location.reload();
+  }
 
   handleClose = () => {
     this.setState({ notifications: false });
   };
-  render() {
+
+  render = () => {
     const { classes } = this.props;
-    const { notifications } = this.state;
+    const { notifications, profileOpen, notificationsOn } = this.state;
+
     return (
       <div>
         <Link to={'/'}>
@@ -59,9 +171,17 @@ class HeaderLinks extends React.Component {
           </IconButton>
         </Link>
         <Manager style={{ display: 'inline-block' }}>
+          <Snackbar
+            place="tr"
+            variant={this.state.currentNotification.variant}
+            message={this.state.currentNotification.message}
+            open={this.state.showNotification}
+            closeNotification={() => this.setState({ showNotification: false })}
+            close
+          />
           <Target>
             <IconButton
-              color="inherit"
+              color={notificationsOn ? "secondary" : "primary"}
               aria-label="Notifications"
               aria-owns={notifications ? 'menu-list' : null}
               aria-haspopup="true"
@@ -71,7 +191,7 @@ class HeaderLinks extends React.Component {
               value={notifications}
             >
               <Notifications className={classes.links} />
-              <span className={classes.notifications}>5</span>
+              {notificationsOn ? (<span className={classes.notifications}>5</span>) : <span></span>}
               <Hidden mdUp>
                 <p onClick={this.handleClick} className={classes.linkText}>
                   Notification
@@ -121,10 +241,10 @@ class HeaderLinks extends React.Component {
                       Another Notification
                     </MenuItem>
                     <MenuItem
-                      onClick={this.handleClose}
+                      onClick={this.turnOffNotifications}
                       className={classes.dropdownItem}
                     >
-                      Another One
+                      TURN OFF NOTIFICATIONS
                     </MenuItem>
                   </MenuList>
                 </Paper>
@@ -132,19 +252,63 @@ class HeaderLinks extends React.Component {
             </ClickAwayListener>
           </Popper>
         </Manager>
-        <IconButton
-          color="inherit"
-          aria-label="Person"
-          className={classes.buttonLink}
-        >
-          <Person className={classes.links} onClick={this.handleClick} />
-          <Hidden mdUp>
-            <p className={classes.linkText}>Profile</p>
-          </Hidden>
-        </IconButton>
+        <Manager style={{ display: "inline-block" }}>
+          <Target>
+            <IconButton
+              color="inherit"
+              aria-label="Person"
+              aria-owns={profileOpen ? "menu-list" : null}
+              className={classes.buttonLink}
+              onClick={this.handleClickProfile}
+            >
+              <Person className={classes.links}/>
+              <Hidden mdUp>
+                <p onClick={this.handleClickProfile} className={classes.linkText}>Profile</p>
+              </Hidden>
+            </IconButton>
+          </Target>
+          <Popper
+            placement="bottom-start"
+            eventsEnabled={profileOpen}
+            className={
+              classNames({ [classes.popperClose]: !profileOpen }) +
+              " " +
+              classes.pooperResponsive
+            }
+          >
+            <ClickAwayListener onClickAway={this.handleClose}>
+              <Grow
+                in={profileOpen}
+                id="menu-list"
+                style={{ transformOrigin: "0 0 0" }}
+              >
+                <Paper className={classes.dropdown}>
+                  <MenuList role="menu">
+                    <MenuItem
+                      onClick={this.handleClose}
+                      className={classes.dropdownItem}
+                    >
+                      {this.state.profile ? this.state.profile.name : ''}
+                    </MenuItem>
+                    <MenuItem
+                      onClick={this.handleLogout}
+                      className={classes.dropdownItem}
+                    >
+                      {'Logout'}
+                    </MenuItem>
+                  </MenuList>
+                </Paper>
+              </Grow>
+            </ClickAwayListener>
+          </Popper>
+        </Manager>
       </div>
     );
   }
 }
+
+HeaderLinks.propTypes = {
+  profile: PropTypes.object.isRequired,
+};
 
 export default withStyles(headerLinksStyle)(HeaderLinks);

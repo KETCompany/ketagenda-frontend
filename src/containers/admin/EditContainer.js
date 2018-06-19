@@ -9,6 +9,7 @@ import * as GroupAPI from '../../api/GroupAPI';
 import * as EventAPI from '../../api/EventAPI';
 
 
+import Button from '../../components/CustomButtons/Button.jsx';
 import DataForm from '../../components/DataForm';
 
 import {
@@ -16,16 +17,20 @@ import {
 } from '../../components';
 
 const styles = theme => ({
-
+  buttonRight: {
+    right: 0,
+    position: 'absolute', 
+  }
 });
 
-class UsersContainer extends Component {
+class EditContainer extends Component {
   constructor(props) {
     super();
     this.state = {
       value: 0,
       data: {},
       dataLoaded: false,
+      kind: null,
       api: {
         user: UserAPI,
         room: RoomAPI,
@@ -74,7 +79,6 @@ class UsersContainer extends Component {
           },
           bookings: {
             type: 'calendar',
-            options: [],
           },
         }
       },
@@ -105,14 +109,17 @@ class UsersContainer extends Component {
     const formInputs = _.get(this.state.formInputs, params.kind);
 
     await Promise.all([
-      Api.initCreate(),
+      Api.initForm(),
       Api.get(params.id, true),
     ])
       .then(([formInputData, ApiData]) => {
         const populatedFormInputs = this.populateFormInputs(formInputs, formInputData);
-        
         this.setState({
-          data: ApiData, dataLoaded: true, api: Api, formInputs: populatedFormInputs
+          data: ApiData,
+          dataLoaded: true,
+          api: Api,
+          formInputs: populatedFormInputs,
+          kind: params.kind
         });
       })
       .catch(err => console.error(err));
@@ -137,6 +144,8 @@ class UsersContainer extends Component {
     return formInputs;
   }
 
+  handleBack = () => this.props.history.goBack();
+
   saveData = async () => {
     const Api = _.get(this.state, 'api');
     await Api.put(this.state.data, this.state.data._id)
@@ -145,10 +154,13 @@ class UsersContainer extends Component {
   }
 
   render() {
-    const { data, formInputs, dataLoaded } = this.state;
+    const { data, formInputs, dataLoaded, kind } = this.state;
+    const { classes } = this.props;
     return (
       <div>
         <RegularCard
+          headerColor="red"
+          cardTitle={(<div>{kind} <Button onClick={this.handleBack} className={classes.buttonRight}>Back</Button></div>)}
           content={
             <div>
               <DataForm
@@ -157,6 +169,7 @@ class UsersContainer extends Component {
                 formInputs={formInputs}
                 handleChange={this.handleChange}
                 handleSave={this.saveData}
+                kind={kind}
               />
             </div>
           }
@@ -166,4 +179,4 @@ class UsersContainer extends Component {
   }
 }
 
-export default withStyles(styles)(UsersContainer);
+export default withStyles(styles)(EditContainer);

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Grid } from 'material-ui';
-import { AddAlert } from '@material-ui/icons';
-import List, { ListItem, ListItemText } from 'material-ui/List';
+import Card from '@material-ui/core/Card';
 import { withStyles } from 'material-ui/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import QRCode from 'qrcode.react';
 
 import * as RoomAPI from '../api/RoomAPI';
@@ -13,6 +13,9 @@ import * as EventAPI from '../api/EventAPI';
 
 import ReservationsCalendar from '../components/ReservationsCalendar';
 import ReservationForm from '../components/ReservationForm';
+import { Redirect } from 'react-router-dom';
+
+import _ from 'lodash';
 
 import {
   RegularCard,
@@ -27,68 +30,33 @@ import {
 
 const moment = require('moment');
 
-const officeHours = [{ from: '9:00', to: '12:00' }, { from: '13:00', to: '17:00' }];
-
 const styles = theme => ({
 
 });
-
-const Event = ({ event: booking }) => {
-  const { event } = booking;
-  if (event && event.name) {
-    return (
-      <span>
-        <strong>{event.name}</strong>
-        {event.desc && ':  ' + event.desc}
-      </span>
-    )
-  } else {
-    return (<span></span>);
-  }
-  
-}
-
-const eventPropGetter = (event) => {
-  if(event._id) {
-    return { style: {
-      background: '#333',
-    }
-  }
-  }
-
-  return {};
-}
-
-const EventAgenda = ({ event }) => {
-  return (
-    <span>
-      <em style={{ color: 'red' }}>{event.title}</em>
-      <p>{event.desc}</p>
-    </span>
-  )
-}
 
 class RoomDetailContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      pageLoaded: false,
       agendaItems: [],
       room: null,
       value: 0,
       reservation: {
         name: '',
         description: '',
-        owner: '5b1dc950ce0c3b20c5f9d005',
+        owner: '5b1dc950ce0c3b20c5f9d005', // TODO: get user id of loggedin user
         subscribers: [],
         start: moment().toDate(),
         end: moment().toDate(),
       },
     };
-    this.getRoom(props.match.params.id);
+    this.getRoom(this.props.match.params.id)
+      .then(() => this.setState({ pageLoaded: true }));
   }
 
-  async getRoom(id) {
+  getRoom = async (id) => {
     const room = await RoomAPI.get(id, true);
     if (room && room.bookings) {
       const roomBookings = room.bookings.map(booking => ({
@@ -98,8 +66,6 @@ class RoomDetailContainer extends React.Component {
         roomId: id,
       }));
       this.setState({ room: { ...room, bookings: roomBookings } });
-    } else {
-      this.getRoom(id);
     }
   }
 
@@ -107,12 +73,8 @@ class RoomDetailContainer extends React.Component {
 
   checkTimeDiff = (start, end) => moment(end).isAfter(start);
 
-  handleNameChange = (event) => {
-    this.setState({ reservation: { ...this.state.reservation, name: event.target.value } });
-  }
-
-  handleDescChange = (event) => {
-    this.setState({ reservation: { ...this.state.reservation, description: event.target.value } });
+  handleFormFieldChange = (event) => {
+    this.setState({ reservation: { ...this.state.reservation, [event.target.name]: event.target.value } });
   }
 
   handleDateChange = (date) => {
@@ -142,7 +104,8 @@ class RoomDetailContainer extends React.Component {
     });
   }
 
-  handleSlotSelect = event => alert(event.title)
+  handleSlotSelect = booking =>
+    this.props.history.push(`/event/${booking.event._id}`)
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -169,15 +132,28 @@ class RoomDetailContainer extends React.Component {
     this.setState({ value });
   };
 
+
+  renderLoad = () => (
+    <div style={{position: 'relative'}}>     
+      <CircularProgress
+        size={40}
+        left={-20}
+        top={10}
+        status={'loading'}
+        style={{marginLeft: '50%'}}
+        color="secondary" />
+    </div>
+  )
+
   renderDetails() {
     const { room } = this.state;
     return (
-      <ItemGrid xs={12} sm={12} md={12}>Item One
+      <div>
         <QRCode
-        value={room._id}
-        size='128'
-      />
-      </ItemGrid>
+          value={room._id}
+          size='128'
+        />
+      </div>
     );
   }
 
@@ -188,32 +164,30 @@ class RoomDetailContainer extends React.Component {
     <ItemGrid xs={12} sm={12} md={12}>
       <h1>Bookings</h1>
       <br />
-      <ReservationForm
-        onSubmit={this.handleSubmit}
-        handleNameChange={this.handleNameChange}
-        handleDescChange={this.handleDescChange}
-        handleDateChange={this.handleDateChange}
-        handleStartTimeChange={this.handleStartTimeChange}
-        handleEndTimeChange={this.handleEndTimeChange}
-        booking={this.state.reservation}
-        officeHours={officeHours}
-      />
       <ReservationsCalendar
-      agendaItems={[...room.bookings, ...agendaItems]}
+        agendaItems={[...room.bookings, ...agendaItems]}
         handleSlotSelect={this.handleSlotSelect}
         handleSelectEvent={this.handleSelectEvent}
-        eventPropGetter={this.eventPropGetter}
-        Event={Event}
-        EventAgenda={EventAgenda}
       />
     </ItemGrid>
     );
   }
 
+  handleBack = () => this.props.history.goBack();
+
   render() {
-    const { room, value } = this.state;
+    const { room, value, pageLoaded } = this.state;
+    const { classes } = this.props;
+    if (pageLoaded === false) {
+      this.renderLoad();
+    }
+
     if (room === null) {
-      return (<div>Room not found</div>);
+      return (
+        <Card>
+          No room found
+        </Card>
+      );
     }
 
     return (
@@ -226,7 +200,7 @@ class RoomDetailContainer extends React.Component {
         </AppBar>
         <RegularCard
           headerColor="orange"
-          cardTitle={`Room: ${room.name}`}
+          cardTitle={(<div>Room: {room.name}  <Button onClick={this.handleBack} className={classes.buttonRight}>Back</Button></div>)}
           cardSubtitle={
             <P>
               {room.type}
