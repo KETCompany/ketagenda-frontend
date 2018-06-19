@@ -78,13 +78,6 @@ class EventDetailContainer extends React.Component {
       event: null,
       agendaItems: [],
       value: 0,
-      reservation: {
-        name: '',
-        description: '',
-        subscribers: [],
-        start: moment().toDate(),
-        end: moment().toDate(),
-      },
     };
     this.getEvent(this.props.match.params.id)
       .then(() => this.setState({ pageLoaded: true }));
@@ -92,71 +85,18 @@ class EventDetailContainer extends React.Component {
 
   getEvent = async (id) => {
     const event = await EventAPI.get(id, true);
-    if (event && event.bookings) {
-      const eventBookings = event.bookings.map(booking => ({
-        ...booking,
-        start: new Date(booking.start),
-        end: new Date(booking.end),
-        eventId: id,
-      }));
+    if (event) {
+      let eventBookings = [];
+      if (event.bookings) {
+        eventBookings = event.bookings.map(booking => ({
+          ...booking,
+          start: new Date(booking.start),
+          end: new Date(booking.end),
+          eventId: id,
+        }));
+      }
       this.setState({ event: { ...event, bookings: eventBookings } });
-      console.log(event);
     }
-  }
-
-  checkTimeDiff = (start, end) => moment(end).isAfter(start);
-
-  handleFormFieldChange = (event) => {
-    this.setState({ reservation: { ...this.state.reservation, [event.target.name]: event.target.value } });
-  }
-
-  handleDateChange = (date) => {
-    this.setState({
-      reservation: {
-        ...this.state.reservation,
-        start: moment(this.state.reservation.start).date(date.getDate()).month(date.getMonth()).toDate(),
-        end: moment(this.state.reservation.end).date(date.getDate()).month(date.getMonth()).toDate(),
-      },
-    });
-  }
-
-  handleStartTimeChange = (time) => {
-    this.setState({ reservation: { ...this.state.reservation, start: moment(this.state.reservation.start).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
-  }
-
-  handleEndTimeChange = (time) => {
-    this.setState({ reservation: { ...this.state.reservation, end: moment(this.state.reservation.end).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
-  }
-
-  handleSelectEvent = (slotInfo) => {
-    this.handleDateChange(slotInfo.start);
-    this.handleStartTimeChange(slotInfo.start);
-    this.handleEndTimeChange(slotInfo.end);
-    this.setState({
-      agendaItems: [...this.state.agendaItems.filter(item => item.reservation === false), this.state.reservation],
-    });
-  }
-
-  handleSlotSelect = booking => console.log(booking)
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-
-    const reservation = {
-      ...this.state.reservation,
-      bookings: [{
-        start: moment(this.state.reservation.start).unix(),
-        end: moment(this.state.reservation.end).unix(),
-        room: this.state.room.id,
-      }],
-    };
-
-    EventAPI.post(reservation).then((res) => {
-      this.setState({
-        agendaItems: [],
-      });
-      this.getEvent(this.state.event._id);
-    });
   }
 
   handleChange = (event, value) => {
@@ -195,19 +135,8 @@ class EventDetailContainer extends React.Component {
     <ItemGrid xs={12} sm={12} md={12}>
       <h1>Bookings</h1>
       <br />
-      <ReservationForm
-        onSubmit={this.handleSubmit}
-        handleNameChange={this.handleFormFieldChange}
-        handleDescChange={this.handleFormFieldChange}
-        handleDateChange={this.handleDateChange}
-        handleStartTimeChange={this.handleStartTimeChange}
-        handleEndTimeChange={this.handleEndTimeChange}
-        booking={this.state.reservation}
-        officeHours={officeHours}
-      />
       <ReservationsCalendar
         agendaItems={[...event.bookings, ...agendaItems]}
-        handleSlotSelect={this.handleSlotSelect}
         handleSelectEvent={this.handleSelectEvent}
         eventPropGetter={this.eventPropGetter}
         Event={Event}

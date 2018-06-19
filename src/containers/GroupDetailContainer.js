@@ -65,14 +65,7 @@ class GroupDetailContainer extends React.Component {
       pageLoaded: false,
       group: null,
       agendaItems: [],
-      value: 0,
-      reservation: {
-        name: '',
-        description: '',
-        subscribers: [],
-        start: moment().toDate(),
-        end: moment().toDate(),
-      },
+      value: 0
     };
     this.getGroup(this.props.match.params.id)
       .then(() => this.setState({ pageLoaded: true }));
@@ -80,75 +73,27 @@ class GroupDetailContainer extends React.Component {
 
   getGroup = async (id) => {
     const group = await GroupAPI.get(id, true);
-    if (group && group.bookings) {
-      const groupBookings = group.bookings.map(booking => ({
-        ...booking,
-        start: new Date(booking.start),
-        end: new Date(booking.end),
-        groupId: id,
-      }));
+    if (group) {
+      let groupBookings = [];
+      if (group.bookings) {
+        groupBookings = group.bookings.map(booking => ({
+          ...booking,
+          start: new Date(booking.start),
+          end: new Date(booking.end),
+          groupId: id,
+        }));
+      }
+      console.log(group);
       this.setState({ group: { ...group, bookings: groupBookings } });
     }
-  }
-
-  checkTimeDiff = (start, end) => moment(end).isAfter(start);
-
-  handleFormFieldChange = (event) => {
-    this.setState({ reservation: { ...this.state.reservation, [event.target.name]: event.target.value } });
-  }
-
-  handleDateChange = (date) => {
-    this.setState({
-      reservation: {
-        ...this.state.reservation,
-        start: moment(this.state.reservation.start).date(date.getDate()).month(date.getMonth()).toDate(),
-        end: moment(this.state.reservation.end).date(date.getDate()).month(date.getMonth()).toDate(),
-      },
-    });
-  }
-
-  handleStartTimeChange = (time) => {
-    this.setState({ reservation: { ...this.state.reservation, start: moment(this.state.reservation.start).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
-  }
-
-  handleEndTimeChange = (time) => {
-    this.setState({ reservation: { ...this.state.reservation, end: moment(this.state.reservation.end).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
-  }
-
-  handleSelectGroup = (slotInfo) => {
-    this.handleDateChange(slotInfo.start);
-    this.handleStartTimeChange(slotInfo.start);
-    this.handleEndTimeChange(slotInfo.end);
-    this.setState({
-      agendaItems: [...this.state.agendaItems.filter(item => item.reservation === false), this.state.reservation],
-    });
-  }
-
-  handleSlotSelect = booking => console.log(booking)
-
-  handleSubmit = (event) => {
-    event.preventDefault();
-
-    const reservation = {
-      ...this.state.reservation,
-      bookings: [{
-        start: moment(this.state.reservation.start).unix(),
-        end: moment(this.state.reservation.end).unix(),
-        room: this.state.room.id,
-      }],
-    };
-
-    GroupAPI.post(reservation).then((res) => {
-      this.setState({
-        agendaItems: [],
-      });
-      this.getGroup(this.state.group._id);
-    });
   }
 
   handleChange = (event, value) => {
     this.setState({ value });
   };
+
+  handleSlotSelect = booking =>
+    this.props.history.push(`/event/${booking.event._id}`)
 
   handleJoin = (e) => {
     GroupAPI.subscribe(this.state.group._id, true)
@@ -182,19 +127,9 @@ class GroupDetailContainer extends React.Component {
     <ItemGrid xs={12} sm={12} md={12}>
       <h1>Bookings</h1>
       <br />
-      <ReservationForm
-        onSubmit={this.handleSubmit}
-        handleNameChange={this.handleFormFieldChange}
-        handleDescChange={this.handleFormFieldChange}
-        handleDateChange={this.handleDateChange}
-        handleStartTimeChange={this.handleStartTimeChange}
-        handleEndTimeChange={this.handleEndTimeChange}
-        booking={this.state.reservation}
-      />
       <ReservationsCalendar
         agendaItems={[...group.bookings, ...agendaItems]}
         handleSlotSelect={this.handleSlotSelect}
-        handleSelectGroup={this.handleSelectGroup}
         eventPropGetter={this.eventPropGetter}
         Event={Event}
       />

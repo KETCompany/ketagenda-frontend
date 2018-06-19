@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-
-import _ from 'lodash';
-
 import ReservationForm from '../components/ReservationForm';
 import ReservationsCalendar from '../components/ReservationsCalendar';
-
+import DataForm from '../components/DataForm';
 import * as RoomAPI from '../api/RoomAPI';
+import EventAPI from '../api/EventAPI';
+import _ from 'lodash';
 
 const moment = require('moment');
 
@@ -16,93 +14,112 @@ moment.locale('nl');
 const styles = theme => ({
   root: {
     textAlign: 'center',
-    // paddingTop: theme.spacing.unit * 15,
   },
 });
-
-
-const officeHours = [{from: '9:00', to: '12:00'}, {from: '13:00', to: '17:00'}]
 
 class ReservationContainer extends Component {
   constructor() {
     super();
     this.state = {
       agendaItems: [],
+      dataLoaded: false,
       booking: {
         name: '',
-        group: '',
-        tutor: '',
-        start: moment().toDate(),
-        end: moment().toDate(),
-        booking: true,
+        description: '',
+        owner: '',
+        groups: [],
+        room: '',
+        bookings: []
+      },
+      formInputs: {
+        owner: {
+          type: 'select',
+          options: [],
+        },
+        groups: {
+          type: 'multiSelect',
+          options: [],
+        },
+        room: {
+          type: 'select',
+          options: [],
+        },
       },
       activeStep: 0,
-      roomId: '5afc2c4f0a876e4deb9656c6',
     };
+    this.loadData();
+  }
+
+  loadData = async () => {
+    const { formInputs } = this.state;
+
+    const a = await EventAPI.initForm();
+
+    const populatedFormInputs = this.populateFormInputs(formInputs, a);
+    this.setState({ dataLoaded: true, formInputs: populatedFormInputs });
+  }
+
+  populateFormInputs = (formInputs, entry) => {
+    Object.entries(entry).forEach(([key, values]) => {
+      if (_.isArray(values)) {
+        if (formInputs[key]) {
+          formInputs[key].options = values;
+        } else {
+          formInputs[key] = {
+            options: values,
+            type: 'select',
+          }
+        }
+      } else {
+        formInputs[key] = values;
+      }
+    })
+
+    return formInputs;
   }
 
   validateDate = () => true;
 
   checkTimeDiff = (start, end) => moment(end).isAfter(start);
 
+  handleChange = (e) => {
+    this.setState({ booking: { ...this.state
+      .booking, [e.target.name]: e.target.value } });
+  }
   
   handleNameChange = (event) => {
     this.setState({ booking: { ...this.state.booking, name: event.target.value } });
   }
-
-  handleDateChange = (date) => {
+  
+  handleSelectEvent = (slotInfo) => {
     this.setState({
       booking: {
         ...this.state.booking,
-        start: moment(this.state.booking.start).date(date.getDate()).month(date.getMonth()).toDate(),
-        end: moment(this.state.booking.end).date(date.getDate()).month(date.getMonth()).toDate(),
-      },
+        bookings:
+        [
+          ...this.state.booking.bookings, {
+          start: moment(slotInfo.start).unix(),
+          end: moment(slotInfo.end).unix(),
+          room: this.state.booking.room,
+        }]
+      }
     });
-  }
-
-  handleStartTimeChange = (time) => {
-    // if (this.checkTimeDiff(time, this.state.booking.end)) {
-    //   this.handleEndTimeChange(time);
-    // }
-    this.setState({ booking: { ...this.state.booking, start: moment(this.state.booking.start).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
-  }
-
-  handleEndTimeChange = (time) => {
-    // if (this.checkTimeDiff(this.state.booking.start, time)) {
-    //   console.log();
-    //   this.handleStartTimeChange(time);
-    // }
-    this.setState({ booking: { ...this.state.booking, end: moment(this.state.booking.end).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
-  }
-
-  handleSelectEvent = (slotInfo) => {
-    this.handleDateChange(slotInfo.start);
-    this.handleStartTimeChange(slotInfo.start);
-    this.handleEndTimeChange(slotInfo.end);
-    this.setState({
-      agendaItems: [...this.state.agendaItems.filter(item => item.booking === false), this.state.booking],
-    });
-    // alert(
-    //   `selected slot: \n\nstart ${slotInfo.start.toLocaleString()} ` +
-    //     `\nend: ${slotInfo.end.toLocaleString()}` +
-    //     `\naction: ${slotInfo.action}`
-    // )
   }
 
   handleSlotSelect = event => alert(event.title)
 
   handleSubmit = (event) => {
     event.preventDefault();
-    return new Promise((resolve, reject) => {
-      this.validateDate();
-    }).then(() => RoomAPI.post(this.state)).catch(error => console.log);
+    return new Promise((resolve) => {
+      resolve(this.validateDate());
+    })
+      .then(() => EventAPI.post(this.state.booking)).catch(error => console.log);
   }
 
   render() {
     const { classes } = this.props;
     const {
-      search, filters, filtersDisabled, rooms, noRooms, loading,
-      type, selectedDate, selectedTime, qrDialogOpen, qrCodeValue,
+      booking, formInputs, bookings
     } = this.state;
 
     return (
@@ -114,10 +131,15 @@ class ReservationContainer extends Component {
           handleStartTimeChange={this.handleStartTimeChange}
           handleEndTimeChange={this.handleEndTimeChange}
           booking={this.state.booking}
-          officeHours={officeHours}
+          dataLoaded={this.state.dataLoaded}
+          data={this.state.booking}
+          formInputs={formInputs}
+          handleChange={this.handleChange}
+          handleSave={this.handleSubmit}
+          kind={'event'}
         />
         <ReservationsCalendar
-          agendaItems={this.state.agendaItems}
+          agendaItems={booking.bookings.map(evt => { return { start: new Date(evt.start*1000), end: new Date(evt.end*1000) } } )}
           handleSlotSelect={this.handleSlotSelect}
           handleSelectEvent={this.handleSelectEvent}
         />

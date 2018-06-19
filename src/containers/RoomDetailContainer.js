@@ -200,16 +200,6 @@ class RoomDetailContainer extends React.Component {
     <ItemGrid xs={12} sm={12} md={12}>
       <h1>Bookings</h1>
       <br />
-      <ReservationForm
-        onSubmit={this.handleSubmit}
-        handleNameChange={this.handleFormFieldChange}
-        handleDescChange={this.handleFormFieldChange}
-        handleDateChange={this.handleDateChange}
-        handleStartTimeChange={this.handleStartTimeChange}
-        handleEndTimeChange={this.handleEndTimeChange}
-        booking={this.state.reservation}
-        officeHours={officeHours}
-      />
       <ReservationsCalendar
         agendaItems={[...room.bookings, ...agendaItems]}
         handleSlotSelect={this.handleSlotSelect}
