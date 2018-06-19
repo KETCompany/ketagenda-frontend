@@ -25,6 +25,7 @@ class CreateContainer extends Component {
       value: 0,
       data: {},
       dataLoaded: false,
+      kind: null,
       api: {
         user: UserAPI,
         room: RoomAPI,
@@ -74,10 +75,28 @@ class CreateContainer extends Component {
           bookings: {
             type: 'calendar',
             options: [],
+            handleSlotSelect: this.handleSlotSelect,
+            handleSelectEvent: this.handleSelectEvent
           },
         }
       },
     };
+  }
+
+  handleSelectEvent = (e) => alert(e);
+
+  handleSlotSelect = (e) => {
+    // this.setState({ booking: { ...this.state.booking, start: moment(this.state.booking.start).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
+    // this.setState({ booking: { ...this.state.booking, end: moment(this.state.booking.end).minute(time.getMinutes()).hour(time.getHours()).toDate() } });
+    
+    // this.setState({
+    //   booking: {
+    //     ...this.state.booking,
+    //     start: moment(this.state.booking.start).date(date.getDate()).month(date.getMonth()).toDate(),
+    //     end: moment(this.state.booking.end).date(date.getDate()).month(date.getMonth()).toDate(),
+    //   },
+    // });
+    console.log(e);
   }
 
   componentDidMount = () => {
@@ -100,7 +119,7 @@ class CreateContainer extends Component {
     const a = await Api.initForm();
 
     const populatedFormInputs = this.populateFormInputs(formInputs, a);
-    this.setState({ dataLoaded: true, api: Api, formInputs: populatedFormInputs  });
+    this.setState({ dataLoaded: true, api: Api, formInputs: populatedFormInputs, kind: params.kind });
   }
 
   populateFormInputs = (formInputs, entry) => {
@@ -130,7 +149,7 @@ class CreateContainer extends Component {
   }
 
   render() {
-    const { data, formInputs, dataLoaded } = this.state;
+    const { data, formInputs, dataLoaded, kind } = this.state;
     return (
       <div>
         <RegularCard
@@ -142,6 +161,7 @@ class CreateContainer extends Component {
                 formInputs={formInputs}
                 handleChange={this.handleChange}
                 handleSave={this.saveData}
+                kind={kind}
               />
             </div>
           }

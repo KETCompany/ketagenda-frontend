@@ -26,6 +26,7 @@ class EditContainer extends Component {
       value: 0,
       data: {},
       dataLoaded: false,
+      kind: null,
       api: {
         user: UserAPI,
         room: RoomAPI,
@@ -110,7 +111,11 @@ class EditContainer extends Component {
       .then(([formInputData, ApiData]) => {
         const populatedFormInputs = this.populateFormInputs(formInputs, formInputData);
         this.setState({
-          data: ApiData, dataLoaded: true, api: Api, formInputs: populatedFormInputs,
+          data: ApiData,
+          dataLoaded: true,
+          api: Api,
+          formInputs: populatedFormInputs,
+          kind: params.kind
         });
       })
       .catch(err => console.error(err));
@@ -143,8 +148,7 @@ class EditContainer extends Component {
   }
 
   render() {
-    console.log(this.state.data);
-    const { data, formInputs, dataLoaded } = this.state;
+    const { data, formInputs, dataLoaded, kind } = this.state;
     return (
       <div>
         <RegularCard
@@ -156,6 +160,7 @@ class EditContainer extends Component {
                 formInputs={formInputs}
                 handleChange={this.handleChange}
                 handleSave={this.saveData}
+                kind={kind}
               />
             </div>
           }
